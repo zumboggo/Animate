@@ -57,6 +57,12 @@ The included demo stories ship with their finished dialogue as bundled audio
 clips, so they play immediately even while signed out. Only new or edited story
 lines call the authenticated generation service.
 
+Before refreshing the bundled clips, run `node scripts/clean-voice-references.mjs`
+to denoise the four ignored local references with Replicate's
+`resemble-ai/resemble-enhance`, then run
+`node scripts/generate-demo-audio.mjs --force`. Raw and cleaned reference files
+remain under the Git-ignored `.cache/` directory.
+
 Generation runs through the authenticated `character-tts` Supabase Edge
 Function. Reference recordings and generated audio are stored in private
 Storage buckets, and repeated dialogue uses the private cache instead of

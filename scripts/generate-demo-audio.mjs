@@ -6,8 +6,10 @@ import { fileURLToPath } from 'node:url';
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = path.join(repo, 'public', 'audio', 'demos');
 const manifestPath = path.join(repo, 'src', 'audio', 'demoVoiceClips.ts');
-const referenceDir = path.join(repo, '.cache', 'voice-references');
+const cleanReferenceDir = path.join(repo, '.cache', 'voice-references-clean');
+const originalReferenceDir = path.join(repo, '.cache', 'voice-references');
 const modelVersion = '9cfba4c265e685f840612be835424f8c33bdee685d7466ece7684b0d9d4c0b1c';
+const force = process.argv.includes('--force');
 const voices = new Set(['ANNA', 'SARAH', 'GRACE', 'ELLIOTT']);
 const exaggeration = {
   neutral: 0.45,
@@ -40,7 +42,12 @@ for (const storyFile of storyFiles) {
 await mkdir(outputDir, { recursive: true });
 const references = new Map();
 for (const character of voices) {
-  const wav = await readFile(path.join(referenceDir, `${character.toLowerCase()}.wav`));
+  let wav;
+  try {
+    wav = await readFile(path.join(cleanReferenceDir, `${character.toLowerCase()}.wav`));
+  } catch {
+    wav = await readFile(path.join(originalReferenceDir, `${character.toLowerCase()}.wav`));
+  }
   references.set(character, `data:audio/wav;base64,${wav.toString('base64')}`);
 }
 
@@ -51,11 +58,13 @@ const entries = [...lines.entries()].map(([key, line]) => {
 
 async function createClip(entry) {
   const destination = path.join(outputDir, entry.filename);
-  try {
-    await readFile(destination);
-    console.log(`cached ${entry.filename}`);
-    return;
-  } catch {}
+  if (!force) {
+    try {
+      await readFile(destination);
+      console.log(`cached ${entry.filename}`);
+      return;
+    } catch {}
+  }
 
   const language = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/u.test(entry.line.text) ? 'zh' : 'en';
   const response = await fetch('https://api.replicate.com/v1/predictions', {

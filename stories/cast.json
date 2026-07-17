@@ -36,7 +36,6 @@
   "GRACE": {
     "displayName": "Grace",
     "adapter": "svgRig",
-    "asset": "paper-doll/grace",
     "appearance": {
       "skin": "#f0a46a",
       "hair": "curlyPonytail",
