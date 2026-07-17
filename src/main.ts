@@ -165,6 +165,11 @@ function playSource(source: string, focusErrors: boolean): void {
 
   lastPlayableSource = source;
   editor.setStatus('playing', `“${story.title}” is ready — click the preview to begin.`);
+  narrator.prepare(
+    story.commands
+      .filter((command) => command.kind === 'dialogue')
+      .map((command) => ({ character: command.character, text: command.text })),
+  );
   director = new Director(story, cast, stage, bubbles, dialogueBox, narrator);
   void director.run();
 }

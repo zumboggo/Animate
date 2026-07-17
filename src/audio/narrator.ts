@@ -8,9 +8,31 @@ export interface SpeechLine {
 /** Plays character dialogue returned by the server-side Google Chirp proxy. */
 export class Narrator {
   private audio: HTMLAudioElement | null = null;
+  private audioCache = new Map<string, Blob>();
+  private pendingAudio = new Map<string, Promise<Blob>>();
   private request: AbortController | null = null;
   private finishPlayback: (() => void) | null = null;
   private finishBrowserSpeech: (() => void) | null = null;
+
+  /** Generates every dialogue line in the background as soon as a story is valid. */
+  prepare(lines: SpeechLine[]): void {
+    if (!settings.voices || window.location.hostname.endsWith('github.io')) return;
+    const queue = [...new Map(lines.map((line) => [this.keyFor(line), line])).values()]
+      .filter((line) => !this.audioCache.has(this.keyFor(line)));
+
+    const worker = async () => {
+      while (queue.length > 0) {
+        const line = queue.shift();
+        if (!line) return;
+        try {
+          await this.fetchAudio(line);
+        } catch {
+          // Playback will retry and use the browser fallback if Chirp is unavailable.
+        }
+      }
+    };
+    void Promise.all([worker(), worker()]);
+  }
 
   async speak(line: SpeechLine): Promise<void> {
     this.stop();
@@ -28,15 +50,9 @@ export class Narrator {
     this.request = request;
 
     try {
-      const response = await fetch('/api/chirp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(line),
-        signal: AbortSignal.any([request.signal, AbortSignal.timeout(12_000)]),
-      });
-      if (!response.ok) throw new Error(await response.text());
-
-      const url = URL.createObjectURL(await response.blob());
+      const blob = await this.fetchAudio(line);
+      if (request.signal.aborted) return;
+      const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       this.audio = audio;
       await new Promise<void>((resolve) => {
@@ -61,6 +77,34 @@ export class Narrator {
     }
   }
 
+  private keyFor(line: SpeechLine): string {
+    return `${line.character}\0${line.text}`;
+  }
+
+  private fetchAudio(line: SpeechLine): Promise<Blob> {
+    const key = this.keyFor(line);
+    const cached = this.audioCache.get(key);
+    if (cached) return Promise.resolve(cached);
+    const pending = this.pendingAudio.get(key);
+    if (pending) return pending;
+
+    const request = fetch('/api/chirp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(line),
+      signal: AbortSignal.timeout(15_000),
+    }).then(async (response) => {
+      if (!response.ok) throw new Error(await response.text());
+      const blob = await response.blob();
+      this.audioCache.set(key, blob);
+      return blob;
+    }).finally(() => {
+      this.pendingAudio.delete(key);
+    });
+    this.pendingAudio.set(key, request);
+    return request;
+  }
+
   stop(): void {
     this.request?.abort();
     this.request = null;
@@ -83,11 +127,11 @@ export class Narrator {
     }
 
     const profiles: Record<string, { pitch: number; rate: number }> = {
-      ANNA: { pitch: 1.12, rate: 0.96 },
-      SARAH: { pitch: 1.28, rate: 1.04 },
-      GRACE: { pitch: 1.16, rate: 1.0 },
-      ELLIOTT: { pitch: 0.96, rate: 1.02 },
-      LEAH: { pitch: 1.42, rate: 1.08 },
+      ANNA: { pitch: 1.16, rate: 1.02 },
+      SARAH: { pitch: 1.3, rate: 1.08 },
+      GRACE: { pitch: 1.2, rate: 1.04 },
+      ELLIOTT: { pitch: 1.08, rate: 1.06 },
+      LEAH: { pitch: 1.44, rate: 1.12 },
     };
     const profile = profiles[line.character] ?? { pitch: 1, rate: 1 };
     const utterance = new SpeechSynthesisUtterance(line.text);

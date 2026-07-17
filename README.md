@@ -53,6 +53,12 @@ Sarah, Grace, Elliott, and Leah. The player detects Chinese text and
 uses a Mandarin voice automatically. Use **Voices on/off** below the stage to
 control narration; the preference is saved in the browser.
 
+When a valid story is created or loaded, its dialogue audio is generated in
+the background automatically. Chirp audio is cached under `.cache/chirp/` so
+replaying the same lines does not repeatedly call the API. Chirp does not offer
+a child-age control, so the cast uses distinct youthful voice personas and
+slightly quicker speaking rates.
+
 Set `GOOGLE_CLOUD_API_KEY` as a server-side environment variable and enable the
 Cloud Text-to-Speech API for that Google Cloud project. Do not rename it with a
 `VITE_` prefix, because Vite-prefixed values are bundled into browser code. For
