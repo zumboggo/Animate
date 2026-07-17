@@ -73,7 +73,12 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}, asset?: str
 
   const paperDoll = getPaperDollParts(asset);
   if (paperDoll) addPaperDoll(bones, paperDoll);
-  const head = bones.get('head')!;
+  const headBone = bones.get('head')!;
+  const head = el('g', {
+    transform: 'translate(100 112) scale(1.22) translate(-100 -112)',
+  });
+  while (headBone.firstChild) head.appendChild(headBone.firstChild);
+  headBone.appendChild(head);
 
   if (!paperDoll) {
 

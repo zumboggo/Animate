@@ -2,6 +2,8 @@ import { settings } from '../engine/settings';
 
 export interface ControlsCallbacks {
   onRestart(): void;
+  onToggleFullscreen(): Promise<void>;
+  isFullscreen(): boolean;
 }
 
 /** The bar under the stage: playback and accessibility controls. */
@@ -54,6 +56,18 @@ export function buildControls(
     renderMotion();
   });
   bar.appendChild(motion);
+
+  const fullscreen = document.createElement('button');
+  const renderFullscreen = () => {
+    const active = cb.isFullscreen();
+    fullscreen.textContent = active ? '↙ Exit full screen' : '⛶ Full screen';
+    fullscreen.classList.toggle('toggled', active);
+    fullscreen.setAttribute('aria-pressed', String(active));
+  };
+  renderFullscreen();
+  fullscreen.addEventListener('click', () => void cb.onToggleFullscreen().finally(renderFullscreen));
+  document.addEventListener('fullscreenchange', renderFullscreen);
+  bar.appendChild(fullscreen);
 
   const spacer = document.createElement('div');
   spacer.className = 'spacer';

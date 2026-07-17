@@ -188,6 +188,25 @@ function saveDraft(source: string): void {
 
 buildControls(previewPanel, {
   onRestart: () => playSource(lastPlayableSource, false),
+  onToggleFullscreen: async () => {
+    if (previewPanel.classList.contains('fullscreen-fallback')) {
+      previewPanel.classList.remove('fullscreen-fallback');
+      return;
+    }
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+      return;
+    }
+    try {
+      await previewPanel.requestFullscreen();
+    } catch {
+      // Some embedded browsers do not grant the Fullscreen API. The fixed
+      // theater layout provides the same focused viewing mode.
+      previewPanel.classList.add('fullscreen-fallback');
+    }
+  },
+  isFullscreen: () => document.fullscreenElement === previewPanel
+    || previewPanel.classList.contains('fullscreen-fallback'),
 });
 
 stage.el.addEventListener('click', () => director?.advance());

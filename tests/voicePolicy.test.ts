@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { demoVoiceClipUrl } from '../src/audio/demoVoiceClips';
 import { detectSpeechLanguage, emotionExaggeration, hasClonedVoice } from '../src/audio/voicePolicy';
 
 describe('character voice policy', () => {
@@ -22,5 +23,13 @@ describe('character voice policy', () => {
     expect(emotionExaggeration('surprised')).toBe(0.65);
     expect(emotionExaggeration('sad')).toBe(0.55);
     expect(emotionExaggeration('angry')).toBe(0.55);
+  });
+});
+
+describe('bundled demo voices', () => {
+  it('finds included English and Chinese dialogue but not new lines', () => {
+    expect(demoVoiceClipUrl('ANNA\0happy\0Come on, Sarah! Let\'s find the flowers.')).toContain('/audio/demos/anna-');
+    expect(demoVoiceClipUrl('GRACE\0happy\0你好！我是 Grace。')).toContain('/audio/demos/grace-');
+    expect(demoVoiceClipUrl('ANNA\0neutral\0A brand new line')).toBeNull();
   });
 });
