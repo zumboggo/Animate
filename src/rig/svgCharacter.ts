@@ -1,5 +1,6 @@
 import type { CastAppearance } from '../engine/storyTypes';
 import { FaceController, type FaceElements } from './faces';
+import { getPaperDollParts, type PaperDollParts, type PaperDollPartName } from './paperDollAssets';
 import { BONE_DEFS, VIEW_H, VIEW_W } from './svgSkeleton';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -44,7 +45,7 @@ function limb(x1: number, y1: number, x2: number, y2: number, stroke: string, wi
 }
 
 /** Builds a chibi vector character in rest pose from an appearance sheet. */
-export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharacter {
+export function buildRigCharacter(appearanceIn: CastAppearance = {}, asset?: string): RigCharacter {
   const a = { ...DEFAULTS, ...appearanceIn };
   const isDress = a.outfit === 'dress';
   const isOnesie = a.outfit === 'onesie';
@@ -69,6 +70,12 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
     bones.set(def.name, g);
     (def.parent ? bones.get(def.parent)! : fit).appendChild(g);
   }
+
+  const paperDoll = getPaperDollParts(asset);
+  if (paperDoll) addPaperDoll(bones, paperDoll);
+  const head = bones.get('head')!;
+
+  if (!paperDoll) {
 
   // ---- Legs (drawn under the torso) ----
   bones.get('leftThigh')!.insertBefore(limb(85, 208, 85, 253, a.pantsColor, 17), bones.get('leftShin')!);
@@ -125,7 +132,6 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
   }
 
   // ---- Head ----
-  const head = bones.get('head')!;
   if (a.hair === 'pigtails') {
     head.append(
       el('path', {
@@ -208,10 +214,18 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
       fill: a.hairColor,
     }));
   }
+  }
 
   // ---- Face ----
   const faceGroup = el('g');
   head.appendChild(faceGroup);
+
+  // Generated heads carry their likeness in the printed eyes and brows. We
+  // replace only the mouth so dialogue lip-sync remains animated without
+  // painting a conspicuous flat patch across the character's face.
+  if (paperDoll) {
+    faceGroup.append(el('ellipse', { cx: 100, cy: 89, rx: 16, ry: 11, fill: a.skin }));
+  }
 
   const strokeAttrs = {
     fill: 'none',
@@ -222,6 +236,10 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
 
   const browL = el('path', { ...strokeAttrs, d: 'M75,51 Q84,47 93,51' });
   const browR = el('path', { ...strokeAttrs, d: 'M107,51 Q116,47 125,51' });
+  if (paperDoll) {
+    browL.setAttribute('opacity', '0');
+    browR.setAttribute('opacity', '0');
+  }
   faceGroup.append(browL, browR);
 
   const eyeDots = el('g');
@@ -252,13 +270,22 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
 
   faceGroup.append(eyeDots, eyeWide, eyeHappy, eyeClosed);
 
-  faceGroup.appendChild(el('path', {
-    d: 'M100,72 q3,4 0,7',
-    fill: 'none',
-    stroke: INK,
-    'stroke-width': 2,
-    'stroke-linecap': 'round',
-  }));
+  if (paperDoll) {
+    eyeDots.setAttribute('opacity', '0');
+    eyeWide.setAttribute('opacity', '0');
+    eyeHappy.setAttribute('opacity', '0');
+    eyeClosed.setAttribute('opacity', '0');
+  }
+
+  if (!paperDoll) {
+    faceGroup.appendChild(el('path', {
+      d: 'M100,72 q3,4 0,7',
+      fill: 'none',
+      stroke: INK,
+      'stroke-width': 2,
+      'stroke-linecap': 'round',
+    }));
+  }
 
   const tears = el('g');
   tears.style.display = 'none';
@@ -277,6 +304,7 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
   });
   faceGroup.appendChild(mouth);
 
+  if (!paperDoll) {
   // ---- Arms (drawn over the torso) ----
   const upperArmColor = isDress ? a.skin : a.shirtColor;
   const leftUpper = bones.get('leftUpperArm')!;
@@ -292,6 +320,7 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
   const rightFore = bones.get('rightForearm')!;
   rightFore.appendChild(limb(136, 170, 136, 200, a.skin, 11));
   rightFore.appendChild(el('circle', { cx: 136, cy: 205, r: 7.5, fill: a.skin }));
+  }
 
   const faceEls: FaceElements = {
     browL,
@@ -303,6 +332,50 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
   };
 
   return { svg, bones, face: new FaceController(faceEls), appearance: a };
+}
+
+interface PartPlacement {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+const PART_PLACEMENTS: Record<PaperDollPartName, PartPlacement> = {
+  head: { x: 44, y: 18, width: 112, height: 96 },
+  torso: { x: 48, y: 104, width: 104, height: 132 },
+  leftUpperArm: { x: 43, y: 124, width: 42, height: 53 },
+  leftForearm: { x: 43, y: 163, width: 42, height: 51 },
+  rightUpperArm: { x: 115, y: 124, width: 42, height: 53 },
+  rightForearm: { x: 115, y: 163, width: 42, height: 51 },
+  leftThigh: { x: 66, y: 200, width: 38, height: 60 },
+  leftShin: { x: 64, y: 247, width: 42, height: 70 },
+  rightThigh: { x: 96, y: 200, width: 38, height: 60 },
+  rightShin: { x: 94, y: 247, width: 42, height: 70 },
+};
+
+function addPaperDoll(bones: Map<string, SVGGElement>, parts: PaperDollParts): void {
+  const part = (name: PaperDollPartName) => {
+    const placement = PART_PLACEMENTS[name];
+    return el('image', {
+      href: parts[name],
+      ...placement,
+      preserveAspectRatio: 'xMidYMid meet',
+    });
+  };
+
+  bones.get('leftThigh')!.insertBefore(part('leftThigh'), bones.get('leftShin')!);
+  bones.get('leftShin')!.appendChild(part('leftShin'));
+  bones.get('rightThigh')!.insertBefore(part('rightThigh'), bones.get('rightShin')!);
+  bones.get('rightShin')!.appendChild(part('rightShin'));
+
+  const torso = bones.get('torso')!;
+  torso.insertBefore(part('torso'), torso.firstChild);
+  bones.get('head')!.appendChild(part('head'));
+  bones.get('leftUpperArm')!.insertBefore(part('leftUpperArm'), bones.get('leftForearm')!);
+  bones.get('leftForearm')!.appendChild(part('leftForearm'));
+  bones.get('rightUpperArm')!.insertBefore(part('rightUpperArm'), bones.get('rightForearm')!);
+  bones.get('rightForearm')!.appendChild(part('rightForearm'));
 }
 
 function addRose(parent: SVGElement, cx: number, cy: number, scale: number): void {

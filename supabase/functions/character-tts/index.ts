@@ -3,7 +3,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.110.7';
 const MODEL_VERSION = '9cfba4c265e685f840612be835424f8c33bdee685d7466ece7684b0d9d4c0b1c';
 const REFERENCE_BUCKET = 'character-voice-references';
 const CACHE_BUCKET = 'character-voice-cache';
-const MAX_TEXT_LENGTH = 400;
+const MAX_TEXT_LENGTH = 300;
 const DAILY_LIMIT = 60;
 
 const VOICES: Record<string, string> = {
@@ -159,23 +159,30 @@ Deno.serve(async (request: Request) => {
     if (quotaError) throw new Error(`Voice quota check failed: ${quotaError.message}`);
     if (!allowed) return json(429, 'Daily character voice limit reached. Try again tomorrow.', { 'Retry-After': '86400' });
 
-    const { data: signedReference, error: signedError } = await admin.storage
-      .from(REFERENCE_BUCKET)
-      .createSignedUrl(VOICES[character], 300);
-    if (signedError || !signedReference?.signedUrl) throw new Error('The character reference voice is unavailable.');
+    let generated: Response;
+    try {
+      const { data: signedReference, error: signedError } = await admin.storage
+        .from(REFERENCE_BUCKET)
+        .createSignedUrl(VOICES[character], 300);
+      if (signedError || !signedReference?.signedUrl) throw new Error('The character reference voice is unavailable.');
 
-    const replicateToken = Deno.env.get('REPLICATE_API_TOKEN');
-    if (!replicateToken) throw new Error('Replicate voice generation is not configured.');
-    const seed = Number.parseInt(cacheKey.slice(0, 8), 16) % 2_147_483_647;
-    const generated = await readPredictionAudio(replicateToken, {
-      text_to_synthesize: text,
-      language_id: language,
-      reference_audio: signedReference.signedUrl,
-      exaggeration: EMOTIONS[emotion],
-      cfg_weight: language === 'zh' ? 0.3 : 0.45,
-      temperature: 0.65,
-      seed,
-    });
+      const replicateToken = Deno.env.get('REPLICATE_API_TOKEN');
+      if (!replicateToken) throw new Error('Replicate voice generation is not configured.');
+      const seed = Number.parseInt(cacheKey.slice(0, 8), 16) % 2_147_483_647;
+      generated = await readPredictionAudio(replicateToken, {
+        text,
+        language,
+        reference_audio: signedReference.signedUrl,
+        exaggeration: EMOTIONS[emotion],
+        cfg_weight: language === 'zh' ? 0.3 : 0.45,
+        temperature: 0.65,
+        seed,
+      });
+    } catch (error) {
+      const { error: refundError } = await admin.rpc('refund_character_tts_quota', { p_user_id: user.id });
+      if (refundError) console.error('[character-tts] quota refund failed:', refundError.message);
+      throw error;
+    }
     const audioBytes = await generated.arrayBuffer();
     const audioType = generated.headers.get('Content-Type') ?? 'audio/wav';
     const { error: uploadError } = await admin.storage.from(CACHE_BUCKET).upload(cachePath, audioBytes, {

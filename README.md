@@ -53,11 +53,15 @@ Replicate's Chatterbox Multilingual model. Leah intentionally remains silent.
 The player passes each script emotion to the voice service and detects Chinese
 text automatically. Use **Voices on/off** below the stage to control narration.
 
+The included demo stories ship with their finished dialogue as bundled audio
+clips, so they play immediately even while signed out. Only new or edited story
+lines call the authenticated generation service.
+
 Generation runs through the authenticated `character-tts` Supabase Edge
 Function. Reference recordings and generated audio are stored in private
 Storage buckets, and repeated dialogue uses the private cache instead of
 spending more Replicate credits. The database limits each account to 60 new
-lines per day and each line to 400 characters.
+lines per day. Chatterbox currently accepts up to 300 characters per line.
 
 Set `REPLICATE_API_TOKEN` in Supabase Edge Function Secrets. Never put it in a
 `VITE_` variable or commit voice recordings to this repository. Apply the

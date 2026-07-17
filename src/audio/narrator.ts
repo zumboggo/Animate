@@ -2,6 +2,7 @@ import { invokeCharacterTts } from '../auth/supabase';
 import type { CharacterEmotion } from '../engine/storyTypes';
 import { settings } from '../engine/settings';
 import { detectSpeechLanguage, hasClonedVoice } from './voicePolicy';
+import { demoVoiceClipUrl } from './demoVoiceClips';
 
 export interface SpeechLine {
   character: string;
@@ -83,12 +84,19 @@ export class Narrator {
 
     const timeout = AbortSignal.timeout(70_000);
     const combinedSignal = signal ? AbortSignal.any([signal, timeout]) : timeout;
-    const request = invokeCharacterTts({
-      character: line.character.toUpperCase(),
-      text: line.text,
-      emotion: line.emotion ?? 'neutral',
-      language: detectSpeechLanguage(line.text),
-    }, combinedSignal).then((blob) => {
+    const demoUrl = demoVoiceClipUrl(key);
+    const source = demoUrl
+      ? fetch(demoUrl, { signal: combinedSignal }).then((response) => {
+          if (!response.ok) throw new Error('Bundled demo voice is unavailable.');
+          return response.blob();
+        })
+      : invokeCharacterTts({
+          character: line.character.toUpperCase(),
+          text: line.text,
+          emotion: line.emotion ?? 'neutral',
+          language: detectSpeechLanguage(line.text),
+        }, combinedSignal);
+    const request = source.then((blob) => {
       this.audioCache.set(key, blob);
       return blob;
     }).finally(() => {

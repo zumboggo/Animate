@@ -101,7 +101,7 @@ export function buildScriptEditor(
 
     const portrait = document.createElement('span');
     portrait.className = 'character-portrait';
-    const rig = buildRigCharacter(entry.appearance);
+    const rig = buildRigCharacter(entry.appearance, entry.asset);
     rig.svg.setAttribute('aria-hidden', 'true');
     portrait.appendChild(rig.svg);
     const copy = document.createElement('span');
