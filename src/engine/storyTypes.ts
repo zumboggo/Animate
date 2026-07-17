@@ -107,6 +107,8 @@ export interface CastAppearance {
   freckles?: boolean;
   height?: number;
   build?: 'small' | 'average' | 'broad';
+  /** Most characters keep their arms behind clothing; front is available for special designs. */
+  armLayer?: 'back' | 'front';
 }
 
 export interface CastEntry {

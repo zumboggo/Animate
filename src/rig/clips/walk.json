@@ -6,66 +6,66 @@
     {
       "time": 0,
       "bones": {
-        "leftThigh": { "rotate": -30 },
-        "leftShin": { "rotate": 10 },
-        "rightThigh": { "rotate": 30 },
-        "rightShin": { "rotate": -18 },
-        "leftUpperArm": { "rotate": 20 },
-        "rightUpperArm": { "rotate": -20 },
+        "leftThigh": { "rotate": -8 },
+        "leftShin": { "rotate": 4 },
+        "rightThigh": { "rotate": 8 },
+        "rightShin": { "rotate": -4 },
+        "leftUpperArm": { "rotate": 5 },
+        "rightUpperArm": { "rotate": -5 },
         "root": { "ty": 0 },
-        "torso": { "rotate": 2 }
+        "torso": { "rotate": 1 }
       }
     },
     {
       "time": 0.25,
       "bones": {
         "leftThigh": { "rotate": 0 },
-        "leftShin": { "rotate": 16 },
+        "leftShin": { "rotate": 3 },
         "rightThigh": { "rotate": 0 },
-        "rightShin": { "rotate": 16 },
+        "rightShin": { "rotate": 3 },
         "leftUpperArm": { "rotate": 0 },
         "rightUpperArm": { "rotate": 0 },
-        "root": { "ty": 2.5 },
-        "torso": { "rotate": 2 }
+        "root": { "ty": 3 },
+        "torso": { "rotate": -1 }
       }
     },
     {
       "time": 0.5,
       "bones": {
-        "leftThigh": { "rotate": 30 },
-        "leftShin": { "rotate": -18 },
-        "rightThigh": { "rotate": -30 },
-        "rightShin": { "rotate": 10 },
-        "leftUpperArm": { "rotate": -20 },
-        "rightUpperArm": { "rotate": 20 },
+        "leftThigh": { "rotate": 8 },
+        "leftShin": { "rotate": -4 },
+        "rightThigh": { "rotate": -8 },
+        "rightShin": { "rotate": 4 },
+        "leftUpperArm": { "rotate": -5 },
+        "rightUpperArm": { "rotate": 5 },
         "root": { "ty": 0 },
-        "torso": { "rotate": 2 }
+        "torso": { "rotate": 1 }
       }
     },
     {
       "time": 0.75,
       "bones": {
         "leftThigh": { "rotate": 0 },
-        "leftShin": { "rotate": 16 },
+        "leftShin": { "rotate": 3 },
         "rightThigh": { "rotate": 0 },
-        "rightShin": { "rotate": 16 },
+        "rightShin": { "rotate": 3 },
         "leftUpperArm": { "rotate": 0 },
         "rightUpperArm": { "rotate": 0 },
-        "root": { "ty": 2.5 },
-        "torso": { "rotate": 2 }
+        "root": { "ty": 3 },
+        "torso": { "rotate": -1 }
       }
     },
     {
       "time": 1,
       "bones": {
-        "leftThigh": { "rotate": -30 },
-        "leftShin": { "rotate": 10 },
-        "rightThigh": { "rotate": 30 },
-        "rightShin": { "rotate": -18 },
-        "leftUpperArm": { "rotate": 20 },
-        "rightUpperArm": { "rotate": -20 },
+        "leftThigh": { "rotate": -8 },
+        "leftShin": { "rotate": 4 },
+        "rightThigh": { "rotate": 8 },
+        "rightShin": { "rotate": -4 },
+        "leftUpperArm": { "rotate": 5 },
+        "rightUpperArm": { "rotate": -5 },
         "root": { "ty": 0 },
-        "torso": { "rotate": 2 }
+        "torso": { "rotate": 1 }
       }
     }
   ]

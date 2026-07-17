@@ -4,17 +4,18 @@ interface StoredSettings {
   autoplay: boolean;
   reduceMotion: boolean;
   voices: boolean;
+  rigDebug: boolean;
   lastStory?: string;
 }
 
 function load(): StoredSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { autoplay: false, reduceMotion: false, voices: true, ...JSON.parse(raw) };
+    if (raw) return { autoplay: false, reduceMotion: false, voices: true, rigDebug: false, ...JSON.parse(raw) };
   } catch {
     // Corrupt storage falls back to defaults.
   }
-  return { autoplay: false, reduceMotion: false, voices: true };
+  return { autoplay: false, reduceMotion: false, voices: true, rigDebug: false };
 }
 
 const state = load();
@@ -59,6 +60,14 @@ export const settings = {
   },
   get reduceMotionToggle(): boolean {
     return state.reduceMotion;
+  },
+
+  get rigDebug(): boolean {
+    return state.rigDebug;
+  },
+  set rigDebug(value: boolean) {
+    state.rigDebug = value;
+    persist();
   },
 
   get lastStory(): string | undefined {

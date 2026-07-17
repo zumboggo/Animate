@@ -1367,6 +1367,41 @@ main {
   font-size: 9px;
 }
 
+.rig-debug .stage-character svg [data-bone] > :not([data-bone]):not(.rig-debug-marker) {
+  opacity: 0.58;
+}
+
+.rig-debug-marker {
+  display: none;
+  pointer-events: none;
+}
+
+.rig-debug .rig-debug-marker {
+  display: block;
+}
+
+.rig-debug-marker rect {
+  stroke: #3b82f6;
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.rig-debug-marker circle {
+  fill: #ff315f;
+  stroke: white;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.rig-debug-marker text {
+  fill: #172554;
+  paint-order: stroke;
+  stroke: white;
+  stroke-width: 3px;
+  font: 700 7px/1 sans-serif;
+}
+
 .error-overlay {
   position: absolute;
   z-index: 50;

@@ -69,6 +69,21 @@ export function buildControls(
   document.addEventListener('fullscreenchange', renderFullscreen);
   bar.appendChild(fullscreen);
 
+  const rigDebug = document.createElement('button');
+  const renderRigDebug = () => {
+    rigDebug.textContent = settings.rigDebug ? 'Rig debug on' : 'Rig debug off';
+    rigDebug.classList.toggle('toggled', settings.rigDebug);
+    rigDebug.setAttribute('aria-pressed', String(settings.rigDebug));
+    rigDebug.title = 'Show puppet pivots, part bounds, and layer labels';
+    document.documentElement.classList.toggle('rig-debug', settings.rigDebug);
+  };
+  renderRigDebug();
+  rigDebug.addEventListener('click', () => {
+    settings.rigDebug = !settings.rigDebug;
+    renderRigDebug();
+  });
+  bar.appendChild(rigDebug);
+
   const spacer = document.createElement('div');
   spacer.className = 'spacer';
   bar.appendChild(spacer);

@@ -24,15 +24,15 @@ export interface BoneDef {
 
 export const BONE_DEFS: BoneDef[] = [
   { name: 'root', parent: null, pivotX: 100, pivotY: 234 },
-  { name: 'leftThigh', parent: 'root', pivotX: 84, pivotY: 234 },
+  { name: 'leftThigh', parent: 'root', pivotX: 84, pivotY: 222 },
   { name: 'leftShin', parent: 'leftThigh', pivotX: 84, pivotY: 272 },
-  { name: 'rightThigh', parent: 'root', pivotX: 116, pivotY: 234 },
+  { name: 'rightThigh', parent: 'root', pivotX: 116, pivotY: 222 },
   { name: 'rightShin', parent: 'rightThigh', pivotX: 116, pivotY: 272 },
   { name: 'torso', parent: 'root', pivotX: 100, pivotY: 234 },
   { name: 'head', parent: 'torso', pivotX: 100, pivotY: 132 },
-  { name: 'leftUpperArm', parent: 'torso', pivotX: 72, pivotY: 150 },
+  { name: 'leftUpperArm', parent: 'torso', pivotX: 79, pivotY: 150 },
   { name: 'leftForearm', parent: 'leftUpperArm', pivotX: 60, pivotY: 188 },
-  { name: 'rightUpperArm', parent: 'torso', pivotX: 128, pivotY: 150 },
+  { name: 'rightUpperArm', parent: 'torso', pivotX: 121, pivotY: 150 },
   { name: 'rightForearm', parent: 'rightUpperArm', pivotX: 140, pivotY: 188 },
 ];
 

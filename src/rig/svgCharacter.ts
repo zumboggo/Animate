@@ -19,6 +19,7 @@ const DEFAULTS: Required<CastAppearance> = {
   freckles: false,
   height: 1,
   build: 'average',
+  armLayer: 'back',
 };
 
 // Limb thickness. Both segments of a limb share one radius, and each joint is
@@ -81,13 +82,13 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
     (def.parent ? bones.get(def.parent)! : fit).appendChild(g);
   }
 
-  // Stage order inside `fit`/`root`: legs, then torso (whose group also holds
-  // the head), then arms on top. Limb roots start inside the torso silhouette
-  // so no rotation can ever open a gap at a shoulder or hip.
+  // Stage order inside `fit`/`root`: legs, then torso. The torso establishes
+  // its own explicit puppet stack below after all drawable parts exist. Limb
+  // roots start inside the silhouette so rotations cannot open joint gaps.
 
   // ---- Legs ----
   bones.get('leftThigh')!.insertBefore(
-    capsule(84, 234, 84, 272, a.pantsColor, LEG_R),
+    capsule(84, 222, 84, 272, a.pantsColor, LEG_R),
     bones.get('leftShin')!,
   );
   const leftShin = bones.get('leftShin')!;
@@ -95,7 +96,7 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
   leftShin.appendChild(el('ellipse', { cx: 80, cy: 309, rx: 14.5, ry: 8, fill: SHOE }));
 
   bones.get('rightThigh')!.insertBefore(
-    capsule(116, 234, 116, 272, a.pantsColor, LEG_R),
+    capsule(116, 222, 116, 272, a.pantsColor, LEG_R),
     bones.get('rightShin')!,
   );
   const rightShin = bones.get('rightShin')!;
@@ -162,14 +163,14 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
 
   const faceEls = addFace(head, a);
 
-  // ---- Arms (topmost, so hands can cover the face when crying) ----
+  // ---- Arms ----
   // Sleeves always match the torso color so the arm root disappears into the
   // body silhouette — no visible seam at the shoulder, at any rotation.
   const sleeveColor = a.shirtColor;
 
   const leftUpper = bones.get('leftUpperArm')!;
   leftUpper.insertBefore(
-    capsule(72, 150, 60, 188, sleeveColor, ARM_R),
+    capsule(79, 150, 60, 188, sleeveColor, ARM_R),
     bones.get('leftForearm')!,
   );
   const leftFore = bones.get('leftForearm')!;
@@ -178,14 +179,65 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
 
   const rightUpper = bones.get('rightUpperArm')!;
   rightUpper.insertBefore(
-    capsule(128, 150, 140, 188, sleeveColor, ARM_R),
+    capsule(121, 150, 140, 188, sleeveColor, ARM_R),
     bones.get('rightForearm')!,
   );
   const rightFore = bones.get('rightForearm')!;
   rightFore.appendChild(capsule(140, 188, 146, 208, a.skin, ARM_R));
   rightFore.appendChild(el('circle', { cx: 147, cy: 212, r: 10.5, fill: a.skin }));
 
+  // Soft clothing caps mask the shoulder pivots. Re-appending the groups
+  // establishes an explicit puppet layer order: arms normally sit behind the
+  // torso, while the face and hair remain readable above every gesture.
+  const seamOverlay = el('g');
+  seamOverlay.dataset.layer = 'clothing-overlay';
+  seamOverlay.append(
+    el('ellipse', { cx: 68, cy: 151, rx: 13, ry: 15, fill: sleeveColor }),
+    el('ellipse', { cx: 132, cy: 151, rx: 13, ry: 15, fill: sleeveColor }),
+  );
+  if (a.armLayer === 'back') {
+    torso.append(leftUpper, rightUpper, outfitGroup, seamOverlay, head);
+  } else {
+    torso.append(outfitGroup, seamOverlay, leftUpper, rightUpper, head);
+  }
+
+  addRigDebugMarkers(bones);
+
   return { svg, bones, face: new FaceController(faceEls), appearance: a };
+}
+
+const DEBUG_BOUNDS: Record<string, [number, number, number, number]> = {
+  root: [44, 16, 112, 302],
+  torso: [48, 130, 104, 122],
+  head: [22, 8, 156, 126],
+  leftUpperArm: [49, 140, 40, 58],
+  leftForearm: [42, 178, 30, 45],
+  rightUpperArm: [111, 140, 40, 58],
+  rightForearm: [128, 178, 30, 45],
+  leftThigh: [73, 211, 22, 72],
+  leftShin: [65, 262, 31, 56],
+  rightThigh: [105, 211, 22, 72],
+  rightShin: [104, 262, 31, 56],
+};
+
+function addRigDebugMarkers(bones: Map<string, SVGGElement>): void {
+  BONE_DEFS.forEach((def, order) => {
+    const bone = bones.get(def.name);
+    const bounds = DEBUG_BOUNDS[def.name];
+    if (!bone || !bounds) return;
+    const [x, y, width, height] = bounds;
+    const marker = el('g');
+    marker.classList.add('rig-debug-marker');
+    marker.setAttribute('aria-hidden', 'true');
+    const label = el('text', { x: def.pivotX + 5, y: def.pivotY - 5 });
+    label.textContent = `${order + 1} ${def.name}`;
+    marker.append(
+      el('rect', { x, y, width, height, rx: 3, fill: 'none' }),
+      el('circle', { cx: def.pivotX, cy: def.pivotY, r: 3.5 }),
+      label,
+    );
+    bone.appendChild(marker);
+  });
 }
 
 // ---------------------------------------------------------------------------

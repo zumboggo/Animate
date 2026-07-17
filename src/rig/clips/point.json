@@ -3,8 +3,8 @@
   "durationMs": 1000,
   "keyframes": [
     { "time": 0, "bones": { "rightUpperArm": { "rotate": 0 }, "rightForearm": { "rotate": 0 }, "head": { "rotate": 0 } } },
-    { "time": 0.25, "bones": { "rightUpperArm": { "rotate": -74 }, "rightForearm": { "rotate": -6 }, "head": { "rotate": -4 } } },
-    { "time": 0.7, "bones": { "rightUpperArm": { "rotate": -74 }, "rightForearm": { "rotate": -6 }, "head": { "rotate": -4 } } },
+    { "time": 0.25, "bones": { "rightUpperArm": { "rotate": -48 }, "rightForearm": { "rotate": -5 }, "head": { "rotate": -3 } } },
+    { "time": 0.7, "bones": { "rightUpperArm": { "rotate": -48 }, "rightForearm": { "rotate": -5 }, "head": { "rotate": -3 } } },
     { "time": 1, "bones": { "rightUpperArm": { "rotate": 0 }, "rightForearm": { "rotate": 0 }, "head": { "rotate": 0 } } }
   ]
 }
