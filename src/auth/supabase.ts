@@ -77,6 +77,35 @@ export async function signOut(): Promise<void> {
   if (error) throw error;
 }
 
+export async function invokeCharacterTts(body: unknown, signal?: AbortSignal): Promise<Blob> {
+  if (!supabase || !supabaseUrl || !supabasePublishableKey) {
+    throw new Error('Sign in is not configured yet.');
+  }
+
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  const token = data.session?.access_token;
+  if (!token) throw new Error('Sign in to hear character voices.');
+
+  const response = await fetch(`${supabaseUrl}/functions/v1/character-tts`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      apikey: supabasePublishableKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+    signal,
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => null) as { error?: unknown } | null;
+    const message = typeof payload?.error === 'string' ? payload.error : 'Character voice generation failed.';
+    throw new Error(message);
+  }
+  return response.blob();
+}
+
 export function authErrorFromUrl(): string | null {
   const params = new URLSearchParams(window.location.hash.replace(/^#/, ''));
   const message = params.get('error_description') ?? params.get('error');

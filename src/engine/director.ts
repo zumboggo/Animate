@@ -82,7 +82,7 @@ export class Director {
         }
         actor.startTalking();
         const narration = settings.voices
-          ? this.narrator.speak({ character: cmd.character, text: cmd.text })
+          ? this.narrator.speak({ character: cmd.character, text: cmd.text, emotion: cmd.emotion })
           : undefined;
         await this.pause(dialogueMs(cmd.text), narration);
         // dispose() already clears shared stage UI. An older director must not

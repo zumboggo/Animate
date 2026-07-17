@@ -168,7 +168,11 @@ function playSource(source: string, focusErrors: boolean): void {
   narrator.prepare(
     story.commands
       .filter((command) => command.kind === 'dialogue')
-      .map((command) => ({ character: command.character, text: command.text })),
+      .map((command) => ({
+        character: command.character,
+        text: command.text,
+        emotion: command.emotion,
+      })),
   );
   director = new Director(story, cast, stage, bubbles, dialogueBox, narrator);
   void director.run();
