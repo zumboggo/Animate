@@ -1,0 +1,10 @@
+{
+  "name": "treePose",
+  "durationMs": 500,
+  "holdEnd": true,
+  "keyframes": [
+    { "time": 0, "bones": { "root": { "ty": 0 }, "torso": { "rotate": 0 }, "head": { "rotate": 0 }, "leftUpperArm": { "rotate": 0 }, "leftForearm": { "rotate": 0 }, "rightUpperArm": { "rotate": 0 }, "rightForearm": { "rotate": 0 } } },
+    { "time": 0.55, "bones": { "root": { "ty": -3 }, "torso": { "rotate": -2 }, "head": { "rotate": 3 }, "leftUpperArm": { "rotate": 118 }, "leftForearm": { "rotate": 42 }, "rightUpperArm": { "rotate": -118 }, "rightForearm": { "rotate": -42 } } },
+    { "time": 1, "bones": { "root": { "ty": -5 }, "torso": { "rotate": 0 }, "head": { "rotate": 0 }, "leftUpperArm": { "rotate": 142 }, "leftForearm": { "rotate": 28 }, "rightUpperArm": { "rotate": -142 }, "rightForearm": { "rotate": -28 } } }
+  ]
+}

@@ -84,7 +84,12 @@ previewPanel.innerHTML = `
 
 let initialSource = fallbackStory;
 try {
-  initialSource = localStorage.getItem(DRAFT_KEY) ?? examples.get('sisters') ?? examples.values().next().value ?? fallbackStory;
+  const savedDraft = localStorage.getItem(DRAFT_KEY);
+  const usesRetiredExamples = savedDraft ? /\b(?:LIN|MAX|MEI)\b/.test(savedDraft) : false;
+  initialSource = (!usesRetiredExamples ? savedDraft : null)
+    ?? examples.get('sisters')
+    ?? examples.values().next().value
+    ?? fallbackStory;
 } catch {
   initialSource = examples.get('sisters') ?? examples.values().next().value ?? fallbackStory;
 }
@@ -117,7 +122,7 @@ castStrip.appendChild(castLabel);
 const stageCast = Object.entries(cast)
   .filter(([, item]) => item.adapter === 'svgRig')
   .sort(([a], [b]) => {
-    const order = ['ANNA', 'SARAH'];
+    const order = ['ANNA', 'SARAH', 'GRACE', 'ELLIOTT', 'LEAH'];
     const aRank = order.indexOf(a);
     const bRank = order.indexOf(b);
     if (aRank !== -1 || bRank !== -1) return (aRank === -1 ? 99 : aRank) - (bRank === -1 ? 99 : bRank);
@@ -135,7 +140,7 @@ for (const [name, entry] of stageCast) {
 }
 const sceneNames = document.createElement('span');
 sceneNames.className = 'cast-scenes';
-sceneNames.textContent = 'park · bedroom · street · peppa-land';
+sceneNames.textContent = 'park · camp · bedroom · street · peppa-land';
 castStrip.appendChild(sceneNames);
 previewPanel.appendChild(castStrip);
 

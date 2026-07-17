@@ -4,8 +4,8 @@ import { compileStory } from '../src/engine/validator';
 import type { StoryCommand } from '../src/engine/storyTypes';
 
 const OPTS = {
-  characters: ['LIN', 'MAX', 'MEI', 'ANNA', 'SARAH'],
-  scenes: ['park', 'bedroom', 'street', 'peppa-land'],
+  characters: ['LIN', 'MAX', 'MEI', 'ANNA', 'SARAH', 'GRACE', 'ELLIOTT', 'LEAH'],
+  scenes: ['park', 'camp', 'bedroom', 'street', 'peppa-land'],
 };
 
 function compile(source: string) {
@@ -155,13 +155,13 @@ describe('validator: friendly suggestions', () => {
 });
 
 describe('the shipped demo stories compile cleanly', () => {
-  it('demo.story has no errors', async () => {
-    const { default: source } = await import('../stories/demo.story?raw');
+  it('family-playtime.story has no errors', async () => {
+    const { default: source } = await import('../stories/family-playtime.story?raw');
     expect(compile(source).errors).toEqual([]);
   });
 
-  it('mei-dance.story has no errors', async () => {
-    const { default: source } = await import('../stories/mei-dance.story?raw');
+  it('chinese-playtime.story has no errors', async () => {
+    const { default: source } = await import('../stories/chinese-playtime.story?raw');
     expect(compile(source).errors).toEqual([]);
   });
 
@@ -172,6 +172,11 @@ describe('the shipped demo stories compile cleanly', () => {
 
   it('peppa-land-adventure.story has no errors', async () => {
     const { default: source } = await import('../stories/peppa-land-adventure.story?raw');
+    expect(compile(source).errors).toEqual([]);
+  });
+
+  it('treat-spot-trees.story has no errors', async () => {
+    const { default: source } = await import('../stories/treat-spot-trees.story?raw');
     expect(compile(source).errors).toEqual([]);
   });
 });

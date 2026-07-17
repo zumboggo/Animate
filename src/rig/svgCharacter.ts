@@ -47,6 +47,7 @@ function limb(x1: number, y1: number, x2: number, y2: number, stroke: string, wi
 export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharacter {
   const a = { ...DEFAULTS, ...appearanceIn };
   const isDress = a.outfit === 'dress';
+  const isOnesie = a.outfit === 'onesie';
   const svg = el('svg', {
     viewBox: `0 0 ${VIEW_W} ${VIEW_H}`,
     preserveAspectRatio: 'xMidYMax meet',
@@ -106,11 +107,21 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
       addRose(dress, 94, 151, 0.55);
     }
     torso.insertBefore(dress, torso.firstChild);
+  } else if (isOnesie) {
+    const onesie = el('g');
+    onesie.append(
+      el('rect', { x: 64, y: 111, width: 72, height: 92, rx: 25, fill: a.shirtColor }),
+      el('path', { d: 'M69,187 Q100,200 131,187 L128,220 L105,220 L100,205 L95,220 L72,220 Z', fill: a.shirtColor }),
+    );
+    addHeart(onesie, 100, 151, 0.75, a.dressColor);
+    torso.insertBefore(onesie, torso.firstChild);
   } else {
     torso.insertBefore(
       el('rect', { x: 66, y: 112, width: 68, height: 100, rx: 22, fill: a.shirtColor }),
       torso.firstChild,
     );
+    if (a.pattern === 'stripes') addStripes(torso);
+    if (a.pattern === 'cat') addCat(torso);
   }
 
   // ---- Head ----
@@ -152,6 +163,14 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
       fill: a.hairColor,
     }));
   }
+  if (a.hair === 'curlyPonytail') {
+    head.append(
+      el('circle', { cx: 142, cy: 38, r: 15, fill: a.hairColor }),
+      el('circle', { cx: 155, cy: 49, r: 13, fill: a.hairColor }),
+      el('circle', { cx: 145, cy: 61, r: 12, fill: a.hairColor }),
+      el('circle', { cx: 139, cy: 39, r: 5, fill: '#d6b4d8' }),
+    );
+  }
   head.appendChild(el('circle', { cx: 100, cy: 68, r: 45, fill: a.skin }));
 
   if (a.hair === 'spiky') {
@@ -165,10 +184,22 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharact
       head.appendChild(el('circle', { cx, cy, r, fill: a.hairColor }));
     }
   }
-  head.appendChild(el('path', {
-    d: 'M55,68 A45,45 0 0 1 145,68 Q137,48 100,48 Q63,48 55,68 Z',
-    fill: a.hairColor,
-  }));
+  if (a.hair === 'curlyPonytail') {
+    for (const [cx, cy, r] of [[61, 50, 11], [72, 38, 12], [88, 31, 12], [105, 30, 12], [122, 35, 11], [136, 48, 10]]) {
+      head.appendChild(el('circle', { cx, cy, r, fill: a.hairColor }));
+    }
+  } else if (a.hair === 'babyWisps') {
+    head.append(
+      el('path', { d: 'M78,34 Q88,18 98,34', fill: 'none', stroke: a.hairColor, 'stroke-width': 5, 'stroke-linecap': 'round' }),
+      el('path', { d: 'M96,31 Q106,17 114,35', fill: 'none', stroke: a.hairColor, 'stroke-width': 5, 'stroke-linecap': 'round' }),
+      el('path', { d: 'M62,55 Q70,41 81,42', fill: 'none', stroke: a.hairColor, 'stroke-width': 5, 'stroke-linecap': 'round' }),
+    );
+  } else {
+    head.appendChild(el('path', {
+      d: 'M55,68 A45,45 0 0 1 145,68 Q137,48 100,48 Q63,48 55,68 Z',
+      fill: a.hairColor,
+    }));
+  }
   if (a.hair === 'pigtails' || a.hair === 'sidePonytail') {
     head.appendChild(el('path', {
       d: a.hair === 'sidePonytail'
@@ -284,4 +315,35 @@ function addRose(parent: SVGElement, cx: number, cy: number, scale: number): voi
     el('circle', { cx: 0, cy: 0, r: 2.2, fill: '#f5b0b7' }),
   );
   parent.appendChild(rose);
+}
+
+function addStripes(parent: SVGElement): void {
+  for (const y of [124, 140, 156, 172, 188]) {
+    parent.appendChild(el('rect', { x: 67, y, width: 66, height: 6, rx: 2, fill: '#244c78' }));
+  }
+  parent.appendChild(el('rect', { x: 94, y: 112, width: 12, height: 28, rx: 4, fill: '#244c78' }));
+  parent.appendChild(el('circle', { cx: 100, cy: 121, r: 2.2, fill: '#dbe5ef' }));
+  parent.appendChild(el('circle', { cx: 100, cy: 130, r: 2.2, fill: '#dbe5ef' }));
+}
+
+function addCat(parent: SVGElement): void {
+  const cat = el('g');
+  cat.append(
+    el('path', { d: 'M77,139 L83,126 L91,137 Q100,132 109,137 L117,126 L123,139 L120,161 Q100,173 80,161 Z', fill: '#d8d0c9', stroke: '#746b68', 'stroke-width': 2 }),
+    el('circle', { cx: 91, cy: 148, r: 2.2, fill: INK }),
+    el('circle', { cx: 109, cy: 148, r: 2.2, fill: INK }),
+    el('path', { d: 'M96,156 Q100,160 104,156', fill: 'none', stroke: '#c86c83', 'stroke-width': 2, 'stroke-linecap': 'round' }),
+  );
+  for (const [cx, cy] of [[78, 189], [91, 198], [111, 188], [123, 202]]) {
+    cat.appendChild(el('ellipse', { cx, cy, rx: 4.5, ry: 3, fill: '#8e817c', opacity: 0.65 }));
+  }
+  parent.appendChild(cat);
+}
+
+function addHeart(parent: SVGElement, cx: number, cy: number, scale: number, color: string): void {
+  parent.appendChild(el('path', {
+    d: 'M0,8 C-20,-4 -23,19 0,34 C23,19 20,-4 0,8 Z',
+    fill: color,
+    transform: `translate(${cx} ${cy}) scale(${scale}) translate(0 -17)`,
+  }));
 }

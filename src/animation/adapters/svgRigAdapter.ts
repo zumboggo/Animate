@@ -28,6 +28,7 @@ const ACTION_CLIPS: Partial<Record<CharacterAction, ClipSpec>> = {
   jump: { clip: 'jump', energetic: true },
   tremble: { clip: 'tremble', loops: 8, energetic: true },
   actScared: { clip: 'tremble', loops: 8, energetic: true },
+  treePose: { clip: 'treePose' },
   sit: { clip: 'sit' },
   laugh: { clip: 'laugh' },
   cry: { clip: 'cry' },

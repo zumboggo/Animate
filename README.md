@@ -5,18 +5,16 @@ studio. You write stories in a simple plain-text script — the characters act
 them out on stage with bone-rigged animation, expressions, and speech bubbles.
 
 ```
-title: The Spider
-scene: park
+title: The Treat Spot Trees
+scene: camp
 
-LIN walks in from left
-LIN (happy): What a beautiful day!
-LIN sits
-
-MAX runs in from right
-MAX (scared): There's a spider on the bench!!
-LIN jumps
-LIN trembles
-MAX laughs
+GRACE walks in from left
+GRACE (happy): The Treat Spot has ice cream!
+ELLIOTT runs in from right
+ANNA (happy): Quick—act like trees!
+GRACE acts like a tree
+ELLIOTT acts like a tree
+ANNA acts like a tree
 ```
 
 ## Running it
@@ -26,6 +24,8 @@ npm install
 npm run dev      # opens the player at http://localhost:5173
 npm test         # parser/validator test suite
 ```
+
+Public site: <https://zumboggo.github.io/Animate/>
 
 Save any `.story` file in `stories/` and the page reloads with your changes.
 
@@ -49,7 +49,7 @@ visitors can still create and preview stories on their device.
 ## Character voices
 
 Dialogue is narrated with distinct Google Cloud Chirp 3 HD voices for Anna,
-Sarah, Mei, Lin, Max, and other characters. The player detects Chinese text and
+Sarah, Grace, Elliott, and Leah. The player detects Chinese text and
 uses a Mandarin voice automatically. Use **Voices on/off** below the stage to
 control narration; the preference is saved in the browser.
 

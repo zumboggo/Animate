@@ -1,52 +1,4 @@
 {
-  "LIN": {
-    "displayName": "Lin",
-    "adapter": "svgRig",
-    "appearance": {
-      "skin": "#f2c9a0",
-      "hair": "short",
-      "hairColor": "#2b1b12",
-      "shirtColor": "#5aa9e6",
-      "pantsColor": "#39415c",
-      "outfit": "shirt",
-      "dressColor": "#5aa9e6",
-      "pattern": "plain",
-      "height": 1.0,
-      "build": "average"
-    }
-  },
-  "MAX": {
-    "displayName": "Max",
-    "adapter": "svgRig",
-    "appearance": {
-      "skin": "#d89a72",
-      "hair": "curly",
-      "hairColor": "#3b2415",
-      "shirtColor": "#f25f5c",
-      "pantsColor": "#2d2d2d",
-      "outfit": "shirt",
-      "dressColor": "#f25f5c",
-      "pattern": "plain",
-      "height": 0.95,
-      "build": "small"
-    }
-  },
-  "MEI": {
-    "displayName": "Mei",
-    "adapter": "svgRig",
-    "appearance": {
-      "skin": "#f7d7b1",
-      "hair": "long",
-      "hairColor": "#1f1a2e",
-      "shirtColor": "#e2777a",
-      "pantsColor": "#4a3f66",
-      "outfit": "shirt",
-      "dressColor": "#e2777a",
-      "pattern": "plain",
-      "height": 0.97,
-      "build": "average"
-    }
-  },
   "ANNA": {
     "displayName": "Anna",
     "adapter": "svgRig",
@@ -79,11 +31,52 @@
       "build": "small"
     }
   },
-  "BLOB": {
-    "displayName": "Blobby",
-    "adapter": "staticSprite",
+  "GRACE": {
+    "displayName": "Grace",
+    "adapter": "svgRig",
     "appearance": {
-      "shirtColor": "#8d8fb5"
+      "skin": "#c98f6f",
+      "hair": "curlyPonytail",
+      "hairColor": "#5b4634",
+      "shirtColor": "#a9ddd1",
+      "pantsColor": "#c7beba",
+      "outfit": "shirt",
+      "dressColor": "#d88a9d",
+      "pattern": "cat",
+      "height": 1.05,
+      "build": "average"
+    }
+  },
+  "ELLIOTT": {
+    "displayName": "Elliott",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#f0c6a3",
+      "hair": "short",
+      "hairColor": "#c7a56b",
+      "shirtColor": "#f4f1df",
+      "pantsColor": "#243f66",
+      "outfit": "shirt",
+      "dressColor": "#244c78",
+      "pattern": "stripes",
+      "height": 1.0,
+      "build": "average"
+    }
+  },
+  "LEAH": {
+    "displayName": "Leah",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#efc3a5",
+      "hair": "babyWisps",
+      "hairColor": "#4a3529",
+      "shirtColor": "#efb9c8",
+      "pantsColor": "#efb9c8",
+      "outfit": "onesie",
+      "dressColor": "#a94d72",
+      "pattern": "heart",
+      "height": 0.68,
+      "build": "small"
     }
   }
 }

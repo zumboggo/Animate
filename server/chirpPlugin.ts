@@ -7,10 +7,9 @@ const MAX_TEXT_LENGTH = 1_000;
 const PERSONAS: Record<string, { name: string; speakingRate: number }> = {
   ANNA: { name: 'Aoede', speakingRate: 0.96 },
   SARAH: { name: 'Leda', speakingRate: 1.06 },
-  MEI: { name: 'Kore', speakingRate: 1.0 },
-  LIN: { name: 'Autonoe', speakingRate: 1.0 },
-  MAX: { name: 'Puck', speakingRate: 1.02 },
-  BLOB: { name: 'Fenrir', speakingRate: 0.94 },
+  GRACE: { name: 'Kore', speakingRate: 1.0 },
+  ELLIOTT: { name: 'Puck', speakingRate: 1.02 },
+  LEAH: { name: 'Leda', speakingRate: 1.1 },
 };
 
 interface ChirpRequest {

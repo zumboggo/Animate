@@ -60,14 +60,14 @@ export function buildScriptEditor(
     <div><strong>Move</strong><code>SARAH walks in from left</code></div>
     <div><strong>Act</strong><code>ANNA waves</code></div>
     <div><strong>Set the scene</strong><code>scene: park</code></div>
-    <p>Pick a character below, then use the line buttons. Scenes: <b>park</b>, <b>bedroom</b>, <b>street</b>, <b>peppa-land</b></p>
+    <p>Pick a character below, then use the line buttons. Scenes: <b>park</b>, <b>camp</b>, <b>bedroom</b>, <b>street</b>, <b>peppa-land</b></p>
   `;
   guide.addEventListener('click', () => {
     guidePanel.hidden = !guidePanel.hidden;
     guide.setAttribute('aria-expanded', String(!guidePanel.hidden));
   });
 
-  const featuredOrder = ['ANNA', 'SARAH'];
+  const featuredOrder = ['ANNA', 'SARAH', 'GRACE', 'ELLIOTT', 'LEAH'];
   const selectableCast = Object.entries(cast)
     .filter(([, entry]) => entry.adapter === 'svgRig')
     .sort(([a], [b]) => {
@@ -109,7 +109,14 @@ export function buildScriptEditor(
     const displayName = document.createElement('strong');
     displayName.textContent = entry.displayName;
     const descriptor = document.createElement('small');
-    descriptor.textContent = name === 'ANNA' ? 'older sister' : name === 'SARAH' ? 'little sister' : name;
+    const descriptors: Record<string, string> = {
+      ANNA: 'older sister',
+      SARAH: 'little sister',
+      GRACE: 'cat lover',
+      ELLIOTT: 'adventurer',
+      LEAH: 'baby sister',
+    };
+    descriptor.textContent = descriptors[name] ?? name;
     copy.append(displayName, descriptor);
     button.append(portrait, copy);
     button.classList.toggle('selected', name === selectedCharacter);

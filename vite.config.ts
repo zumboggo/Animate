@@ -7,8 +7,10 @@ export default defineConfig(({ mode }) => {
   const projectEnv = loadEnv(mode, process.cwd(), '');
   const documentsEnv = loadEnv(mode, path.resolve(process.cwd(), '..'), '');
   const googleApiKey = projectEnv.GOOGLE_CLOUD_API_KEY || documentsEnv.GOOGLE_CLOUD_API_KEY;
+  const repositoryName = process.env.GITHUB_REPOSITORY?.split('/')[1];
 
   return {
+    base: process.env.GITHUB_ACTIONS === 'true' && repositoryName ? `/${repositoryName}/` : '/',
     plugins: [chirpPlugin(googleApiKey)],
     server: {
       watch: {
