@@ -34,7 +34,7 @@ export function buildControls(
     voices.textContent = settings.voices ? '🔊 Voices on' : '🔇 Voices off';
     voices.classList.toggle('toggled', settings.voices);
     voices.setAttribute('aria-pressed', String(settings.voices));
-    voices.title = 'Speak dialogue with Google Chirp voices';
+    voices.title = 'Speak dialogue with private character voices (sign-in required)';
   };
   renderVoices();
   voices.addEventListener('click', () => {

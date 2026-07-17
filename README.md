@@ -43,29 +43,27 @@ http://localhost:5173/**
 https://your-production-domain.example/**
 ```
 
-The local `.env.local` is ignored by Git. Signing in is optional; signed-out
-visitors can still create and preview stories on their device.
+The local `.env.local` is ignored by Git. Signed-out visitors can still create
+and preview stories, but cloned character audio requires a signed-in session.
 
 ## Character voices
 
-Dialogue is narrated with distinct Google Cloud Chirp 3 HD voices for Anna,
-Sarah, Grace, Elliott, and Leah. The player detects Chinese text and
-uses a Mandarin voice automatically. Use **Voices on/off** below the stage to
-control narration; the preference is saved in the browser.
+Anna, Sarah, Grace, and Elliott use consented private reference recordings with
+Replicate's Chatterbox Multilingual model. Leah intentionally remains silent.
+The player passes each script emotion to the voice service and detects Chinese
+text automatically. Use **Voices on/off** below the stage to control narration.
 
-When a valid story is created or loaded, its dialogue audio is generated in
-the background automatically. Chirp audio is cached under `.cache/chirp/` so
-replaying the same lines does not repeatedly call the API. Chirp does not offer
-a child-age control, so the cast uses distinct youthful voice personas and
-slightly quicker speaking rates.
+Generation runs through the authenticated `character-tts` Supabase Edge
+Function. Reference recordings and generated audio are stored in private
+Storage buckets, and repeated dialogue uses the private cache instead of
+spending more Replicate credits. The database limits each account to 60 new
+lines per day and each line to 400 characters.
 
-Set `GOOGLE_CLOUD_API_KEY` as a server-side environment variable and enable the
-Cloud Text-to-Speech API for that Google Cloud project. Do not rename it with a
-`VITE_` prefix, because Vite-prefixed values are bundled into browser code. For
-local development, the app also reads this key from the `.env` file one folder
-above the project. The `/api/chirp` proxy works with `npm run dev` and
-`npm run preview`; a production host must route that endpoint through a
-server-side function using the same key.
+Set `REPLICATE_API_TOKEN` in Supabase Edge Function Secrets. Never put it in a
+`VITE_` variable or commit voice recordings to this repository. Apply the
+Supabase migration, upload the normalized WAV files as `anna.wav`, `sarah.wav`,
+`grace.wav`, and `elliott.wav` to the `character-voice-references` bucket, then
+deploy the function with JWT verification enabled.
 
 ## Using the story studio
 
