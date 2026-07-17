@@ -1,48 +1,82 @@
 {
-  "LIN": {
-    "displayName": "Lin",
+  "ANNA": {
+    "displayName": "Anna",
     "adapter": "svgRig",
     "appearance": {
-      "skin": "#f2c9a0",
+      "skin": "#f2c4a3",
+      "hair": "sidePonytail",
+      "hairColor": "#3a2925",
+      "shirtColor": "#f6d8dd",
+      "pantsColor": "#d85f6d",
+      "outfit": "dress",
+      "dressColor": "#861d48",
+      "pattern": "roses",
+      "height": 1.08,
+      "build": "average"
+    }
+  },
+  "SARAH": {
+    "displayName": "Sarah",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#efc09e",
+      "hair": "pigtails",
+      "hairColor": "#4a3328",
+      "shirtColor": "#f6d8dd",
+      "pantsColor": "#efc09e",
+      "outfit": "dress",
+      "dressColor": "#861d48",
+      "pattern": "roses",
+      "height": 0.82,
+      "build": "small"
+    }
+  },
+  "GRACE": {
+    "displayName": "Grace",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#c98f6f",
+      "hair": "curlyPonytail",
+      "hairColor": "#5b4634",
+      "shirtColor": "#a9ddd1",
+      "pantsColor": "#c7beba",
+      "outfit": "shirt",
+      "dressColor": "#d88a9d",
+      "pattern": "cat",
+      "height": 1.05,
+      "build": "average"
+    }
+  },
+  "ELLIOTT": {
+    "displayName": "Elliott",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#f0c6a3",
       "hair": "short",
-      "hairColor": "#2b1b12",
-      "shirtColor": "#5aa9e6",
-      "pantsColor": "#39415c",
+      "hairColor": "#c7a56b",
+      "shirtColor": "#f4f1df",
+      "pantsColor": "#243f66",
+      "outfit": "shirt",
+      "dressColor": "#244c78",
+      "pattern": "stripes",
       "height": 1.0,
       "build": "average"
     }
   },
-  "MAX": {
-    "displayName": "Max",
+  "LEAH": {
+    "displayName": "Leah",
     "adapter": "svgRig",
     "appearance": {
-      "skin": "#d89a72",
-      "hair": "curly",
-      "hairColor": "#3b2415",
-      "shirtColor": "#f25f5c",
-      "pantsColor": "#2d2d2d",
-      "height": 0.95,
+      "skin": "#efc3a5",
+      "hair": "babyWisps",
+      "hairColor": "#4a3529",
+      "shirtColor": "#efb9c8",
+      "pantsColor": "#efb9c8",
+      "outfit": "onesie",
+      "dressColor": "#a94d72",
+      "pattern": "heart",
+      "height": 0.68,
       "build": "small"
-    }
-  },
-  "MEI": {
-    "displayName": "Mei",
-    "adapter": "svgRig",
-    "appearance": {
-      "skin": "#f7d7b1",
-      "hair": "long",
-      "hairColor": "#1f1a2e",
-      "shirtColor": "#e2777a",
-      "pantsColor": "#4a3f66",
-      "height": 0.97,
-      "build": "average"
-    }
-  },
-  "BLOB": {
-    "displayName": "Blobby",
-    "adapter": "staticSprite",
-    "appearance": {
-      "shirtColor": "#8d8fb5"
     }
   }
 }

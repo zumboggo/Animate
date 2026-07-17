@@ -1,4 +1,5 @@
 import { StageEffects } from '../animation/stageEffects';
+import peppaLandUrl from '../../assets/backgrounds/peppa-land.png?url';
 
 /**
  * Built-in vector backdrops. M3 will add image backgrounds from
@@ -6,6 +7,47 @@ import { StageEffects } from '../animation/stageEffects';
  * back to these.
  */
 const SCENES: Record<string, string> = {
+  'peppa-land': `
+    <img src="${peppaLandUrl}" alt="" draggable="false" />`,
+  camp: `
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="camp-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8fc9e8"/><stop offset="1" stop-color="#f7d9a3"/>
+        </linearGradient>
+        <linearGradient id="camp-wood" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#9a6335"/><stop offset="1" stop-color="#6f4327"/>
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="900" fill="url(#camp-sky)"/>
+      <circle cx="1370" cy="125" r="72" fill="#ffe68a"/>
+      <path d="M0,510 Q260,390 510,520 Q790,350 1040,520 Q1320,370 1600,500 L1600,900 L0,900 Z" fill="#447c4b"/>
+      <rect y="640" width="1600" height="260" fill="#73a354"/>
+      <path d="M0,760 Q390,680 780,770 T1600,740 L1600,900 L0,900 Z" fill="#d3b77b" opacity="0.7"/>
+      <g fill="#315f3b">
+        <path d="M80,650 L205,210 L330,650 Z"/><path d="M250,650 L390,170 L530,650 Z"/>
+        <path d="M1260,650 L1390,190 L1520,650 Z"/>
+      </g>
+      <g fill="#5f3d26">
+        <rect x="192" y="520" width="26" height="160"/><rect x="377" y="520" width="28" height="160"/><rect x="1377" y="520" width="28" height="160"/>
+      </g>
+      <g>
+        <rect x="880" y="300" width="410" height="370" rx="16" fill="url(#camp-wood)" stroke="#52321f" stroke-width="12"/>
+        <path d="M840,318 L1085,160 L1330,318 Z" fill="#5d3823" stroke="#452719" stroke-width="12"/>
+        <rect x="940" y="386" width="290" height="142" rx="10" fill="#fff4d2" stroke="#4d2e1d" stroke-width="14"/>
+        <rect x="925" y="525" width="320" height="35" rx="9" fill="#cc8b46"/>
+        <rect x="980" y="320" width="210" height="52" rx="20" fill="#f1c75d" stroke="#5c3822" stroke-width="8"/>
+        <text x="1085" y="354" text-anchor="middle" font-family="system-ui, sans-serif" font-size="30" font-weight="800" fill="#5c3822">TREAT SPOT</text>
+        <g transform="translate(985 410)">
+          <path d="M0,0 L28,82 L56,0 Z" fill="#d59a5d"/><circle cx="28" cy="0" r="31" fill="#f6a9bf"/><circle cx="16" cy="-7" r="4" fill="#ef475e"/>
+        </g>
+        <g transform="translate(1090 415)">
+          <path d="M0,0 Q34,-18 68,0 L60,80 Q34,94 8,80 Z" fill="#eece4f" stroke="#d18b35" stroke-width="5"/>
+          <path d="M18,5 L25,72 M38,2 L42,78 M57,6 L54,70" stroke="#f7e98c" stroke-width="8"/>
+        </g>
+      </g>
+      <g fill="#f3e8c5" opacity="0.85"><circle cx="610" cy="705" r="7"/><circle cx="670" cy="742" r="6"/><circle cx="748" cy="700" r="8"/></g>
+    </svg>`,
   park: `
     <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <defs>

@@ -58,7 +58,8 @@ export type CharacterAction =
   | 'turnAround'
   | 'laugh'
   | 'cry'
-  | 'actScared';
+  | 'actScared'
+  | 'treePose';
 
 export type CharacterEmotion =
   | 'neutral'
@@ -95,10 +96,13 @@ export interface Story {
 
 export interface CastAppearance {
   skin?: string;
-  hair?: 'short' | 'curly' | 'spiky' | 'long';
+  hair?: 'short' | 'curly' | 'spiky' | 'long' | 'pigtails' | 'sidePonytail' | 'curlyPonytail' | 'babyWisps';
   hairColor?: string;
   shirtColor?: string;
   pantsColor?: string;
+  outfit?: 'shirt' | 'dress' | 'onesie';
+  dressColor?: string;
+  pattern?: 'plain' | 'roses' | 'stripes' | 'cat' | 'heart';
   height?: number;
   build?: 'small' | 'average' | 'broad';
 }

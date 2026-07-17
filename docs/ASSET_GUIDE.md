@@ -2,8 +2,8 @@
 
 ## Backgrounds
 
-V1 ships three built-in vector scenes (`park`, `bedroom`, `street`), defined
-in `src/engine/stage.ts`.
+V1 ships three built-in vector scenes (`park`, `bedroom`, `street`) plus the
+image-backed `peppa-land` demo scene, all registered in `src/engine/stage.ts`.
 
 In M3+, image backgrounds will live in `assets/backgrounds/` and be referenced
 by file name from scripts:
@@ -33,10 +33,13 @@ Characters are defined in `stories/cast.json`. For the built-in SVG rig:
     "adapter": "svgRig",
     "appearance": {
       "skin": "#f2c9a0",
-      "hair": "short",          // short | curly | spiky | long
+      "hair": "short",          // short | curly | spiky | long | pigtails | sidePonytail
       "hairColor": "#2b1b12",
       "shirtColor": "#5aa9e6",
       "pantsColor": "#39415c",
+      "outfit": "shirt",        // shirt | dress
+      "dressColor": "#861d48",
+      "pattern": "plain",       // plain | roses
       "height": 1.0,             // relative size
       "build": "average"         // small | average | broad
     }
