@@ -102,7 +102,11 @@ export class SvgRigAdapter extends BaseAdapter {
     await this.animator.play(CLIPS[spec.clip], { loops: spec.loops, rate: spec.rate });
     if (action === 'cry') this.rig?.face.setTears(false);
 
-    if (!CLIPS[spec.clip].holdEnd) this.startIdle();
+    if (!CLIPS[spec.clip].holdEnd) {
+      // Clips like tremble end mid-pose; ease back to rest before idling.
+      await this.animator.toRest(200);
+      this.startIdle();
+    }
   }
 
   startIdle(): void {
