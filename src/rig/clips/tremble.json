@@ -1,0 +1,10 @@
+{
+  "name": "tremble",
+  "durationMs": 180,
+  "loop": true,
+  "keyframes": [
+    { "time": 0, "bones": { "root": { "tx": -3 }, "head": { "tx": -2 }, "leftUpperArm": { "rotate": -50 }, "leftForearm": { "rotate": -110 }, "rightUpperArm": { "rotate": 50 }, "rightForearm": { "rotate": 110 } } },
+    { "time": 0.5, "bones": { "root": { "tx": 3 }, "head": { "tx": 2 }, "leftUpperArm": { "rotate": -50 }, "leftForearm": { "rotate": -110 }, "rightUpperArm": { "rotate": 50 }, "rightForearm": { "rotate": 110 } } },
+    { "time": 1, "bones": { "root": { "tx": -3 }, "head": { "tx": -2 }, "leftUpperArm": { "rotate": -50 }, "leftForearm": { "rotate": -110 }, "rightUpperArm": { "rotate": 50 }, "rightForearm": { "rotate": 110 } } }
+  ]
+}

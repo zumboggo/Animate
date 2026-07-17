@@ -1,0 +1,10 @@
+{
+  "name": "idle",
+  "durationMs": 3200,
+  "loop": true,
+  "keyframes": [
+    { "time": 0, "bones": { "torso": { "ty": 0 }, "head": { "rotate": 0 } } },
+    { "time": 0.5, "bones": { "torso": { "ty": 2.5 }, "head": { "rotate": -2 } } },
+    { "time": 1, "bones": { "torso": { "ty": 0 }, "head": { "rotate": 0 } } }
+  ]
+}

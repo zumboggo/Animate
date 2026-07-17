@@ -1,0 +1,12 @@
+{
+  "name": "dance",
+  "durationMs": 1400,
+  "loop": true,
+  "keyframes": [
+    { "time": 0, "bones": { "root": { "tx": -10, "ty": 0 }, "torso": { "rotate": -6 }, "head": { "rotate": 6 }, "leftUpperArm": { "rotate": 150 }, "leftForearm": { "rotate": 20 }, "rightUpperArm": { "rotate": -25 }, "rightForearm": { "rotate": 15 }, "leftThigh": { "rotate": 6 }, "rightThigh": { "rotate": -6 } } },
+    { "time": 0.25, "bones": { "root": { "tx": 0, "ty": -8 }, "torso": { "rotate": 0 }, "head": { "rotate": 0 }, "leftUpperArm": { "rotate": 90 }, "leftForearm": { "rotate": 10 }, "rightUpperArm": { "rotate": -90 }, "rightForearm": { "rotate": -10 }, "leftThigh": { "rotate": 0 }, "rightThigh": { "rotate": 0 } } },
+    { "time": 0.5, "bones": { "root": { "tx": 10, "ty": 0 }, "torso": { "rotate": 6 }, "head": { "rotate": -6 }, "leftUpperArm": { "rotate": 25 }, "leftForearm": { "rotate": -15 }, "rightUpperArm": { "rotate": -150 }, "rightForearm": { "rotate": -20 }, "leftThigh": { "rotate": 6 }, "rightThigh": { "rotate": -6 } } },
+    { "time": 0.75, "bones": { "root": { "tx": 0, "ty": -8 }, "torso": { "rotate": 0 }, "head": { "rotate": 0 }, "leftUpperArm": { "rotate": 90 }, "leftForearm": { "rotate": 10 }, "rightUpperArm": { "rotate": -90 }, "rightForearm": { "rotate": -10 }, "leftThigh": { "rotate": 0 }, "rightThigh": { "rotate": 0 } } },
+    { "time": 1, "bones": { "root": { "tx": -10, "ty": 0 }, "torso": { "rotate": -6 }, "head": { "rotate": 6 }, "leftUpperArm": { "rotate": 150 }, "leftForearm": { "rotate": 20 }, "rightUpperArm": { "rotate": -25 }, "rightForearm": { "rotate": 15 }, "leftThigh": { "rotate": 6 }, "rightThigh": { "rotate": -6 } } }
+  ]
+}

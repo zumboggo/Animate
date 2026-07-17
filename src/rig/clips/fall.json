@@ -1,0 +1,12 @@
+{
+  "name": "fall",
+  "durationMs": 850,
+  "holdEnd": true,
+  "keyframes": [
+    { "time": 0, "bones": { "root": { "rotate": 0, "ty": 0 }, "leftUpperArm": { "rotate": 0 }, "rightUpperArm": { "rotate": 0 } } },
+    { "time": 0.35, "bones": { "root": { "rotate": 30, "ty": 4 }, "leftUpperArm": { "rotate": 120 }, "rightUpperArm": { "rotate": -120 } } },
+    { "time": 0.6, "bones": { "root": { "rotate": 84, "ty": 40 }, "leftUpperArm": { "rotate": 60 }, "rightUpperArm": { "rotate": -60 } } },
+    { "time": 0.75, "bones": { "root": { "rotate": 80, "ty": 52 }, "leftUpperArm": { "rotate": 40 }, "rightUpperArm": { "rotate": -40 } } },
+    { "time": 1, "bones": { "root": { "rotate": 84, "ty": 58 }, "leftUpperArm": { "rotate": 30 }, "rightUpperArm": { "rotate": -30 } } }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "name": "walk",
+  "durationMs": 520,
+  "loop": true,
+  "keyframes": [
+    {
+      "time": 0,
+      "bones": {
+        "leftThigh": { "rotate": -24 },
+        "leftShin": { "rotate": 8 },
+        "rightThigh": { "rotate": 24 },
+        "rightShin": { "rotate": -14 },
+        "leftUpperArm": { "rotate": 22 },
+        "rightUpperArm": { "rotate": -22 },
+        "root": { "ty": 0 },
+        "torso": { "rotate": 2 }
+      }
+    },
+    {
+      "time": 0.25,
+      "bones": {
+        "leftThigh": { "rotate": 0 },
+        "leftShin": { "rotate": 14 },
+        "rightThigh": { "rotate": 0 },
+        "rightShin": { "rotate": 14 },
+        "leftUpperArm": { "rotate": 0 },
+        "rightUpperArm": { "rotate": 0 },
+        "root": { "ty": 3 },
+        "torso": { "rotate": 2 }
+      }
+    },
+    {
+      "time": 0.5,
+      "bones": {
+        "leftThigh": { "rotate": 24 },
+        "leftShin": { "rotate": -14 },
+        "rightThigh": { "rotate": -24 },
+        "rightShin": { "rotate": 8 },
+        "leftUpperArm": { "rotate": -22 },
+        "rightUpperArm": { "rotate": 22 },
+        "root": { "ty": 0 },
+        "torso": { "rotate": 2 }
+      }
+    },
+    {
+      "time": 0.75,
+      "bones": {
+        "leftThigh": { "rotate": 0 },
+        "leftShin": { "rotate": 14 },
+        "rightThigh": { "rotate": 0 },
+        "rightShin": { "rotate": 14 },
+        "leftUpperArm": { "rotate": 0 },
+        "rightUpperArm": { "rotate": 0 },
+        "root": { "ty": 3 },
+        "torso": { "rotate": 2 }
+      }
+    },
+    {
+      "time": 1,
+      "bones": {
+        "leftThigh": { "rotate": -24 },
+        "leftShin": { "rotate": 8 },
+        "rightThigh": { "rotate": 24 },
+        "rightShin": { "rotate": -14 },
+        "leftUpperArm": { "rotate": 22 },
+        "rightUpperArm": { "rotate": -22 },
+        "root": { "ty": 0 },
+        "torso": { "rotate": 2 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "nod",
+  "durationMs": 700,
+  "keyframes": [
+    { "time": 0, "bones": { "head": { "ty": 0, "rotate": 0 } } },
+    { "time": 0.28, "bones": { "head": { "ty": 8, "rotate": 3 } } },
+    { "time": 0.5, "bones": { "head": { "ty": 1, "rotate": 0 } } },
+    { "time": 0.72, "bones": { "head": { "ty": 7, "rotate": 3 } } },
+    { "time": 1, "bones": { "head": { "ty": 0, "rotate": 0 } } }
+  ]
+}

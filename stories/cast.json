@@ -1,0 +1,48 @@
+{
+  "LIN": {
+    "displayName": "Lin",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#f2c9a0",
+      "hair": "short",
+      "hairColor": "#2b1b12",
+      "shirtColor": "#5aa9e6",
+      "pantsColor": "#39415c",
+      "height": 1.0,
+      "build": "average"
+    }
+  },
+  "MAX": {
+    "displayName": "Max",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#d89a72",
+      "hair": "curly",
+      "hairColor": "#3b2415",
+      "shirtColor": "#f25f5c",
+      "pantsColor": "#2d2d2d",
+      "height": 0.95,
+      "build": "small"
+    }
+  },
+  "MEI": {
+    "displayName": "Mei",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#f7d7b1",
+      "hair": "long",
+      "hairColor": "#1f1a2e",
+      "shirtColor": "#e2777a",
+      "pantsColor": "#4a3f66",
+      "height": 0.97,
+      "build": "average"
+    }
+  },
+  "BLOB": {
+    "displayName": "Blobby",
+    "adapter": "staticSprite",
+    "appearance": {
+      "shirtColor": "#8d8fb5"
+    }
+  }
+}

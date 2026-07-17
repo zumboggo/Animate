@@ -1,0 +1,13 @@
+{
+  "name": "laugh",
+  "durationMs": 1200,
+  "keyframes": [
+    { "time": 0, "bones": { "torso": { "ty": 0 }, "head": { "rotate": 0, "ty": 0 } } },
+    { "time": 0.15, "bones": { "torso": { "ty": 5 }, "head": { "rotate": -7, "ty": -2 } } },
+    { "time": 0.3, "bones": { "torso": { "ty": 0 }, "head": { "rotate": 0, "ty": 0 } } },
+    { "time": 0.45, "bones": { "torso": { "ty": 5 }, "head": { "rotate": 7, "ty": -2 } } },
+    { "time": 0.6, "bones": { "torso": { "ty": 0 }, "head": { "rotate": 0, "ty": 0 } } },
+    { "time": 0.75, "bones": { "torso": { "ty": 5 }, "head": { "rotate": -7, "ty": -2 } } },
+    { "time": 1, "bones": { "torso": { "ty": 0 }, "head": { "rotate": 0, "ty": 0 } } }
+  ]
+}

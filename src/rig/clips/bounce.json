@@ -1,0 +1,11 @@
+{
+  "name": "bounce",
+  "durationMs": 520,
+  "keyframes": [
+    { "time": 0, "bones": { "root": { "ty": 0 } } },
+    { "time": 0.3, "bones": { "root": { "ty": -14 } } },
+    { "time": 0.6, "bones": { "root": { "ty": 0 } } },
+    { "time": 0.8, "bones": { "root": { "ty": -6 } } },
+    { "time": 1, "bones": { "root": { "ty": 0 } } }
+  ]
+}
