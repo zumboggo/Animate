@@ -103,6 +103,8 @@ export interface CastAppearance {
   outfit?: 'shirt' | 'dress' | 'onesie';
   dressColor?: string;
   pattern?: 'plain' | 'roses' | 'stripes' | 'cat' | 'heart';
+  eyeColor?: string;
+  freckles?: boolean;
   height?: number;
   build?: 'small' | 'average' | 'broad';
 }

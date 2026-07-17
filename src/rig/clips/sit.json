@@ -4,7 +4,7 @@
   "holdEnd": true,
   "keyframes": [
     { "time": 0, "bones": { "root": { "ty": 0 }, "torso": { "rotate": 0 }, "leftThigh": { "rotate": 0 }, "leftShin": { "rotate": 0 }, "rightThigh": { "rotate": 0 }, "rightShin": { "rotate": 0 }, "leftUpperArm": { "rotate": 0 }, "rightUpperArm": { "rotate": 0 } } },
-    { "time": 0.55, "bones": { "root": { "ty": 24 }, "torso": { "rotate": 3 }, "leftThigh": { "rotate": 40 }, "leftShin": { "rotate": -40 }, "rightThigh": { "rotate": -40 }, "rightShin": { "rotate": 40 }, "leftUpperArm": { "rotate": 6 }, "rightUpperArm": { "rotate": -6 } } },
-    { "time": 1, "bones": { "root": { "ty": 46 }, "torso": { "rotate": 3 }, "leftThigh": { "rotate": 72 }, "leftShin": { "rotate": -72 }, "rightThigh": { "rotate": -72 }, "rightShin": { "rotate": 72 }, "leftUpperArm": { "rotate": 10 }, "rightUpperArm": { "rotate": -10 } } }
+    { "time": 0.55, "bones": { "root": { "ty": 18 }, "torso": { "rotate": 3 }, "leftThigh": { "rotate": 40 }, "leftShin": { "rotate": -40 }, "rightThigh": { "rotate": -40 }, "rightShin": { "rotate": 40 }, "leftUpperArm": { "rotate": 6 }, "rightUpperArm": { "rotate": -6 } } },
+    { "time": 1, "bones": { "root": { "ty": 34 }, "torso": { "rotate": 3 }, "leftThigh": { "rotate": 74 }, "leftShin": { "rotate": -74 }, "rightThigh": { "rotate": -74 }, "rightShin": { "rotate": 74 }, "leftUpperArm": { "rotate": 9 }, "rightUpperArm": { "rotate": -9 } } }
   ]
 }

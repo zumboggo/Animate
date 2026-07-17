@@ -33,13 +33,15 @@ Characters are defined in `stories/cast.json`. For the built-in SVG rig:
     "adapter": "svgRig",
     "appearance": {
       "skin": "#f2c9a0",
-      "hair": "short",          // short | curly | spiky | long | pigtails | sidePonytail
+      "hair": "short",          // short | curly | spiky | long | pigtails | sidePonytail | curlyPonytail | babyWisps
       "hairColor": "#2b1b12",
       "shirtColor": "#5aa9e6",
       "pantsColor": "#39415c",
-      "outfit": "shirt",        // shirt | dress
+      "outfit": "shirt",        // shirt | dress | onesie
       "dressColor": "#861d48",
-      "pattern": "plain",       // plain | roses
+      "pattern": "plain",       // plain | roses | stripes | cat | heart
+      "eyeColor": "#5b4632",
+      "freckles": false,
       "height": 1.0,             // relative size
       "build": "average"         // small | average | broad
     }

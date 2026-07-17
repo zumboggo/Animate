@@ -2,7 +2,6 @@
   "ANNA": {
     "displayName": "Anna",
     "adapter": "svgRig",
-    "asset": "paper-doll/anna",
     "appearance": {
       "skin": "#f2c4a3",
       "hair": "sidePonytail",
@@ -12,6 +11,7 @@
       "outfit": "dress",
       "dressColor": "#861d48",
       "pattern": "roses",
+      "eyeColor": "#4f3524",
       "height": 1.08,
       "build": "average"
     }
@@ -19,7 +19,6 @@
   "SARAH": {
     "displayName": "Sarah",
     "adapter": "svgRig",
-    "asset": "paper-doll/sarah",
     "appearance": {
       "skin": "#efc09e",
       "hair": "pigtails",
@@ -29,6 +28,7 @@
       "outfit": "dress",
       "dressColor": "#861d48",
       "pattern": "roses",
+      "eyeColor": "#5a4030",
       "height": 0.82,
       "build": "small"
     }
@@ -45,6 +45,7 @@
       "outfit": "shirt",
       "dressColor": "#d88a9d",
       "pattern": "cat",
+      "eyeColor": "#463829",
       "height": 1.05,
       "build": "average"
     }
@@ -52,7 +53,6 @@
   "ELLIOTT": {
     "displayName": "Elliott",
     "adapter": "svgRig",
-    "asset": "paper-doll/elliott",
     "appearance": {
       "skin": "#f0c6a3",
       "hair": "short",
@@ -62,6 +62,8 @@
       "outfit": "shirt",
       "dressColor": "#244c78",
       "pattern": "stripes",
+      "eyeColor": "#5f87ae",
+      "freckles": true,
       "height": 1.0,
       "build": "average"
     }
@@ -69,7 +71,6 @@
   "LEAH": {
     "displayName": "Leah",
     "adapter": "svgRig",
-    "asset": "paper-doll/leah",
     "appearance": {
       "skin": "#efc3a5",
       "hair": "babyWisps",
@@ -79,6 +80,7 @@
       "outfit": "onesie",
       "dressColor": "#a94d72",
       "pattern": "heart",
+      "eyeColor": "#513c2c",
       "height": 0.68,
       "build": "small"
     }

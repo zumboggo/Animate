@@ -1,10 +1,10 @@
 import type { CastAppearance } from '../engine/storyTypes';
 import { FaceController, type FaceElements } from './faces';
-import { getPaperDollParts, type PaperDollParts, type PaperDollPartName } from './paperDollAssets';
 import { BONE_DEFS, VIEW_H, VIEW_W } from './svgSkeleton';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const INK = '#26201d';
+const INK = '#3b2f2a';
+const SHOE = '#4a4652';
 
 const DEFAULTS: Required<CastAppearance> = {
   skin: '#f2c9a0',
@@ -15,9 +15,17 @@ const DEFAULTS: Required<CastAppearance> = {
   outfit: 'shirt',
   dressColor: '#5aa9e6',
   pattern: 'plain',
+  eyeColor: '#5b4632',
+  freckles: false,
   height: 1,
   build: 'average',
 };
+
+// Limb thickness. Both segments of a limb share one radius, and each joint is
+// the shared round cap centered exactly on the bone pivot — that coincident
+// circle is what keeps elbows and knees seamless at every bend angle.
+const ARM_R = 9;
+const LEG_R = 10.5;
 
 export interface RigCharacter {
   svg: SVGSVGElement;
@@ -35,17 +43,18 @@ function el<K extends keyof SVGElementTagNameMap>(
   return node;
 }
 
-function limb(x1: number, y1: number, x2: number, y2: number, stroke: string, width: number) {
+/** A filled capsule: a fat round-capped stroke between two joint centers. */
+function capsule(x1: number, y1: number, x2: number, y2: number, fill: string, r: number) {
   return el('line', {
     x1, y1, x2, y2,
-    stroke,
-    'stroke-width': width,
+    stroke: fill,
+    'stroke-width': r * 2,
     'stroke-linecap': 'round',
   });
 }
 
 /** Builds a chibi vector character in rest pose from an appearance sheet. */
-export function buildRigCharacter(appearanceIn: CastAppearance = {}, asset?: string): RigCharacter {
+export function buildRigCharacter(appearanceIn: CastAppearance = {}): RigCharacter {
   const a = { ...DEFAULTS, ...appearanceIn };
   const isDress = a.outfit === 'dress';
   const isOnesie = a.outfit === 'onesie';
@@ -53,11 +62,12 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}, asset?: str
     viewBox: `0 0 ${VIEW_W} ${VIEW_H}`,
     preserveAspectRatio: 'xMidYMax meet',
   });
+  svg.style.overflow = 'visible';
 
   // Non-bone wrapper used only for the build (body width) scale, so the
   // animator can freely overwrite every bone's transform each frame.
   const fit = el('g');
-  const buildScale = a.build === 'small' ? 0.92 : a.build === 'broad' ? 1.1 : 1;
+  const buildScale = a.build === 'small' ? 0.94 : a.build === 'broad' ? 1.08 : 1;
   if (buildScale !== 1) {
     fit.setAttribute('transform', `translate(100 0) scale(${buildScale} 1) translate(-100 0)`);
   }
@@ -71,317 +81,310 @@ export function buildRigCharacter(appearanceIn: CastAppearance = {}, asset?: str
     (def.parent ? bones.get(def.parent)! : fit).appendChild(g);
   }
 
-  const paperDoll = getPaperDollParts(asset);
-  if (paperDoll) addPaperDoll(bones, paperDoll);
-  const headBone = bones.get('head')!;
-  const head = el('g', {
-    transform: 'translate(100 112) scale(1.22) translate(-100 -112)',
-  });
-  while (headBone.firstChild) head.appendChild(headBone.firstChild);
-  headBone.appendChild(head);
+  // Stage order inside `fit`/`root`: legs, then torso (whose group also holds
+  // the head), then arms on top. Limb roots start inside the torso silhouette
+  // so no rotation can ever open a gap at a shoulder or hip.
 
-  if (!paperDoll) {
-
-  // ---- Legs (drawn under the torso) ----
-  bones.get('leftThigh')!.insertBefore(limb(85, 208, 85, 253, a.pantsColor, 17), bones.get('leftShin')!);
+  // ---- Legs ----
+  bones.get('leftThigh')!.insertBefore(
+    capsule(84, 234, 84, 272, a.pantsColor, LEG_R),
+    bones.get('leftShin')!,
+  );
   const leftShin = bones.get('leftShin')!;
-  leftShin.appendChild(limb(85, 253, 85, 300, a.pantsColor, 15));
-  leftShin.appendChild(el('ellipse', { cx: 82, cy: 309, rx: 13, ry: 7, fill: '#3a3a3a' }));
+  leftShin.appendChild(capsule(84, 272, 84, 302, a.pantsColor, LEG_R));
+  leftShin.appendChild(el('ellipse', { cx: 80, cy: 309, rx: 14.5, ry: 8, fill: SHOE }));
 
-  bones.get('rightThigh')!.insertBefore(limb(115, 208, 115, 253, a.pantsColor, 17), bones.get('rightShin')!);
+  bones.get('rightThigh')!.insertBefore(
+    capsule(116, 234, 116, 272, a.pantsColor, LEG_R),
+    bones.get('rightShin')!,
+  );
   const rightShin = bones.get('rightShin')!;
-  rightShin.appendChild(limb(115, 253, 115, 300, a.pantsColor, 15));
-  rightShin.appendChild(el('ellipse', { cx: 118, cy: 309, rx: 13, ry: 7, fill: '#3a3a3a' }));
+  rightShin.appendChild(capsule(116, 272, 116, 302, a.pantsColor, LEG_R));
+  rightShin.appendChild(el('ellipse', { cx: 120, cy: 309, rx: 14.5, ry: 8, fill: SHOE }));
 
-  // ---- Torso ----
+  // ---- Torso / outfit ----
   const torso = bones.get('torso')!;
+  const outfitGroup = el('g');
   if (isDress) {
-    const dress = el('g');
-    dress.append(
-      el('rect', { x: 65, y: 112, width: 70, height: 59, rx: 20, fill: a.shirtColor }),
-      el('rect', { x: 65, y: 155, width: 70, height: 17, rx: 5, fill: a.dressColor }),
+    outfitGroup.append(
+      el('rect', { x: 66, y: 132, width: 68, height: 58, rx: 22, fill: a.shirtColor }),
+      el('rect', { x: 66, y: 174, width: 68, height: 13, rx: 5, fill: a.dressColor }),
       el('path', {
-        d: 'M66,164 Q100,174 134,164 L151,228 Q100,242 49,228 Z',
+        d: 'M64,182 Q100,192 136,182 L152,240 Q100,254 48,240 Z',
         fill: a.dressColor,
       }),
       el('path', {
-        d: 'M58,226 Q100,238 142,226',
+        d: 'M56,238 Q100,250 144,238',
         fill: 'none',
-        stroke: '#5f1234',
+        stroke: '#000',
         'stroke-width': 3,
-        opacity: 0.35,
+        opacity: 0.18,
       }),
     );
     if (a.pattern === 'roses') {
-      addRose(dress, 79, 133, 0.72);
-      addRose(dress, 105, 124, 0.64);
-      addRose(dress, 121, 146, 0.74);
-      addRose(dress, 94, 151, 0.55);
+      addRose(outfitGroup, 82, 152, 0.66);
+      addRose(outfitGroup, 110, 144, 0.58);
+      addRose(outfitGroup, 121, 168, 0.66);
+      addRose(outfitGroup, 91, 172, 0.5);
+      addRose(outfitGroup, 74, 216, 0.6);
+      addRose(outfitGroup, 126, 220, 0.62);
     }
-    torso.insertBefore(dress, torso.firstChild);
   } else if (isOnesie) {
-    const onesie = el('g');
-    onesie.append(
-      el('rect', { x: 64, y: 111, width: 72, height: 92, rx: 25, fill: a.shirtColor }),
-      el('path', { d: 'M69,187 Q100,200 131,187 L128,220 L105,220 L100,205 L95,220 L72,220 Z', fill: a.shirtColor }),
+    outfitGroup.append(
+      el('rect', { x: 62, y: 132, width: 76, height: 96, rx: 30, fill: a.shirtColor }),
+      el('path', {
+        d: 'M70,212 Q100,226 130,212 L127,244 L106,244 L100,230 L94,244 L73,244 Z',
+        fill: a.shirtColor,
+      }),
     );
-    addHeart(onesie, 100, 151, 0.75, a.dressColor);
-    torso.insertBefore(onesie, torso.firstChild);
+    if (a.pattern === 'heart') addHeart(outfitGroup, 100, 168, 0.7, a.dressColor);
   } else {
-    torso.insertBefore(
-      el('rect', { x: 66, y: 112, width: 68, height: 100, rx: 22, fill: a.shirtColor }),
-      torso.firstChild,
+    outfitGroup.appendChild(
+      el('rect', { x: 64, y: 132, width: 72, height: 106, rx: 26, fill: a.shirtColor }),
     );
-    if (a.pattern === 'stripes') addStripes(torso);
-    if (a.pattern === 'cat') addCat(torso);
+    if (a.pattern === 'stripes') addStripes(outfitGroup);
+    if (a.pattern === 'cat') addCat(outfitGroup);
+    if (a.pattern === 'heart') addHeart(outfitGroup, 100, 168, 0.7, a.dressColor);
   }
+  torso.insertBefore(outfitGroup, torso.firstChild);
 
   // ---- Head ----
-  if (a.hair === 'pigtails') {
-    head.append(
-      el('path', {
-        d: 'M61,42 Q35,26 31,49 Q29,66 49,73 Q39,82 52,91 Q68,82 66,57 Z',
-        fill: a.hairColor,
-      }),
-      el('path', {
-        d: 'M139,42 Q165,26 169,49 Q171,66 151,73 Q161,82 148,91 Q132,82 134,57 Z',
-        fill: a.hairColor,
-      }),
-      el('circle', { cx: 57, cy: 42, r: 5, fill: '#77a765' }),
-      el('circle', { cx: 143, cy: 42, r: 5, fill: '#77a765' }),
-    );
-  }
-  if (a.hair === 'sidePonytail') {
-    head.append(
-      el('path', {
-        d: 'M138,42 Q164,43 168,65 Q171,83 151,99 Q158,78 143,70 Z',
-        fill: a.hairColor,
-      }),
-      el('path', {
-        d: 'M148,54 Q166,62 159,87 Q153,103 141,107 Q151,84 137,67 Z',
-        fill: a.hairColor,
-      }),
-      el('circle', { cx: 144, cy: 51, r: 6, fill: a.dressColor }),
-    );
-  }
-  if (a.hair === 'long') {
-    head.appendChild(el('path', {
-      d: 'M57,58 Q46,110 58,140 Q68,146 76,140 Q66,105 68,70 Z',
-      fill: a.hairColor,
-    }));
-    head.appendChild(el('path', {
-      d: 'M143,58 Q154,110 142,140 Q132,146 124,140 Q134,105 132,70 Z',
-      fill: a.hairColor,
-    }));
-  }
-  if (a.hair === 'curlyPonytail') {
-    head.append(
-      el('circle', { cx: 142, cy: 38, r: 15, fill: a.hairColor }),
-      el('circle', { cx: 155, cy: 49, r: 13, fill: a.hairColor }),
-      el('circle', { cx: 145, cy: 61, r: 12, fill: a.hairColor }),
-      el('circle', { cx: 139, cy: 39, r: 5, fill: '#d6b4d8' }),
-    );
-  }
-  head.appendChild(el('circle', { cx: 100, cy: 68, r: 45, fill: a.skin }));
+  const head = bones.get('head')!;
+  const backHair = el('g');
+  head.appendChild(backHair);
+  addBackHair(backHair, a);
 
-  if (a.hair === 'spiky') {
-    head.appendChild(el('path', {
-      d: 'M58,62 L70,30 L82,48 L96,22 L108,46 L122,28 L134,50 L142,62 Z',
-      fill: a.hairColor,
-    }));
-  }
-  if (a.hair === 'curly') {
-    for (const [cx, cy, r] of [[62, 45, 13], [82, 32, 14], [103, 28, 14], [122, 34, 13], [138, 48, 12]]) {
-      head.appendChild(el('circle', { cx, cy, r, fill: a.hairColor }));
-    }
-  }
-  if (a.hair === 'curlyPonytail') {
-    for (const [cx, cy, r] of [[61, 50, 11], [72, 38, 12], [88, 31, 12], [105, 30, 12], [122, 35, 11], [136, 48, 10]]) {
-      head.appendChild(el('circle', { cx, cy, r, fill: a.hairColor }));
-    }
-  } else if (a.hair === 'babyWisps') {
-    head.append(
-      el('path', { d: 'M78,34 Q88,18 98,34', fill: 'none', stroke: a.hairColor, 'stroke-width': 5, 'stroke-linecap': 'round' }),
-      el('path', { d: 'M96,31 Q106,17 114,35', fill: 'none', stroke: a.hairColor, 'stroke-width': 5, 'stroke-linecap': 'round' }),
-      el('path', { d: 'M62,55 Q70,41 81,42', fill: 'none', stroke: a.hairColor, 'stroke-width': 5, 'stroke-linecap': 'round' }),
-    );
-  } else {
-    head.appendChild(el('path', {
-      d: 'M55,68 A45,45 0 0 1 145,68 Q137,48 100,48 Q63,48 55,68 Z',
-      fill: a.hairColor,
-    }));
-  }
-  if (a.hair === 'pigtails' || a.hair === 'sidePonytail') {
-    head.appendChild(el('path', {
-      d: a.hair === 'sidePonytail'
-        ? 'M58,61 Q73,28 112,29 Q100,42 91,53 Q78,51 64,68 Z'
-        : 'M57,64 Q73,31 102,31 Q91,42 88,55 Q73,53 61,69 Z',
-      fill: a.hairColor,
-    }));
-  }
-  }
+  head.appendChild(el('circle', { cx: 100, cy: 74, r: 56, fill: a.skin }));
 
-  // ---- Face ----
+  const topHair = el('g');
+  head.appendChild(topHair);
+  addTopHair(topHair, a);
+
+  const faceEls = addFace(head, a);
+
+  // ---- Arms (topmost, so hands can cover the face when crying) ----
+  // Sleeves always match the torso color so the arm root disappears into the
+  // body silhouette — no visible seam at the shoulder, at any rotation.
+  const sleeveColor = a.shirtColor;
+
+  const leftUpper = bones.get('leftUpperArm')!;
+  leftUpper.insertBefore(
+    capsule(72, 150, 60, 188, sleeveColor, ARM_R),
+    bones.get('leftForearm')!,
+  );
+  const leftFore = bones.get('leftForearm')!;
+  leftFore.appendChild(capsule(60, 188, 54, 208, a.skin, ARM_R));
+  leftFore.appendChild(el('circle', { cx: 53, cy: 212, r: 10.5, fill: a.skin }));
+
+  const rightUpper = bones.get('rightUpperArm')!;
+  rightUpper.insertBefore(
+    capsule(128, 150, 140, 188, sleeveColor, ARM_R),
+    bones.get('rightForearm')!,
+  );
+  const rightFore = bones.get('rightForearm')!;
+  rightFore.appendChild(capsule(140, 188, 146, 208, a.skin, ARM_R));
+  rightFore.appendChild(el('circle', { cx: 147, cy: 212, r: 10.5, fill: a.skin }));
+
+  return { svg, bones, face: new FaceController(faceEls), appearance: a };
+}
+
+// ---------------------------------------------------------------------------
+// Face
+// ---------------------------------------------------------------------------
+
+function addFace(head: SVGGElement, a: Required<CastAppearance>): FaceElements {
   const faceGroup = el('g');
   head.appendChild(faceGroup);
 
-  // Generated heads carry their likeness in the printed eyes and brows. We
-  // replace only the mouth so dialogue lip-sync remains animated without
-  // painting a conspicuous flat patch across the character's face.
-  if (paperDoll) {
-    faceGroup.append(el('ellipse', { cx: 100, cy: 89, rx: 16, ry: 11, fill: a.skin }));
-  }
-
-  const strokeAttrs = {
+  const browAttrs = {
     fill: 'none',
-    stroke: INK,
-    'stroke-width': 3.4,
+    stroke: a.hairColor,
+    'stroke-width': 4.2,
     'stroke-linecap': 'round',
   } as const;
-
-  const browL = el('path', { ...strokeAttrs, d: 'M75,51 Q84,47 93,51' });
-  const browR = el('path', { ...strokeAttrs, d: 'M107,51 Q116,47 125,51' });
-  if (paperDoll) {
-    browL.setAttribute('opacity', '0');
-    browR.setAttribute('opacity', '0');
-  }
+  const browL = el('path', { ...browAttrs, d: 'M66,49 Q78,44 90,49' });
+  const browR = el('path', { ...browAttrs, d: 'M110,49 Q122,44 134,49' });
   faceGroup.append(browL, browR);
 
-  const eyeDots = el('g');
-  eyeDots.append(
-    el('circle', { cx: 84, cy: 64, r: 4.5, fill: INK }),
-    el('circle', { cx: 116, cy: 64, r: 4.5, fill: INK }),
-  );
-
-  const eyeWide = el('g');
-  for (const cx of [84, 116]) {
-    eyeWide.append(
-      el('circle', { cx, cy: 64, r: 8, fill: '#fff', stroke: INK, 'stroke-width': 1.6 }),
-      el('circle', { cx, cy: 64, r: 3.6, fill: INK }),
+  // Big sparkly chibi eyes — static apart from the blink.
+  const eyesOpen = el('g');
+  for (const cx of [78, 122]) {
+    eyesOpen.append(
+      el('ellipse', { cx, cy: 73, rx: 13.5, ry: 16.5, fill: '#fff' }),
+      el('circle', { cx, cy: 76, r: 8.8, fill: a.eyeColor }),
+      el('circle', { cx, cy: 77, r: 4.6, fill: '#2c2320' }),
+      el('circle', { cx: cx - 3.4, cy: 70.5, r: 3.1, fill: '#fff' }),
+      el('circle', { cx: cx + 3.6, cy: 80, r: 1.7, fill: '#fff' }),
+      el('path', {
+        d: `M${cx - 13.5},67 Q${cx},57.5 ${cx + 13.5},67`,
+        fill: 'none',
+        stroke: INK,
+        'stroke-width': 2.4,
+        'stroke-linecap': 'round',
+      }),
     );
   }
 
-  const eyeHappy = el('g');
-  eyeHappy.append(
-    el('path', { ...strokeAttrs, d: 'M75,66 Q84,57 93,66' }),
-    el('path', { ...strokeAttrs, d: 'M107,66 Q116,57 125,66' }),
+  const eyesClosed = el('g');
+  eyesClosed.style.display = 'none';
+  eyesClosed.append(
+    el('path', {
+      d: 'M65,74 Q78,82 91,74',
+      fill: 'none', stroke: INK, 'stroke-width': 3.6, 'stroke-linecap': 'round',
+    }),
+    el('path', {
+      d: 'M109,74 Q122,82 135,74',
+      fill: 'none', stroke: INK, 'stroke-width': 3.6, 'stroke-linecap': 'round',
+    }),
+  );
+  faceGroup.append(eyesOpen, eyesClosed);
+
+  faceGroup.appendChild(el('path', {
+    d: 'M96,90 q4,3.5 8,0',
+    fill: 'none',
+    stroke: INK,
+    'stroke-width': 2.2,
+    'stroke-linecap': 'round',
+    opacity: 0.4,
+  }));
+
+  faceGroup.append(
+    el('ellipse', { cx: 58, cy: 94, rx: 8.5, ry: 5.5, fill: '#f79bb0', opacity: 0.45 }),
+    el('ellipse', { cx: 142, cy: 94, rx: 8.5, ry: 5.5, fill: '#f79bb0', opacity: 0.45 }),
   );
 
-  const eyeClosed = el('g');
-  eyeClosed.append(
-    el('path', { ...strokeAttrs, d: 'M76,65 L92,65' }),
-    el('path', { ...strokeAttrs, d: 'M108,65 L124,65' }),
-  );
-
-  faceGroup.append(eyeDots, eyeWide, eyeHappy, eyeClosed);
-
-  if (paperDoll) {
-    eyeDots.setAttribute('opacity', '0');
-    eyeWide.setAttribute('opacity', '0');
-    eyeHappy.setAttribute('opacity', '0');
-    eyeClosed.setAttribute('opacity', '0');
-  }
-
-  if (!paperDoll) {
-    faceGroup.appendChild(el('path', {
-      d: 'M100,72 q3,4 0,7',
-      fill: 'none',
-      stroke: INK,
-      'stroke-width': 2,
-      'stroke-linecap': 'round',
-    }));
+  if (a.freckles) {
+    for (const [cx, cy] of [[62, 88], [68, 92], [57, 92.5], [138, 88], [132, 92], [143, 92.5]]) {
+      faceGroup.appendChild(el('circle', { cx, cy, r: 1.5, fill: '#c08355', opacity: 0.8 }));
+    }
   }
 
   const tears = el('g');
   tears.style.display = 'none';
   tears.append(
-    el('ellipse', { cx: 84, cy: 79, rx: 2.6, ry: 4.4, fill: '#7ec8ff' }),
-    el('ellipse', { cx: 116, cy: 79, rx: 2.6, ry: 4.4, fill: '#7ec8ff' }),
+    el('ellipse', { cx: 78, cy: 96, rx: 3.2, ry: 5.4, fill: '#7ec8ff' }),
+    el('ellipse', { cx: 122, cy: 96, rx: 3.2, ry: 5.4, fill: '#7ec8ff' }),
   );
   faceGroup.appendChild(tears);
 
   const mouth = el('path', {
-    d: 'M91,89 Q100,93 109,89',
+    d: 'M92,101 Q100,107 108,101',
     fill: 'none',
     stroke: INK,
-    'stroke-width': 3.2,
+    'stroke-width': 3.4,
     'stroke-linecap': 'round',
   });
   faceGroup.appendChild(mouth);
 
-  if (!paperDoll) {
-  // ---- Arms (drawn over the torso) ----
-  const upperArmColor = isDress ? a.skin : a.shirtColor;
-  const leftUpper = bones.get('leftUpperArm')!;
-  leftUpper.insertBefore(limb(64, 133, 64, 170, upperArmColor, 13), bones.get('leftForearm')!);
-  if (isDress) leftUpper.appendChild(el('circle', { cx: 64, cy: 134, r: 10, fill: a.dressColor }));
-  const leftFore = bones.get('leftForearm')!;
-  leftFore.appendChild(limb(64, 170, 64, 200, a.skin, 11));
-  leftFore.appendChild(el('circle', { cx: 64, cy: 205, r: 7.5, fill: a.skin }));
+  return { browL, browR, eyesOpen, eyesClosed, mouth, tears, inkColor: INK };
+}
 
-  const rightUpper = bones.get('rightUpperArm')!;
-  rightUpper.insertBefore(limb(136, 133, 136, 170, upperArmColor, 13), bones.get('rightForearm')!);
-  if (isDress) rightUpper.appendChild(el('circle', { cx: 136, cy: 134, r: 10, fill: a.dressColor }));
-  const rightFore = bones.get('rightForearm')!;
-  rightFore.appendChild(limb(136, 170, 136, 200, a.skin, 11));
-  rightFore.appendChild(el('circle', { cx: 136, cy: 205, r: 7.5, fill: a.skin }));
+// ---------------------------------------------------------------------------
+// Hair (head circle: center (100,74), r=56 — top y=18, sides x=44/156)
+// ---------------------------------------------------------------------------
+
+/** The classic fringe cap most styles build on. */
+function hairCap(color: string) {
+  return el('path', {
+    d: 'M44,74 A56,56 0 0 1 156,74 Q147,46 100,46 Q53,46 44,74 Z',
+    fill: color,
+  });
+}
+
+function addBackHair(g: SVGGElement, a: Required<CastAppearance>): void {
+  const c = a.hairColor;
+  switch (a.hair) {
+    case 'pigtails':
+      g.append(
+        el('circle', { cx: 33, cy: 50, r: 17, fill: c }),
+        el('circle', { cx: 26, cy: 72, r: 13, fill: c }),
+        el('circle', { cx: 167, cy: 50, r: 17, fill: c }),
+        el('circle', { cx: 174, cy: 72, r: 13, fill: c }),
+      );
+      return;
+    case 'sidePonytail':
+      g.append(
+        el('circle', { cx: 162, cy: 52, r: 16, fill: c }),
+        el('circle', { cx: 170, cy: 74, r: 13, fill: c }),
+        el('circle', { cx: 165, cy: 95, r: 11, fill: c }),
+      );
+      return;
+    case 'curlyPonytail':
+      g.append(
+        el('circle', { cx: 156, cy: 44, r: 15, fill: c }),
+        el('circle', { cx: 166, cy: 62, r: 13, fill: c }),
+        el('circle', { cx: 158, cy: 80, r: 11, fill: c }),
+      );
+      return;
+    case 'long':
+      g.append(
+        el('path', { d: 'M45,60 Q30,130 45,170 Q60,178 72,168 Q58,115 60,80 Z', fill: c }),
+        el('path', { d: 'M155,60 Q170,130 155,170 Q140,178 128,168 Q142,115 140,80 Z', fill: c }),
+      );
+      return;
+    default:
+      return;
   }
-
-  const faceEls: FaceElements = {
-    browL,
-    browR,
-    eyeGroups: { dots: eyeDots, wide: eyeWide, happyArcs: eyeHappy, closed: eyeClosed },
-    mouth,
-    tears,
-    inkColor: INK,
-  };
-
-  return { svg, bones, face: new FaceController(faceEls), appearance: a };
 }
 
-interface PartPlacement {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+function addTopHair(g: SVGGElement, a: Required<CastAppearance>): void {
+  const c = a.hairColor;
+  switch (a.hair) {
+    case 'babyWisps': {
+      const wisp = (d: string) =>
+        el('path', { d, fill: 'none', stroke: c, 'stroke-width': 5.5, 'stroke-linecap': 'round' });
+      g.append(
+        wisp('M84,26 Q94,8 104,26'),
+        wisp('M100,24 Q112,8 118,28'),
+        wisp('M64,44 Q72,26 86,30'),
+      );
+      return;
+    }
+    case 'spiky':
+      g.append(
+        el('path', {
+          d: 'M46,66 L60,30 L74,50 L94,20 L110,48 L126,26 L140,50 L152,66 Z',
+          fill: c,
+        }),
+        hairCap(c),
+      );
+      return;
+    case 'curly':
+      for (const [cx, cy, r] of [[54, 48, 15], [74, 32, 16], [100, 26, 16], [126, 32, 16], [146, 48, 15]]) {
+        g.appendChild(el('circle', { cx, cy, r, fill: c }));
+      }
+      g.appendChild(hairCap(c));
+      return;
+    case 'curlyPonytail':
+      g.appendChild(hairCap(c));
+      for (const [cx, cy, r] of [[52, 46, 13], [68, 32, 14], [90, 25, 14], [112, 26, 14], [132, 34, 13], [148, 46, 12]]) {
+        g.appendChild(el('circle', { cx, cy, r, fill: c }));
+      }
+      g.appendChild(el('circle', { cx: 146, cy: 36, r: 5.5, fill: '#d6b4d8' }));
+      return;
+    case 'pigtails':
+      g.append(
+        hairCap(c),
+        el('circle', { cx: 45, cy: 47, r: 5.5, fill: '#77a765' }),
+        el('circle', { cx: 155, cy: 47, r: 5.5, fill: '#77a765' }),
+      );
+      return;
+    case 'sidePonytail':
+      g.append(
+        hairCap(c),
+        el('path', { d: 'M52,64 Q66,34 106,32 Q94,44 88,58 Q68,54 56,72 Z', fill: c }),
+        el('circle', { cx: 150, cy: 43, r: 6.5, fill: a.dressColor }),
+      );
+      return;
+    default:
+      // short, long, and anything unrecognized get the fringe cap.
+      g.appendChild(hairCap(c));
+  }
 }
 
-const PART_PLACEMENTS: Record<PaperDollPartName, PartPlacement> = {
-  head: { x: 44, y: 18, width: 112, height: 96 },
-  torso: { x: 48, y: 104, width: 104, height: 132 },
-  leftUpperArm: { x: 43, y: 124, width: 42, height: 53 },
-  leftForearm: { x: 43, y: 163, width: 42, height: 51 },
-  rightUpperArm: { x: 115, y: 124, width: 42, height: 53 },
-  rightForearm: { x: 115, y: 163, width: 42, height: 51 },
-  leftThigh: { x: 66, y: 200, width: 38, height: 60 },
-  leftShin: { x: 64, y: 247, width: 42, height: 70 },
-  rightThigh: { x: 96, y: 200, width: 38, height: 60 },
-  rightShin: { x: 94, y: 247, width: 42, height: 70 },
-};
-
-function addPaperDoll(bones: Map<string, SVGGElement>, parts: PaperDollParts): void {
-  const part = (name: PaperDollPartName) => {
-    const placement = PART_PLACEMENTS[name];
-    return el('image', {
-      href: parts[name],
-      ...placement,
-      preserveAspectRatio: 'xMidYMid meet',
-    });
-  };
-
-  bones.get('leftThigh')!.insertBefore(part('leftThigh'), bones.get('leftShin')!);
-  bones.get('leftShin')!.appendChild(part('leftShin'));
-  bones.get('rightThigh')!.insertBefore(part('rightThigh'), bones.get('rightShin')!);
-  bones.get('rightShin')!.appendChild(part('rightShin'));
-
-  const torso = bones.get('torso')!;
-  torso.insertBefore(part('torso'), torso.firstChild);
-  bones.get('head')!.appendChild(part('head'));
-  bones.get('leftUpperArm')!.insertBefore(part('leftUpperArm'), bones.get('leftForearm')!);
-  bones.get('leftForearm')!.appendChild(part('leftForearm'));
-  bones.get('rightUpperArm')!.insertBefore(part('rightUpperArm'), bones.get('rightForearm')!);
-  bones.get('rightForearm')!.appendChild(part('rightForearm'));
-}
+// ---------------------------------------------------------------------------
+// Outfit patterns
+// ---------------------------------------------------------------------------
 
 function addRose(parent: SVGElement, cx: number, cy: number, scale: number): void {
   const rose = el('g', { transform: `translate(${cx} ${cy}) scale(${scale})` });
@@ -396,23 +399,23 @@ function addRose(parent: SVGElement, cx: number, cy: number, scale: number): voi
 }
 
 function addStripes(parent: SVGElement): void {
-  for (const y of [124, 140, 156, 172, 188]) {
-    parent.appendChild(el('rect', { x: 67, y, width: 66, height: 6, rx: 2, fill: '#244c78' }));
+  for (const y of [150, 166, 182, 198, 214]) {
+    parent.appendChild(el('rect', { x: 66, y, width: 68, height: 6.5, rx: 3, fill: '#244c78' }));
   }
-  parent.appendChild(el('rect', { x: 94, y: 112, width: 12, height: 28, rx: 4, fill: '#244c78' }));
-  parent.appendChild(el('circle', { cx: 100, cy: 121, r: 2.2, fill: '#dbe5ef' }));
-  parent.appendChild(el('circle', { cx: 100, cy: 130, r: 2.2, fill: '#dbe5ef' }));
+  parent.appendChild(el('rect', { x: 94, y: 132, width: 12, height: 26, rx: 4, fill: '#244c78' }));
+  parent.appendChild(el('circle', { cx: 100, cy: 141, r: 2.2, fill: '#dbe5ef' }));
+  parent.appendChild(el('circle', { cx: 100, cy: 150, r: 2.2, fill: '#dbe5ef' }));
 }
 
 function addCat(parent: SVGElement): void {
-  const cat = el('g');
+  const cat = el('g', { transform: 'translate(0 32)' });
   cat.append(
     el('path', { d: 'M77,139 L83,126 L91,137 Q100,132 109,137 L117,126 L123,139 L120,161 Q100,173 80,161 Z', fill: '#d8d0c9', stroke: '#746b68', 'stroke-width': 2 }),
     el('circle', { cx: 91, cy: 148, r: 2.2, fill: INK }),
     el('circle', { cx: 109, cy: 148, r: 2.2, fill: INK }),
     el('path', { d: 'M96,156 Q100,160 104,156', fill: 'none', stroke: '#c86c83', 'stroke-width': 2, 'stroke-linecap': 'round' }),
   );
-  for (const [cx, cy] of [[78, 189], [91, 198], [111, 188], [123, 202]]) {
+  for (const [cx, cy] of [[80, 185], [92, 193], [110, 184], [121, 195]]) {
     cat.appendChild(el('ellipse', { cx, cy, rx: 4.5, ry: 3, fill: '#8e817c', opacity: 0.65 }));
   }
   parent.appendChild(cat);

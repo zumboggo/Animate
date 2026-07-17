@@ -1,90 +1,84 @@
 import type { CharacterEmotion } from '../engine/storyTypes';
 
-type EyeStyle = 'dots' | 'wide' | 'happyArcs' | 'closed';
-
 interface FaceSpec {
   browL: string;
   browR: string;
-  eyes: EyeStyle;
   mouth: string;
   mouthFilled?: boolean;
 }
 
-// Head circle is centered at (100, 68) with r=45; eyes sit at x=84/116, y≈64.
+/**
+ * Chibi face vocabulary. The big eyes never change — every emotion is
+ * expressed with just the eyebrows and the mouth (plus tears for crying).
+ * Head circle is centered at (100, 74) with r=56; eyes sit at x=78/122, y≈73;
+ * brows hover around y≈46; the mouth lives around (100, 96..117).
+ */
 const FACES: Record<CharacterEmotion, FaceSpec> = {
   neutral: {
-    browL: 'M75,51 Q84,47 93,51',
-    browR: 'M107,51 Q116,47 125,51',
-    eyes: 'dots',
-    mouth: 'M91,89 Q100,93 109,89',
+    browL: 'M66,49 Q78,44 90,49',
+    browR: 'M110,49 Q122,44 134,49',
+    mouth: 'M92,101 Q100,107 108,101',
   },
   happy: {
-    browL: 'M75,47 Q84,42 93,47',
-    browR: 'M107,47 Q116,42 125,47',
-    eyes: 'dots',
-    mouth: 'M85,86 Q100,101 115,86',
+    browL: 'M66,45 Q78,40 90,45',
+    browR: 'M110,45 Q122,40 134,45',
+    mouth: 'M85,98 Q100,113 115,98',
   },
   sad: {
-    browL: 'M75,53 Q84,51 93,47',
-    browR: 'M107,47 Q116,51 125,53',
-    eyes: 'dots',
-    mouth: 'M90,95 Q100,86 110,95',
+    browL: 'M66,52 Q78,50 90,46',
+    browR: 'M110,46 Q122,50 134,52',
+    mouth: 'M91,108 Q100,99 109,108',
   },
   angry: {
-    browL: 'M75,46 L93,54',
-    browR: 'M125,46 L107,54',
-    eyes: 'dots',
-    mouth: 'M90,94 Q100,89 110,94',
+    browL: 'M66,44 L90,53',
+    browR: 'M134,44 L110,53',
+    mouth: 'M91,106 Q100,101 109,106',
   },
   scared: {
-    browL: 'M75,44 Q84,39 93,44',
-    browR: 'M107,44 Q116,39 125,44',
-    eyes: 'wide',
-    mouth: 'M91,92 Q95,88 99,92 Q103,96 107,92',
+    browL: 'M66,41 Q78,35 90,41',
+    browR: 'M110,41 Q122,35 134,41',
+    mouth: 'M90,104 Q95,100 100,104 Q105,108 110,104',
   },
   surprised: {
-    browL: 'M75,43 Q84,38 93,43',
-    browR: 'M107,43 Q116,38 125,43',
-    eyes: 'wide',
-    mouth: 'M100,86 a6,7.5 0 1 0 0.01,0 Z',
+    browL: 'M66,39 Q78,33 90,39',
+    browR: 'M110,39 Q122,33 134,39',
+    mouth: 'M100,97 a6.5,8 0 1 0 0.01,0 Z',
     mouthFilled: true,
   },
   laughing: {
-    browL: 'M75,46 Q84,41 93,46',
-    browR: 'M107,46 Q116,41 125,46',
-    eyes: 'happyArcs',
-    mouth: 'M84,85 Q100,84 116,85 Q114,105 100,105 Q86,105 84,85 Z',
+    browL: 'M66,44 Q78,38 90,44',
+    browR: 'M110,44 Q122,38 134,44',
+    mouth: 'M84,97 Q100,95 116,97 Q114,117 100,117 Q86,117 84,97 Z',
     mouthFilled: true,
   },
   confused: {
-    browL: 'M75,46 Q84,42 93,46',
-    browR: 'M107,52 L125,52',
-    eyes: 'dots',
-    mouth: 'M91,93 Q96,88 101,93 Q105,96 110,90',
+    browL: 'M66,44 Q78,39 90,44',
+    browR: 'M110,52 L134,52',
+    mouth: 'M91,104 Q96,99 101,104 Q106,108 111,100',
   },
 };
 
-const TALK_MOUTH = 'M100,85 a7,8.5 0 1 0 0.01,0 Z';
+const TALK_MOUTH = 'M100,96 a7,9 0 1 0 0.01,0 Z';
 
 export interface FaceElements {
   browL: SVGPathElement;
   browR: SVGPathElement;
-  eyeGroups: Record<EyeStyle, SVGGElement>;
+  eyesOpen: SVGGElement;
+  eyesClosed: SVGGElement;
   mouth: SVGPathElement;
   tears: SVGGElement;
   inkColor: string;
 }
 
 /**
- * Drives one character's face: emotion swaps, idle blinking, and a simple
- * open/close mouth flap while the character is speaking.
+ * Drives one character's face: brow/mouth emotion swaps, an occasional
+ * blink, and a simple open/close mouth flap while the character speaks.
  */
 export class FaceController {
   private emotion: CharacterEmotion = 'neutral';
   private blinkTimer: ReturnType<typeof setTimeout> | null = null;
   private talkTimer: ReturnType<typeof setInterval> | null = null;
   private talkOpen = false;
-  private blinking = false;
 
   constructor(private els: FaceElements) {
     this.apply();
@@ -122,15 +116,8 @@ export class FaceController {
     if (this.blinkTimer) return;
     const schedule = () => {
       this.blinkTimer = setTimeout(() => {
-        const spec = FACES[this.emotion];
-        if (spec.eyes === 'dots' || spec.eyes === 'wide') {
-          this.blinking = true;
-          this.applyEyes();
-          setTimeout(() => {
-            this.blinking = false;
-            this.applyEyes();
-          }, 140);
-        }
+        this.setEyesClosed(true);
+        setTimeout(() => this.setEyesClosed(false), 150);
         schedule();
       }, 2600 + Math.random() * 2600);
     };
@@ -140,8 +127,7 @@ export class FaceController {
   stopBlinking(): void {
     if (this.blinkTimer) clearTimeout(this.blinkTimer);
     this.blinkTimer = null;
-    this.blinking = false;
-    this.applyEyes();
+    this.setEyesClosed(false);
   }
 
   dispose(): void {
@@ -149,20 +135,16 @@ export class FaceController {
     this.stopTalking();
   }
 
+  private setEyesClosed(closed: boolean): void {
+    this.els.eyesOpen.style.display = closed ? 'none' : '';
+    this.els.eyesClosed.style.display = closed ? '' : 'none';
+  }
+
   private apply(): void {
     const spec = FACES[this.emotion];
     this.els.browL.setAttribute('d', spec.browL);
     this.els.browR.setAttribute('d', spec.browR);
-    this.applyEyes();
     this.applyMouth();
-  }
-
-  private applyEyes(): void {
-    const spec = FACES[this.emotion];
-    const active: EyeStyle = this.blinking ? 'closed' : spec.eyes;
-    for (const [style, group] of Object.entries(this.els.eyeGroups)) {
-      group.style.display = style === active ? '' : 'none';
-    }
   }
 
   private applyMouth(): void {
