@@ -95,10 +95,13 @@ export interface Story {
 
 export interface CastAppearance {
   skin?: string;
-  hair?: 'short' | 'curly' | 'spiky' | 'long';
+  hair?: 'short' | 'curly' | 'spiky' | 'long' | 'pigtails' | 'sidePonytail';
   hairColor?: string;
   shirtColor?: string;
   pantsColor?: string;
+  outfit?: 'shirt' | 'dress';
+  dressColor?: string;
+  pattern?: 'plain' | 'roses';
   height?: number;
   build?: 'small' | 'average' | 'broad';
 }

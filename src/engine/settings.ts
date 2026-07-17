@@ -3,17 +3,18 @@ const STORAGE_KEY = 'animate-settings';
 interface StoredSettings {
   autoplay: boolean;
   reduceMotion: boolean;
+  voices: boolean;
   lastStory?: string;
 }
 
 function load(): StoredSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { autoplay: false, reduceMotion: false, ...JSON.parse(raw) };
+    if (raw) return { autoplay: false, reduceMotion: false, voices: true, ...JSON.parse(raw) };
   } catch {
     // Corrupt storage falls back to defaults.
   }
-  return { autoplay: false, reduceMotion: false };
+  return { autoplay: false, reduceMotion: false, voices: true };
 }
 
 const state = load();
@@ -37,6 +38,14 @@ export const settings = {
   },
   set autoplay(value: boolean) {
     state.autoplay = value;
+    persist();
+  },
+
+  get voices(): boolean {
+    return state.voices;
+  },
+  set voices(value: boolean) {
+    state.voices = value;
     persist();
   },
 

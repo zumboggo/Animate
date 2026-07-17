@@ -8,6 +8,9 @@
       "hairColor": "#2b1b12",
       "shirtColor": "#5aa9e6",
       "pantsColor": "#39415c",
+      "outfit": "shirt",
+      "dressColor": "#5aa9e6",
+      "pattern": "plain",
       "height": 1.0,
       "build": "average"
     }
@@ -21,6 +24,9 @@
       "hairColor": "#3b2415",
       "shirtColor": "#f25f5c",
       "pantsColor": "#2d2d2d",
+      "outfit": "shirt",
+      "dressColor": "#f25f5c",
+      "pattern": "plain",
       "height": 0.95,
       "build": "small"
     }
@@ -34,8 +40,43 @@
       "hairColor": "#1f1a2e",
       "shirtColor": "#e2777a",
       "pantsColor": "#4a3f66",
+      "outfit": "shirt",
+      "dressColor": "#e2777a",
+      "pattern": "plain",
       "height": 0.97,
       "build": "average"
+    }
+  },
+  "ANNA": {
+    "displayName": "Anna",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#f2c4a3",
+      "hair": "sidePonytail",
+      "hairColor": "#3a2925",
+      "shirtColor": "#f6d8dd",
+      "pantsColor": "#d85f6d",
+      "outfit": "dress",
+      "dressColor": "#861d48",
+      "pattern": "roses",
+      "height": 1.08,
+      "build": "average"
+    }
+  },
+  "SARAH": {
+    "displayName": "Sarah",
+    "adapter": "svgRig",
+    "appearance": {
+      "skin": "#efc09e",
+      "hair": "pigtails",
+      "hairColor": "#4a3328",
+      "shirtColor": "#f6d8dd",
+      "pantsColor": "#efc09e",
+      "outfit": "dress",
+      "dressColor": "#861d48",
+      "pattern": "roses",
+      "height": 0.82,
+      "build": "small"
     }
   },
   "BLOB": {

@@ -3,7 +3,10 @@ import { parseStory } from '../src/engine/parser';
 import { compileStory } from '../src/engine/validator';
 import type { StoryCommand } from '../src/engine/storyTypes';
 
-const OPTS = { characters: ['LIN', 'MAX', 'MEI'], scenes: ['park', 'bedroom', 'street'] };
+const OPTS = {
+  characters: ['LIN', 'MAX', 'MEI', 'ANNA', 'SARAH'],
+  scenes: ['park', 'bedroom', 'street', 'peppa-land'],
+};
 
 function compile(source: string) {
   return compileStory(source, OPTS);
@@ -159,6 +162,16 @@ describe('the shipped demo stories compile cleanly', () => {
 
   it('mei-dance.story has no errors', async () => {
     const { default: source } = await import('../stories/mei-dance.story?raw');
+    expect(compile(source).errors).toEqual([]);
+  });
+
+  it('sisters.story has no errors', async () => {
+    const { default: source } = await import('../stories/sisters.story?raw');
+    expect(compile(source).errors).toEqual([]);
+  });
+
+  it('peppa-land-adventure.story has no errors', async () => {
+    const { default: source } = await import('../stories/peppa-land-adventure.story?raw');
     expect(compile(source).errors).toEqual([]);
   });
 });

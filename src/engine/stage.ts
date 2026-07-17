@@ -1,4 +1,5 @@
 import { StageEffects } from '../animation/stageEffects';
+import peppaLandUrl from '../../assets/backgrounds/peppa-land.png?url';
 
 /**
  * Built-in vector backdrops. M3 will add image backgrounds from
@@ -6,6 +7,8 @@ import { StageEffects } from '../animation/stageEffects';
  * back to these.
  */
 const SCENES: Record<string, string> = {
+  'peppa-land': `
+    <img src="${peppaLandUrl}" alt="" draggable="false" />`,
   park: `
     <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <defs>

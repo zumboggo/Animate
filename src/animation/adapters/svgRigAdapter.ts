@@ -48,6 +48,7 @@ export class SvgRigAdapter extends BaseAdapter {
 
   protected buildContent(inner: HTMLElement): void {
     this.rig = buildRigCharacter(this.entry.appearance);
+    this.rig.svg.style.height = `${(this.rig.appearance.height * 100).toFixed(1)}%`;
     inner.appendChild(this.rig.svg);
 
     const pivots = new Map(BONE_DEFS.map((b) => [b.name, { px: b.pivotX, py: b.pivotY }]));

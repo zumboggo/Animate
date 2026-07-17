@@ -6,7 +6,7 @@ export class ErrorOverlay {
 
   constructor(private stageEl: HTMLElement) {}
 
-  show(storyName: string, errors: StoryError[]): void {
+  show(storyName: string, errors: StoryError[], authoring = false): void {
     this.hide();
     this.el = document.createElement('div');
     this.el.className = 'error-overlay';
@@ -15,7 +15,9 @@ export class ErrorOverlay {
     h.textContent = '🎬 Oops — the script needs a little fix';
     const sub = document.createElement('p');
     sub.className = 'error-sub';
-    sub.textContent = `Found ${errors.length === 1 ? 'one thing' : errors.length + ' things'} to fix in "${storyName}". Save the file and this page will refresh.`;
+    sub.textContent = authoring
+      ? `Found ${errors.length === 1 ? 'one thing' : errors.length + ' things'} to fix in “${storyName}”. Use the line links beside the editor to jump right there.`
+      : `Found ${errors.length === 1 ? 'one thing' : errors.length + ' things'} to fix in “${storyName}”. Save the file and this page will refresh.`;
 
     const list = document.createElement('ul');
     for (const err of [...errors].sort((a, b) => a.line - b.line)) {

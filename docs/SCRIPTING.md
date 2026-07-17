@@ -51,7 +51,7 @@ Shown on the opening card. Put it at the top.
 scene: park
 ```
 
-Available scenes: `park`, `bedroom`, `street`. You can change scene again in
+Available scenes: `park`, `bedroom`, `street`, `peppa-land`. You can change scene again in
 the middle of a story.
 
 ### Dialogue — making characters speak
@@ -157,10 +157,10 @@ fade in
 
 ## Characters
 
-Characters are defined in `stories/cast.json`. The starting cast is **LIN**,
-**MAX**, and **MEI**. To add someone new, copy one of the entries in
-`cast.json` and change the name, hair (`short`, `curly`, `spiky`, `long`), and
-colors.
+Characters are defined in `stories/cast.json`. The starting cast includes
+**ANNA**, **SARAH**, **LIN**, **MAX**, and **MEI**. In the browser studio, choose
+a character portrait before using the dialogue, entrance, or action shortcut.
+To add someone new, copy a cast entry and adjust its appearance.
 
 ## Playing your story
 
