@@ -1,4 +1,4 @@
-# A tiny sister story featuring the photo-inspired Anna and Sarah rigs.
+# A tiny sister story demonstrating Anna and Sarah's generated pose art together.
 
 title: The Sisters' Garden Dance
 scene: park

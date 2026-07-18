@@ -1,0 +1,52 @@
+{
+  "id": "SARAH",
+  "displayName": "Sarah",
+  "adapter": "puppetParts",
+  "renderMode": "poseSprites",
+  "scale": 0.85,
+  "defaultEmotion": "neutral",
+  "defaultPose": "neutral",
+  "baseAsset": "assets/characters/sarah/poses/neutral.png",
+  "paths": {
+    "reference": "assets/characters/sarah/reference",
+    "parts": "assets/characters/sarah/parts",
+    "face": "assets/characters/sarah/face",
+    "poses": "assets/characters/sarah/poses"
+  },
+  "layerOrder": [
+    "hair-back",
+    "back-arm",
+    "back-leg",
+    "pelvis",
+    "torso",
+    "front-leg",
+    "front-arm",
+    "head",
+    "face-base",
+    "eyes",
+    "eyebrows",
+    "mouth",
+    "hair-front",
+    "accessories"
+  ],
+  "pivots": {
+    "leftUpperArm": { "pivot": { "x": 0.5, "y": 0.12 }, "anchor": "leftShoulder" },
+    "leftForearm": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "leftElbow" },
+    "rightUpperArm": { "pivot": { "x": 0.5, "y": 0.12 }, "anchor": "rightShoulder" },
+    "rightForearm": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightElbow" }
+  },
+  "poses": {
+    "neutral": "poses/neutral.png",
+    "happy": "poses/happy.png",
+    "angry": "poses/angry.png",
+    "scared": "poses/scared.png",
+    "seated": "poses/seated.png",
+    "pointing": "poses/pointing.png",
+    "laughing": "poses/laughing.png"
+  },
+  "assetStatus": {
+    "poseSprites": "ready",
+    "bodyParts": "reference-only: the supplied parts sheet uses a different T-shirt design",
+    "faceParts": "reference-only: the supplied face parts do not match the pink-vest character"
+  }
+}

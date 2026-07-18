@@ -2,6 +2,7 @@ import type { CastEntry } from '../engine/storyTypes';
 import type { CharacterAnimationAdapter } from './animationTypes';
 import { warnOnce } from './adapters/baseAdapter';
 import { Live2dAdapter } from './adapters/live2dAdapter.stub';
+import { PuppetPartsAdapter } from './adapters/puppetPartsAdapter';
 import { SpineAdapter } from './adapters/spineAdapter.stub';
 import { SpriteSheetAdapter } from './adapters/spriteSheetAdapter';
 import { StaticSpriteAdapter } from './adapters/staticSpriteAdapter';
@@ -12,6 +13,7 @@ type AdapterFactory = (entry: CastEntry) => CharacterAnimationAdapter;
 
 const REGISTRY: Record<string, AdapterFactory> = {
   svgRig: (entry) => new SvgRigAdapter(entry),
+  puppetParts: (entry) => new PuppetPartsAdapter(entry),
   staticSprite: (entry) => new StaticSpriteAdapter(entry),
   spriteSheet: (entry) => new SpriteSheetAdapter(entry),
   webmClip: (entry) => new WebmClipAdapter(entry),

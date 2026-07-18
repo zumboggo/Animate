@@ -72,7 +72,7 @@ export function buildScriptEditor(
 
   const featuredOrder = ['ANNA', 'SARAH', 'GRACE', 'ELLIOTT', 'LEAH'];
   const selectableCast = Object.entries(cast)
-    .filter(([, entry]) => entry.adapter === 'svgRig')
+    .filter(([, entry]) => entry.adapter === 'svgRig' || entry.adapter === 'puppetParts')
     .sort(([a], [b]) => {
       const aRank = featuredOrder.indexOf(a);
       const bRank = featuredOrder.indexOf(b);
@@ -104,9 +104,17 @@ export function buildScriptEditor(
 
     const portrait = document.createElement('span');
     portrait.className = 'character-portrait';
-    const rig = buildRigCharacter(entry.appearance);
-    rig.svg.setAttribute('aria-hidden', 'true');
-    portrait.appendChild(rig.svg);
+    if (entry.adapter === 'puppetParts' && entry.asset) {
+      const image = document.createElement('img');
+      image.src = entry.asset;
+      image.alt = '';
+      image.draggable = false;
+      portrait.appendChild(image);
+    } else {
+      const rig = buildRigCharacter(entry.appearance);
+      rig.svg.setAttribute('aria-hidden', 'true');
+      portrait.appendChild(rig.svg);
+    }
     const copy = document.createElement('span');
     copy.className = 'character-copy';
     const displayName = document.createElement('strong');

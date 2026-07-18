@@ -137,3 +137,14 @@ Add a new action by dropping a clip JSON in `rig/clips/`, registering it in
 `clips/index.ts` and `ACTION_CLIPS` (svgRigAdapter), adding the verb to
 `ACTION_PHRASES` (validator.ts) and the `CharacterAction` union
 (storyTypes.ts).
+
+## Pose-first puppet parts
+
+`puppetPartsAdapter.ts` provides nested stage, scale, acting-motion, and art
+layers plus crossfaded full-body poses. It can therefore ship a coherent pose
+sheet before matching separated parts exist. Missing poses retain the previous
+clean art and warn once. Rig debug mode shows actor bounds, starter
+shoulder/hip pivots, layer order, and the current animation. Matching body and
+face layers can be added later without changing the director or `.story`
+syntax. Sarah and Anna use this adapter; see [SARAH_ASSETS.md](SARAH_ASSETS.md)
+and [ANNA_ASSETS.md](ANNA_ASSETS.md).

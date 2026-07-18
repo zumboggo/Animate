@@ -1,0 +1,58 @@
+{
+  "id": "ANNA",
+  "displayName": "Anna",
+  "adapter": "puppetParts",
+  "renderMode": "poseSprites",
+  "scale": 1.0,
+  "defaultEmotion": "neutral",
+  "defaultPose": "neutral",
+  "baseAsset": "assets/characters/anna/poses/neutral.png",
+  "paths": {
+    "reference": "assets/characters/anna/reference",
+    "parts": "assets/characters/anna/parts",
+    "face": "assets/characters/anna/face",
+    "poses": "assets/characters/anna/poses"
+  },
+  "layerOrder": [
+    "hair-back",
+    "back-arm",
+    "back-leg",
+    "pelvis",
+    "torso",
+    "front-leg",
+    "front-arm",
+    "head",
+    "face-base",
+    "eyes",
+    "eyebrows",
+    "mouth",
+    "hair-front",
+    "accessories"
+  ],
+  "pivots": {
+    "leftUpperArm": { "pivot": { "x": 0.5, "y": 0.1 }, "anchor": "leftShoulder" },
+    "leftForearm": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "leftElbow" },
+    "leftHand": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "leftWrist" },
+    "rightUpperArm": { "pivot": { "x": 0.5, "y": 0.1 }, "anchor": "rightShoulder" },
+    "rightForearm": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightElbow" },
+    "rightHand": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightWrist" },
+    "leftThigh": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "leftHip" },
+    "leftShin": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "leftKnee" },
+    "rightThigh": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightHip" },
+    "rightShin": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightKnee" }
+  },
+  "poses": {
+    "neutral": "poses/neutral.png",
+    "happy": "poses/happy.png",
+    "angry": "poses/angry.png",
+    "scared": "poses/scared.png",
+    "seated": "poses/seated.png",
+    "pointing": "poses/pointing.png",
+    "laughing": "poses/laughing.png"
+  },
+  "assetStatus": {
+    "poseSprites": "ready",
+    "bodyParts": "ready for layered-rig assembly and pivot tuning",
+    "faceParts": "ready for blink and talk-shape assembly"
+  }
+}

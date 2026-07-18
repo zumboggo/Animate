@@ -128,7 +128,9 @@ learning layer is planned — see the roadmap).
 The story engine never talks to a specific animation technology — adapters do.
 See **[docs/ANIMATION_ADAPTERS.md](docs/ANIMATION_ADAPTERS.md)** for the
 developer guide and **[docs/ASSET_GUIDE.md](docs/ASSET_GUIDE.md)** for asset
-conventions.
+conventions. The sisters' generated-art pipelines are documented in
+**[docs/SARAH_ASSETS.md](docs/SARAH_ASSETS.md)** and
+**[docs/ANNA_ASSETS.md](docs/ANNA_ASSETS.md)**.
 
 ## Roadmap
 

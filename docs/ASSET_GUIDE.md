@@ -52,6 +52,15 @@ Characters are defined in `stories/cast.json`. For the built-in SVG rig:
 The registry key (`LIN`) is the name used in scripts. `displayName` is what
 speech bubbles show.
 
+Sarah uses the generated-art `puppetParts` adapter in pose-first mode. Her
+production images and authoring manifest live under
+`public/assets/characters/sarah/`; see [SARAH_ASSETS.md](SARAH_ASSETS.md) for
+the extraction command, pose mapping, scale tuning, and current crop status.
+
+Anna uses the same adapter with a complete matching source set. Her transparent
+pose, body-part, and face assets live under `public/assets/characters/anna/`;
+see [ANNA_ASSETS.md](ANNA_ASSETS.md) for regeneration and tuning details.
+
 ## Future pre-rigged / sprite assets
 
 Organize per character under `assets/characters/`:

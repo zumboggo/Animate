@@ -132,6 +132,8 @@ export interface CastAppearance {
 export interface CastEntry {
   displayName: string;
   adapter: string;
+  /** Character-relative stage height; 1 is the standard cast height. */
+  scale?: number;
   appearance?: CastAppearance;
   /** For asset-backed adapters (sprites, Spine, Live2D, WebM). */
   asset?: string;
@@ -139,6 +141,12 @@ export interface CastEntry {
   animationMap?: Partial<Record<CharacterAction, string>>;
   /** Optional full-body pose art. Missing poses cleanly fall back to the reusable rig template. */
   poseAssets?: Partial<Record<CharacterPose, string>>;
+  /** Expression sprites used by pose-first characters when a named acting pose is unavailable. */
+  emotionAssets?: Partial<Record<CharacterEmotion, string>>;
+  /** Relative pose height, useful for seated/crouched art trimmed from a shared source sheet. */
+  poseScales?: Partial<Record<CharacterPose, number>>;
+  /** Human-readable asset manifest used for authoring and rig tuning. */
+  assetManifest?: string;
   /** Optional per-character override for the director's default action-to-pose choice. */
   poseMap?: Partial<Record<CharacterAction, CharacterPose>>;
 }

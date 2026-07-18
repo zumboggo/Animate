@@ -1,0 +1,16 @@
+{
+  "padding": 14,
+  "sources": {
+    "fullbody": "reference/fullbody.png",
+    "poses": "reference/pose-sheet.png"
+  },
+  "crops": {
+    "neutral": { "source": "poses", "rect": [12, 42, 345, 637], "output": "poses/neutral.png" },
+    "happy": { "source": "poses", "rect": [372, 42, 372, 637], "output": "poses/happy.png" },
+    "angry": { "source": "poses", "rect": [760, 42, 352, 637], "output": "poses/angry.png" },
+    "scared": { "source": "poses", "rect": [0, 735, 278, 545], "output": "poses/scared.png" },
+    "seated": { "source": "poses", "rect": [230, 735, 360, 545], "output": "poses/seated.png" },
+    "pointing": { "source": "poses", "rect": [520, 700, 390, 580], "output": "poses/pointing.png" },
+    "laughing": { "source": "poses", "rect": [835, 735, 287, 545], "output": "poses/laughing.png" }
+  }
+}
