@@ -2,7 +2,8 @@
   "padding": 14,
   "sources": {
     "fullbody": "reference/fullbody.png",
-    "poses": "reference/pose-sheet.png"
+    "poses": "reference/pose-sheet.png",
+    "parts": "reference/parts-sheet.png"
   },
   "crops": {
     "neutral": { "source": "poses", "rect": [12, 42, 345, 637], "output": "poses/neutral.png" },
@@ -11,6 +12,42 @@
     "scared": { "source": "poses", "rect": [0, 735, 278, 545], "output": "poses/scared.png" },
     "seated": { "source": "poses", "rect": [230, 735, 360, 545], "output": "poses/seated.png" },
     "pointing": { "source": "poses", "rect": [520, 700, 390, 580], "output": "poses/pointing.png" },
-    "laughing": { "source": "poses", "rect": [835, 735, 287, 545], "output": "poses/laughing.png" }
+    "laughing": { "source": "poses", "rect": [835, 735, 287, 545], "output": "poses/laughing.png" },
+
+    "head": { "source": "parts", "rect": [422, 52, 310, 230], "output": "parts/head.png" },
+    "hair-front": { "source": "parts", "rect": [740, 52, 320, 225], "output": "parts/hair-front.png" },
+    "hair-back": { "source": "parts", "rect": [1072, 52, 335, 225], "output": "parts/hair-back.png" },
+    "face-base": { "source": "parts", "rect": [451, 306, 190, 190], "output": "parts/face-base.png" },
+    "torso": { "source": "parts", "rect": [42, 768, 270, 208], "output": "parts/torso.png" },
+    "left-upper-arm": { "source": "parts", "rect": [320, 778, 135, 170], "output": "parts/left-upper-arm.png" },
+    "left-forearm": { "source": "parts", "rect": [456, 780, 126, 162], "output": "parts/left-forearm.png" },
+    "left-hand": { "source": "parts", "rect": [585, 780, 101, 148], "output": "parts/left-hand.png" },
+    "right-upper-arm": { "source": "parts", "rect": [724, 776, 140, 176], "output": "parts/right-upper-arm.png" },
+    "right-forearm": { "source": "parts", "rect": [872, 780, 123, 165], "output": "parts/right-forearm.png" },
+    "right-hand": { "source": "parts", "rect": [1020, 780, 105, 150], "output": "parts/right-hand.png" },
+    "pelvis": { "source": "parts", "rect": [1195, 768, 205, 162], "output": "parts/pelvis.png" },
+    "left-thigh": { "source": "parts", "rect": [311, 948, 119, 138], "output": "parts/left-thigh.png" },
+    "left-shin": { "source": "parts", "rect": [477, 948, 103, 138], "output": "parts/left-shin.png" },
+    "left-foot": { "source": "parts", "rect": [607, 952, 127, 134], "output": "parts/left-foot.png" },
+    "right-thigh": { "source": "parts", "rect": [793, 948, 121, 138], "output": "parts/right-thigh.png" },
+    "right-shin": { "source": "parts", "rect": [970, 948, 105, 138], "output": "parts/right-shin.png" },
+    "right-foot": { "source": "parts", "rect": [1115, 952, 129, 134], "output": "parts/right-foot.png" },
+
+    "brows-neutral": { "source": "parts", "rect": [765, 328, 112, 45], "output": "face/brows-neutral.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "brows-angry": { "source": "parts", "rect": [912, 328, 112, 48], "output": "face/brows-angry.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "brows-sad": { "source": "parts", "rect": [1068, 327, 112, 49], "output": "face/brows-sad.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "brows-surprised": { "source": "parts", "rect": [1228, 324, 124, 51], "output": "face/brows-surprised.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "eyes-open": { "source": "parts", "rect": [635, 459, 113, 61], "output": "face/eyes-open.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "eyes-closed": { "source": "parts", "rect": [774, 461, 115, 58], "output": "face/eyes-closed.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "eyes-happy": { "source": "parts", "rect": [920, 460, 116, 59], "output": "face/eyes-happy.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "eyes-worried": { "source": "parts", "rect": [1073, 443, 121, 78], "output": "face/eyes-worried.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "eyes-surprised": { "source": "parts", "rect": [1238, 446, 120, 76], "output": "face/eyes-surprised.png", "keepLargestSubject": false, "minComponentPixels": 20 },
+    "mouth-neutral": { "source": "parts", "rect": [430, 605, 107, 67], "output": "face/mouth-neutral.png" },
+    "mouth-smile": { "source": "parts", "rect": [568, 596, 111, 80], "output": "face/mouth-smile.png" },
+    "mouth-open-talk": { "source": "parts", "rect": [715, 591, 105, 87], "output": "face/mouth-open-talk.png" },
+    "mouth-sad": { "source": "parts", "rect": [848, 601, 106, 72], "output": "face/mouth-sad.png" },
+    "mouth-angry": { "source": "parts", "rect": [990, 590, 112, 91], "output": "face/mouth-angry.png" },
+    "mouth-surprised": { "source": "parts", "rect": [1139, 589, 86, 90], "output": "face/mouth-surprised.png" },
+    "mouth-laugh": { "source": "parts", "rect": [1272, 590, 118, 90], "output": "face/mouth-laugh.png" }
   }
 }

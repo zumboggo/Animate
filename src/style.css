@@ -1183,9 +1183,8 @@ main {
   animation: actor-talk-settle 1.25s ease-in-out infinite;
 }
 
-/* Pose-first puppet adapter. Position/facing, character scale, acting motion,
-   and pose art each have their own layer so one transform never stomps on
-   another. The same DOM can accept individually layered body parts later. */
+/* Hybrid generated-art puppet. Position/facing, character scale, whole-body
+   motion, nested bones, and special-pose sprites each own one transform layer. */
 .puppet-parts-host {
   overflow: visible;
 }
@@ -1209,6 +1208,42 @@ main {
   width: 100%;
   will-change: transform;
 }
+
+.puppet-rig-art {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 50%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(-50%);
+  transform-origin: 50% 94%;
+  transition: opacity 170ms ease;
+  filter: drop-shadow(0 8px 7px rgba(41, 48, 43, 0.13));
+  pointer-events: none;
+}
+
+.puppet-bone {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  will-change: transform;
+}
+
+.puppet-rig-layer {
+  position: absolute;
+  max-width: none;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.puppet.is-rig-active .puppet-rig-art { opacity: 1; }
+.puppet.is-rig-active .puppet-pose-sprite { opacity: 0; }
+.puppet.is-special-pose .puppet-rig-art { opacity: 0; }
+.puppet.is-special-pose .puppet-pose-sprite.is-active { opacity: 1; }
 
 .puppet-animation-layer.is-idle {
   animation: puppet-idle 3.2s ease-in-out infinite;
@@ -1283,6 +1318,11 @@ main {
 
 .rig-debug .puppet-debug-overlay {
   display: block;
+}
+
+.rig-debug .puppet-rig-layer {
+  outline: 1px solid rgba(14, 116, 144, 0.5);
+  outline-offset: -1px;
 }
 
 .puppet-debug-name,

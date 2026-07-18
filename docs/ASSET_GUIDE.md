@@ -52,7 +52,7 @@ Characters are defined in `stories/cast.json`. For the built-in SVG rig:
 The registry key (`LIN`) is the name used in scripts. `displayName` is what
 speech bubbles show.
 
-Sarah uses the generated-art `puppetParts` adapter in pose-first mode. Her
+Sarah uses the generated-art `puppetParts` adapter in hybrid bone-and-pose mode. Her
 production images and authoring manifest live under
 `public/assets/characters/sarah/`; see [SARAH_ASSETS.md](SARAH_ASSETS.md) for
 the extraction command, pose mapping, scale tuning, and current crop status.

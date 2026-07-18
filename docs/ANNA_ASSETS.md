@@ -30,21 +30,21 @@ or eyebrows while removing isolated sheet specks. Adjust only the measured
 ## Runtime mapping
 
 `stories/cast.json` assigns Anna `adapter: "puppetParts"` at scale `1.0`; Sarah
-remains `0.85`. Dialogue emotions crossfade among the neutral, happy, angry,
-and scared sprites. Sit, point, laugh, and dance use their dedicated full-body
-poses. Walk and run remain stage translation plus a restrained body bob, while
-small actions use whole-body puppet-theatre motion.
+remains `0.85`. Dialogue uses the layered rig, independent face shapes, and
+mouth animation. Sit, point, laugh, scared recoil, and dance use dedicated
+full-body poses. Walk and run combine stage translation, a restrained body bob,
+and small nested limb motion; nod, shake, wave, tremble, bounce, and recoil stay
+on the rig.
 
 Anna's extracted body and face parts match her red Canada top, heart-patterned
-leggings, pink shoes, brown bob, and pink sunglasses. They are ready for future
-joint-level assembly. The production renderer currently favors the complete
-pose sprites because those guarantee clean shoulders and hips during difficult
-actions.
+leggings, pink shoes, brown bob, and pink sunglasses. They now form the
+production joint-level assembly. Complete pose sprites remain available where
+they guarantee cleaner shoulders and hips during difficult actions.
 
 ## Pivots and debug tuning
 
-`character.json` contains normalized starter pivots for shoulders, elbows,
-wrists, hips, and knees plus the intended layer order. Use **Rig debug** below
-the stage to inspect Anna's bounds, current pose, shoulder/hip guides, and layer
-labels. When the layered rig is enabled, keep arms behind the shirt, place
-shoulder pivots inside the torso, and preserve generous overlap at every joint.
+`character.json` contains the live normalized pivots for shoulders, elbows,
+wrists, hips, knees, and ankles plus layer image bounds and ordering. Use **Rig
+debug** below the stage to inspect every pivot, part outline, and layer label.
+Keep arms behind the shirt, place shoulder pivots inside the torso, and preserve
+generous overlap at every joint.

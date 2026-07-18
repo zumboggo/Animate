@@ -2,7 +2,7 @@
   "id": "ANNA",
   "displayName": "Anna",
   "adapter": "puppetParts",
-  "renderMode": "poseSprites",
+  "renderMode": "hybrid",
   "scale": 1.0,
   "defaultEmotion": "neutral",
   "defaultPose": "neutral",
@@ -40,6 +40,84 @@
     "leftShin": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "leftKnee" },
     "rightThigh": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightHip" },
     "rightShin": { "pivot": { "x": 0.5, "y": 0.08 }, "anchor": "rightKnee" }
+  },
+  "rig": {
+    "aspectRatio": 0.48,
+    "rotationScale": 0.68,
+    "bones": {
+      "root": { "pivot": [50, 94], "z": 0 },
+      "pelvis": { "parent": "root", "pivot": [50, 59], "z": 1 },
+      "leftThigh": { "parent": "pelvis", "pivot": [42, 61], "z": -2 },
+      "leftShin": { "parent": "leftThigh", "pivot": [40, 76], "z": 0 },
+      "leftFoot": { "parent": "leftShin", "pivot": [39, 90], "z": 0 },
+      "rightThigh": { "parent": "pelvis", "pivot": [58, 61], "z": -3 },
+      "rightShin": { "parent": "rightThigh", "pivot": [60, 76], "z": 0 },
+      "rightFoot": { "parent": "rightShin", "pivot": [61, 90], "z": 0 },
+      "torso": { "parent": "root", "pivot": [50, 53], "z": 3 },
+      "leftUpperArm": { "parent": "torso", "pivot": [31, 33], "z": -2 },
+      "leftForearm": { "parent": "leftUpperArm", "pivot": [24, 48], "z": 0 },
+      "leftHand": { "parent": "leftForearm", "pivot": [20, 64], "z": 0 },
+      "rightUpperArm": { "parent": "torso", "pivot": [69, 33], "z": -3 },
+      "rightForearm": { "parent": "rightUpperArm", "pivot": [76, 48], "z": 0 },
+      "rightHand": { "parent": "rightForearm", "pivot": [80, 64], "z": 0 },
+      "head": { "parent": "torso", "pivot": [50, 30], "z": 4 }
+    },
+    "layers": [
+      { "name": "left-thigh", "bone": "leftThigh", "asset": "assets/characters/anna/parts/left-thigh.png", "box": [24, 57, 25, 22], "z": 0 },
+      { "name": "left-shin", "bone": "leftShin", "asset": "assets/characters/anna/parts/left-shin.png", "box": [26, 73, 21, 20], "z": 0 },
+      { "name": "left-foot", "bone": "leftFoot", "asset": "assets/characters/anna/parts/left-foot.png", "box": [19, 87, 31, 12], "z": 0 },
+      { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/anna/parts/right-thigh.png", "box": [51, 57, 25, 22], "z": 0 },
+      { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/anna/parts/right-shin.png", "box": [53, 73, 21, 20], "z": 0 },
+      { "name": "right-foot", "bone": "rightFoot", "asset": "assets/characters/anna/parts/right-foot.png", "box": [50, 87, 31, 12], "z": 0 },
+      { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/anna/parts/pelvis.png", "box": [29, 54, 42, 19], "z": 1 },
+      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/anna/parts/left-upper-arm.png", "box": [14, 30, 25, 30], "z": 0 },
+      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/anna/parts/left-forearm.png", "box": [10, 45, 22, 27], "z": 0 },
+      { "name": "left-hand", "bone": "leftHand", "asset": "assets/characters/anna/parts/left-hand.png", "box": [10, 61, 18, 17], "z": 0 },
+      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/anna/parts/right-upper-arm.png", "box": [61, 30, 25, 30], "z": 0 },
+      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/anna/parts/right-forearm.png", "box": [68, 45, 22, 27], "z": 0 },
+      { "name": "right-hand", "bone": "rightHand", "asset": "assets/characters/anna/parts/right-hand.png", "box": [72, 61, 18, 17], "z": 0 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/anna/parts/torso.png", "box": [24, 27, 52, 37], "z": 2 },
+      { "name": "hair-back", "bone": "head", "asset": "assets/characters/anna/parts/hair-back.png", "box": [7, 0, 86, 35], "z": 0 },
+      { "name": "face-base", "bone": "head", "asset": "assets/characters/anna/parts/face-base.png", "box": [20, 3, 60, 31], "z": 1 },
+      { "name": "brows", "bone": "head", "asset": "assets/characters/anna/face/brows-neutral.png", "box": [34, 12, 32, 4], "z": 2, "feature": "brows" },
+      { "name": "eyes", "bone": "head", "asset": "assets/characters/anna/face/eyes-open.png", "box": [31, 15, 38, 7], "z": 3, "feature": "eyes" },
+      { "name": "mouth", "bone": "head", "asset": "assets/characters/anna/face/mouth-neutral.png", "box": [40, 22, 20, 6], "z": 4, "feature": "mouth" },
+      { "name": "hair-front", "bone": "head", "asset": "assets/characters/anna/parts/hair-front.png", "box": [7, 0, 86, 35], "z": 5 }
+    ],
+    "face": {
+      "brows": {
+        "neutral": "assets/characters/anna/face/brows-neutral.png",
+        "happy": "assets/characters/anna/face/brows-neutral.png",
+        "sad": "assets/characters/anna/face/brows-sad.png",
+        "angry": "assets/characters/anna/face/brows-angry.png",
+        "scared": "assets/characters/anna/face/brows-sad.png",
+        "surprised": "assets/characters/anna/face/brows-surprised.png",
+        "laughing": "assets/characters/anna/face/brows-neutral.png",
+        "confused": "assets/characters/anna/face/brows-angry.png"
+      },
+      "eyes": {
+        "neutral": "assets/characters/anna/face/eyes-open.png",
+        "closed": "assets/characters/anna/face/eyes-closed.png",
+        "happy": "assets/characters/anna/face/eyes-happy.png",
+        "sad": "assets/characters/anna/face/eyes-worried.png",
+        "angry": "assets/characters/anna/face/eyes-open.png",
+        "scared": "assets/characters/anna/face/eyes-worried.png",
+        "surprised": "assets/characters/anna/face/eyes-surprised.png",
+        "laughing": "assets/characters/anna/face/eyes-happy.png",
+        "confused": "assets/characters/anna/face/eyes-worried.png"
+      },
+      "mouths": {
+        "neutral": "assets/characters/anna/face/mouth-neutral.png",
+        "talk": "assets/characters/anna/face/mouth-open-talk.png",
+        "happy": "assets/characters/anna/face/mouth-smile.png",
+        "sad": "assets/characters/anna/face/mouth-sad.png",
+        "angry": "assets/characters/anna/face/mouth-angry.png",
+        "scared": "assets/characters/anna/face/mouth-surprised.png",
+        "surprised": "assets/characters/anna/face/mouth-surprised.png",
+        "laughing": "assets/characters/anna/face/mouth-laugh.png",
+        "confused": "assets/characters/anna/face/mouth-neutral.png"
+      }
+    }
   },
   "poses": {
     "neutral": "poses/neutral.png",

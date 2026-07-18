@@ -23,13 +23,13 @@ public/assets/characters/sarah/
     seated.png
     pointing.png
     laughing.png
-  parts/                   reserved for matching layered artwork
-  face/                    reserved for matching face shapes
+  parts/                   matching head, clothing, limbs, pelvis, and feet
+  face/                    brows, eyes, and mouth expression shapes
 ```
 
-The browser loads only the transparent files in `poses/`. Reference sheets are
-kept so crops are reproducible and future art can be checked against the
-original generation.
+The browser assembles the transparent files in `parts/` and `face/` for normal
+acting, then crossfades to complete sprites in `poses/` for difficult actions.
+Reference sheets are kept so every crop remains reproducible.
 
 ## Rebuild the pose crops
 
@@ -60,32 +60,24 @@ Hard actions use the coherent full-body art:
 - `actScared` and scared/surprised dialogue -> `scared.png`
 - angry dialogue and `handsOnHips` -> `angry.png`
 
-Walk/run remain stage translation with a small bob. Nod, shake, jump, wave,
-tremble, recoil, and cry use restrained whole-body motion. A missing image logs
-one warning and retains the previous clean pose; it never breaks story
-playback.
+Walk/run use stage translation, a small body bob, and restrained nested limb
+motion. Nod, shake, jump, wave, tremble, recoil, and cry animate the layered
+bone rig. Dialogue swaps real mouth shapes, and the eye layer blinks
+independently. A missing image logs one warning and falls back to a clean pose;
+it never breaks story playback.
 
 ## Pivots, layers, and debug view
 
-The manifest records the intended future layer order and normalized starter
-pivots. Turn on **Rig debug** under the stage to show Sarah's actor bounds,
-shoulder/hip pivot guides, layer-order label, and current animation. Tune the
-manifest first when matching separated parts are introduced, then position
-each nested image around those anchors. Keep arms behind the vest/torso and use
-generous shoulder, elbow, wrist, hip, knee, and ankle overlap.
+The manifest drives the production layer order, normalized bone pivots, image
+bounds, and face mappings. Turn on **Rig debug** under the stage to show every
+bone pivot and part outline plus the live layer order. Keep arms behind the
+vest/torso and use generous shoulder, elbow, wrist, hip, knee, and ankle
+overlap when tuning it.
 
-## Current asset gap
+## Current production mode
 
-The supplied separated-parts sheet is useful as construction reference, but
-its Sarah wears a plain pink T-shirt and has a different face/hair rendering.
-The polished full-body and pose sheets show the requested pink vest over a
-light-pink shirt. Mixing them would make Sarah change design during animation,
-so `parts/` and `face/` are deliberately reserved rather than populated with
-inconsistent crops.
-
-As a result, Sarah currently uses expression pose sprites and subtle talking
-motion. Per-eye blinking and mouth-flap swaps are not enabled yet. To add them,
-generate a new transparent parts/face sheet that exactly matches the pink-vest
-model, then crop those shapes into `parts/` and `face/` and update
-`character.json`. No `.story`, parser, validator, or director changes are
-needed.
+The July 18 parts sheet matches Sarah's pink vest, light-pink sleeves, grey
+pants, pigtails, and pink shoes. Those assets now power her hybrid renderer:
+the bone rig handles continuous acting and face animation, while the seven
+full-body sprites preserve polished silhouettes for seated, pointing,
+laughing, scared, and other difficult poses. No `.story` syntax changed.

@@ -42,10 +42,6 @@
       "fall": 0.86,
       "dance": 0.9
     },
-    "poseMap": {
-      "wave": "talkHappy",
-      "cry": "scared"
-    },
     "appearance": {
       "skin": "#efb487",
       "hair": "bob",
@@ -102,10 +98,6 @@
       "surprised": 0.86,
       "fall": 0.86,
       "dance": 0.86
-    },
-    "poseMap": {
-      "wave": "talkHappy",
-      "cry": "scared"
     },
     "appearance": {
       "skin": "#efc09e",

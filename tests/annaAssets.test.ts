@@ -3,7 +3,7 @@ import anna from '../public/assets/characters/anna/character.json';
 import cast from '../stories/cast.json';
 
 describe('Anna generated-art character', () => {
-  it('uses the pose-first puppet adapter above Sarah toddler scale', () => {
+  it('uses the hybrid bone-and-pose adapter above Sarah toddler scale', () => {
     expect(cast.ANNA.adapter).toBe('puppetParts');
     expect(cast.ANNA.scale).toBe(1);
     expect(cast.ANNA.scale).toBeGreaterThan(cast.SARAH.scale);
@@ -20,6 +20,9 @@ describe('Anna generated-art character', () => {
   });
 
   it('publishes a matching parts-and-face manifest for rig assembly', () => {
+    expect(anna.renderMode).toBe('hybrid');
+    expect(Object.keys(anna.rig.bones)).toHaveLength(16);
+    expect(anna.rig.layers).toHaveLength(20);
     expect(anna.paths).toMatchObject({
       parts: 'assets/characters/anna/parts',
       face: 'assets/characters/anna/face',

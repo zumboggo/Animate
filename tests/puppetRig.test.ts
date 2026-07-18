@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { CLIPS } from '../src/rig/clips';
 import { BONE_DEFS } from '../src/rig/svgSkeleton';
+import anna from '../public/assets/characters/anna/character.json';
+import sarah from '../public/assets/characters/sarah/character.json';
 
 function rotations(clipName: string, boneName: string): number[] {
   return CLIPS[clipName].keyframes.map((frame) => frame.bones[boneName]?.rotate ?? 0);
@@ -29,5 +31,22 @@ describe('smooth puppet rig guardrails', () => {
     expect(maxAbs(rotations('point', 'rightUpperArm'))).toBeLessThanOrEqual(48);
     expect(maxAbs(rotations('sit', 'leftThigh'))).toBeLessThanOrEqual(8);
     expect(maxAbs(rotations('sit', 'rightThigh'))).toBeLessThanOrEqual(8);
+  });
+
+  it('nests generated-art limbs into real parent-child bone chains', () => {
+    for (const manifest of [anna, sarah]) {
+      expect(manifest.rig.bones.leftForearm.parent).toBe('leftUpperArm');
+      expect(manifest.rig.bones.leftHand.parent).toBe('leftForearm');
+      expect(manifest.rig.bones.rightShin.parent).toBe('rightThigh');
+      expect(manifest.rig.bones.rightFoot.parent).toBe('rightShin');
+      expect(manifest.rig.bones.head.parent).toBe('torso');
+    }
+  });
+
+  it('keeps screen-right wave bones on the screen-right side', () => {
+    for (const manifest of [anna, sarah]) {
+      expect(manifest.rig.bones.rightUpperArm.pivot[0]).toBeGreaterThan(50);
+      expect(manifest.rig.bones.leftUpperArm.pivot[0]).toBeLessThan(50);
+    }
   });
 });

@@ -7,48 +7,74 @@ import type {
   Gait,
 } from '../../engine/storyTypes';
 import { sleep } from '../../engine/timing';
-import type {
-  ActingMotion,
-  AnimationOptions,
-  PoseTransitionOptions,
-} from '../animationTypes';
+import { CLIPS } from '../../rig/clips';
+import { RIG_POSES } from '../../rig/poseTemplates';
+import type { ActingMotion, AnimationOptions, PoseTransitionOptions } from '../animationTypes';
+import { PuppetBoneAnimator } from '../puppetBoneAnimator';
+import type { PuppetCharacterManifest, PuppetRigDefinition } from '../puppetRigTypes';
 import { BaseAdapter, warnOnce } from './baseAdapter';
 
-const POSE_TRANSFORMS: Record<CharacterPose, string> = {
-  idle: 'translate(0, 0) rotate(0deg)',
-  talkNeutral: 'translate(1px, -1px) rotate(-0.35deg)',
-  talkHappy: 'translate(1px, -2px) rotate(-0.6deg)',
-  talkAngry: 'translate(0, 0) rotate(0.45deg)',
-  scared: 'translate(-4px, 2px) rotate(-0.7deg)',
-  laugh: 'translate(0, 1px) rotate(-0.65deg)',
-  sit: 'translate(0, 12px) rotate(0deg)',
-  point: 'translate(2px, 0) rotate(-0.45deg)',
-  handsOnHips: 'translate(0, 0) rotate(0.4deg)',
-  surprised: 'translate(0, -3px) rotate(0.25deg)',
-  fall: 'translate(12px, 24px) rotate(8deg)',
-  dance: 'translate(-2px, -2px) rotate(-0.8deg)',
+interface ClipSpec {
+  clip: string;
+  loops?: number;
+  rate?: number;
+  energetic?: boolean;
+}
+
+const ACTION_CLIPS: Partial<Record<CharacterAction, ClipSpec>> = {
+  nod: { clip: 'nod' },
+  shakeHead: { clip: 'shakeHead' },
+  wave: { clip: 'wave' },
+  jump: { clip: 'jump', energetic: true },
+  bounce: { clip: 'bounce' },
+  recoil: { clip: 'recoil' },
+  tremble: { clip: 'tremble', loops: 6, energetic: true },
+  actScared: { clip: 'tremble', loops: 6, energetic: true },
+  treePose: { clip: 'treePose' },
+  sit: { clip: 'sit' },
+  laugh: { clip: 'laugh' },
+  cry: { clip: 'cry' },
+  point: { clip: 'point' },
+  dance: { clip: 'dance', loops: 2, energetic: true },
+  fall: { clip: 'fall', energetic: true },
 };
 
+const SPECIAL_POSES = new Set<CharacterPose>([
+  'scared',
+  'laugh',
+  'sit',
+  'point',
+  'handsOnHips',
+  'surprised',
+  'dance',
+]);
+
 /**
- * Pose-first implementation of the puppetParts contract.
+ * Hybrid generated-art adapter.
  *
- * Sarah currently has one coherent full-body pose set, while the supplied
- * separated parts use a different outfit.  This adapter therefore keeps the
- * requested nested transform layers and manifest contract, crossfades whole-
- * body poses for difficult acting, and uses restrained story-app motion for
- * everything else.  Matching layered parts can be added without changing the
- * director or .story syntax.
+ * Idle, dialogue, walking, blinking, nodding, waving, trembling, and other
+ * small actions use nested HTML bones assembled from the character manifest.
+ * Difficult acting beats crossfade to the supplied coherent full-body poses.
  */
 export class PuppetPartsAdapter extends BaseAdapter {
   private scaleLayer: HTMLDivElement | null = null;
   private animationLayer: HTMLDivElement | null = null;
   private puppet: HTMLDivElement | null = null;
+  private rigArt: HTMLDivElement | null = null;
   private activeSprite: HTMLImageElement | null = null;
   private standbySprite: HTMLImageElement | null = null;
+  private animator: PuppetBoneAnimator | null = null;
+  private bones = new Map<string, HTMLDivElement>();
+  private features = new Map<'brows' | 'eyes' | 'mouth', HTMLImageElement>();
+  private rigDefinition: PuppetRigDefinition | null = null;
   private currentEmotion: CharacterEmotion = 'neutral';
-  private currentPose: CharacterPose = 'idle';
   private currentAsset = '';
   private swapVersion = 0;
+  private idling = false;
+  private talking = false;
+  private talkOpen = false;
+  private blinkTimer: ReturnType<typeof setTimeout> | null = null;
+  private talkTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(private entry: CastEntry) {
     super();
@@ -56,7 +82,6 @@ export class PuppetPartsAdapter extends BaseAdapter {
 
   protected buildContent(inner: HTMLElement): void {
     inner.classList.add('puppet-parts-host');
-
     this.scaleLayer = document.createElement('div');
     this.scaleLayer.className = 'puppet-scale-layer';
     this.scaleLayer.style.height = `${((this.entry.scale ?? this.entry.appearance?.height ?? 1) * 100).toFixed(1)}%`;
@@ -64,12 +89,14 @@ export class PuppetPartsAdapter extends BaseAdapter {
     this.animationLayer = document.createElement('div');
     this.animationLayer.className = 'puppet-animation-layer';
     this.puppet = document.createElement('div');
-    this.puppet.className = 'puppet puppet-pose-first';
-    this.puppet.dataset.animation = 'idle';
+    this.puppet.className = 'puppet puppet-hybrid';
+    this.puppet.dataset.animation = 'loading-rig';
 
+    this.rigArt = document.createElement('div');
+    this.rigArt.className = 'puppet-rig-art';
     this.activeSprite = this.makeSprite('is-active');
     this.standbySprite = this.makeSprite('');
-    this.puppet.append(this.activeSprite, this.standbySprite, this.makeDebugOverlay());
+    this.puppet.append(this.rigArt, this.activeSprite, this.standbySprite, this.makeDebugOverlay());
     this.animationLayer.appendChild(this.puppet);
     this.scaleLayer.appendChild(this.animationLayer);
     inner.appendChild(this.scaleLayer);
@@ -80,20 +107,24 @@ export class PuppetPartsAdapter extends BaseAdapter {
       this.activeSprite.src = initial;
       this.applyPoseScale(this.activeSprite, 'idle');
     } else {
-      warnOnce(
-        `puppet-asset-${this.entry.displayName}`,
-        `${this.entry.displayName} has no puppet base asset; the actor will remain hidden.`,
-      );
       this.activeSprite.hidden = true;
     }
-    this.startIdle();
+    void this.loadLayeredRig();
   }
 
   unmount(): void {
     this.swapVersion += 1;
+    this.stopBlinking();
+    this.stopTalking();
+    this.animator?.dispose();
+    this.animator = null;
+    this.bones.clear();
+    this.features.clear();
+    this.rigDefinition = null;
     this.scaleLayer = null;
     this.animationLayer = null;
     this.puppet = null;
+    this.rigArt = null;
     this.activeSprite = null;
     this.standbySprite = null;
     super.unmount();
@@ -101,24 +132,22 @@ export class PuppetPartsAdapter extends BaseAdapter {
 
   async setEmotion(emotion: CharacterEmotion): Promise<void> {
     this.currentEmotion = emotion;
+    this.updateFace();
   }
 
   async transitionToPose(pose: CharacterPose, options: PoseTransitionOptions = {}): Promise<boolean> {
     if (!this.puppet || !this.animationLayer) return false;
-    this.currentPose = pose;
     this.setDebugAnimation(pose);
 
-    const source = this.resolveAsset(pose);
-    const swapped = source ? await this.swapTo(source, pose) : false;
-    if (!swapped && !this.currentAsset) return false;
-
-    const durationMs = options.durationMs ?? 300;
-    this.puppet.style.transitionDuration = `${durationMs}ms`;
-    this.puppet.style.transform = POSE_TRANSFORMS[pose];
-    await this.playWholeBodyMotion(options.motion ?? 'settle');
-    if (pose === 'idle') this.startIdle();
-    else this.stopIdle();
-    return true;
+    const specialSource = SPECIAL_POSES.has(pose) ? this.resolvePoseAsset(pose) : undefined;
+    if (specialSource) {
+      this.stopIdle();
+      const shown = await this.showPoseSprite(specialSource, pose);
+      if (!shown) return this.transitionRigToPose(pose, options);
+      await this.playWholeBodyMotion(options.motion ?? 'settle');
+      return true;
+    }
+    return this.transitionRigToPose(pose, options);
   }
 
   async playAction(action: CharacterAction, _options?: AnimationOptions): Promise<void> {
@@ -131,94 +160,187 @@ export class PuppetPartsAdapter extends BaseAdapter {
       await this.turnAround();
       return;
     }
-    if (settings.reduceMotion) {
-      await sleep(180);
+
+    const spec = ACTION_CLIPS[action];
+    if (this.animator && spec) {
+      this.showRig();
+      if (spec.energetic && settings.reduceMotion) {
+        await sleep(220);
+        return;
+      }
+      this.stopIdle();
+      this.setDebugAnimation(action);
+      await this.animator.play(CLIPS[spec.clip], { loops: spec.loops, rate: spec.rate });
+      if (!CLIPS[spec.clip].holdEnd) {
+        await this.animator.toRest(190);
+        this.startIdle();
+      }
       return;
     }
 
-    const motions: Partial<Record<CharacterAction, { frames: Keyframe[]; ms: number; loops?: number }>> = {
-      nod: {
-        frames: [{ transform: 'translateY(0)' }, { transform: 'translateY(4px) scaleY(.99)' }, { transform: 'translateY(0)' }],
-        ms: 520,
-      },
-      shakeHead: {
-        frames: [{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }],
-        ms: 420,
-      },
-      wave: {
-        frames: [{ transform: 'rotate(0)' }, { transform: 'rotate(-1.2deg)' }, { transform: 'rotate(.8deg)' }, { transform: 'rotate(0)' }],
-        ms: 620,
-      },
-      jump: {
-        frames: [{ transform: 'translateY(0)' }, { transform: 'translateY(-28px)' }, { transform: 'translateY(2px)' }, { transform: 'translateY(0)' }],
-        ms: 650,
-      },
-      bounce: {
-        frames: [{ transform: 'translateY(0)' }, { transform: 'translateY(-8px)' }, { transform: 'translateY(0)' }],
-        ms: 420,
-      },
-      recoil: {
-        frames: [{ transform: 'translateX(0) scale(1)' }, { transform: 'translateX(-8px) scale(.985)' }, { transform: 'translateX(1px) scale(1)' }],
-        ms: 360,
-      },
-      tremble: {
-        frames: [{ transform: 'translateX(0)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }],
-        ms: 150,
-        loops: 5,
-      },
-      cry: {
-        frames: [{ transform: 'translateY(0)' }, { transform: 'translateY(3px) rotate(-.5deg)' }, { transform: 'translateY(0)' }],
-        ms: 600,
-        loops: 2,
-      },
-      treePose: {
-        frames: [{ transform: 'rotate(0)' }, { transform: 'rotate(-.8deg)' }, { transform: 'rotate(.5deg)' }, { transform: 'rotate(0)' }],
-        ms: 900,
-      },
-    };
-    const motion = motions[action];
-    if (!motion) {
-      warnOnce(
-        `puppet-action-${this.entry.displayName}-${action}`,
-        `${this.entry.displayName} has no clean ${action} pose yet; using a gentle settle.`,
-      );
-      await this.playWholeBodyMotion('settle');
-      return;
-    }
-    this.setDebugAnimation(action);
-    await this.animationLayer.animate(motion.frames, {
-      duration: motion.ms,
-      iterations: motion.loops ?? 1,
-      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-    }).finished.catch(() => undefined);
+    // A clean whole-character fallback remains available while a manifest is
+    // loading or if an optional bone clip is unavailable.
+    await this.playFallbackMotion(action);
   }
 
   startIdle(): void {
+    if (this.idling || settings.reduceMotion) return;
+    this.idling = true;
     this.animationLayer?.classList.add('is-idle');
+    if (this.animator) void this.animator.play(CLIPS.idle);
   }
 
   stopIdle(): void {
+    this.idling = false;
     this.animationLayer?.classList.remove('is-idle');
+    this.animator?.stop();
   }
 
   startTalking(): void {
+    this.talking = true;
     this.animationLayer?.classList.add('is-talking');
+    if (!this.features.get('mouth') || this.talkTimer) return;
+    this.talkTimer = setInterval(() => {
+      this.talkOpen = !this.talkOpen;
+      this.updateMouth();
+    }, 145);
   }
 
   stopTalking(): void {
+    this.talking = false;
+    this.talkOpen = false;
     this.animationLayer?.classList.remove('is-talking');
+    if (this.talkTimer) clearInterval(this.talkTimer);
+    this.talkTimer = null;
+    this.updateMouth();
   }
 
   protected onMoveStart(gait: Gait): void {
     this.stopIdle();
+    this.showRig();
     this.setDebugAnimation(gait === 'run' ? 'run' : 'walk');
     this.animationLayer?.classList.add(gait === 'run' ? 'is-running' : 'is-walking');
+    if (this.animator) void this.animator.play(CLIPS.walk, { rate: gait === 'run' ? 1.75 : 1 });
   }
 
   protected onMoveEnd(): void {
     this.animationLayer?.classList.remove('is-walking', 'is-running');
-    this.setDebugAnimation(this.currentPose);
-    this.startIdle();
+    if (!this.animator) {
+      this.startIdle();
+      return;
+    }
+    this.animator.stop();
+    void this.animator.toRest(220).then(() => this.startIdle());
+  }
+
+  private async loadLayeredRig(): Promise<void> {
+    if (!this.entry.assetManifest || !this.rigArt || !this.puppet) return;
+    try {
+      const response = await fetch(this.entry.assetManifest);
+      if (!response.ok) throw new Error(`manifest returned ${response.status}`);
+      const manifest = await response.json() as PuppetCharacterManifest;
+      if (manifest.renderMode !== 'hybrid' || !manifest.rig) throw new Error('manifest has no hybrid rig');
+      if (!this.rigArt || !this.puppet) return;
+      this.rigDefinition = manifest.rig;
+      this.buildRig(manifest.rig);
+      const images = [...this.rigArt.querySelectorAll('img')];
+      await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
+      if (!this.rigArt || !this.puppet) return;
+      this.animator = new PuppetBoneAnimator(this.bones, manifest.rig.rotationScale ?? 0.7);
+      this.populateDebugOverlay(manifest.rig);
+      this.updateFace();
+      this.startBlinking();
+      this.showRig();
+      this.setDebugAnimation('idle');
+      this.startIdle();
+    } catch (error) {
+      warnOnce(
+        `puppet-manifest-${this.entry.displayName}`,
+        `${this.entry.displayName}'s layered rig could not load; keeping clean pose sprites. ${String(error)}`,
+      );
+      this.setDebugAnimation('pose fallback');
+      this.startIdle();
+    }
+  }
+
+  private buildRig(definition: PuppetRigDefinition): void {
+    if (!this.rigArt) return;
+    this.rigArt.replaceChildren();
+    this.rigArt.style.aspectRatio = String(definition.aspectRatio);
+    this.bones.clear();
+    this.features.clear();
+
+    for (const [name, bone] of Object.entries(definition.bones)) {
+      const element = document.createElement('div');
+      element.className = 'puppet-bone';
+      element.dataset.bone = name;
+      element.style.transformOrigin = `${bone.pivot[0]}% ${bone.pivot[1]}%`;
+      element.style.zIndex = String(bone.z ?? 0);
+      this.bones.set(name, element);
+    }
+    for (const [name, bone] of Object.entries(definition.bones)) {
+      const element = this.bones.get(name)!;
+      const parent = bone.parent ? this.bones.get(bone.parent) : undefined;
+      (parent ?? this.rigArt).appendChild(element);
+    }
+    for (const layer of definition.layers) {
+      const bone = this.bones.get(layer.bone);
+      if (!bone) continue;
+      const image = document.createElement('img');
+      image.className = 'puppet-rig-layer';
+      image.dataset.layer = layer.name;
+      image.src = layer.asset;
+      image.alt = '';
+      image.draggable = false;
+      const [left, top, width, height] = layer.box;
+      Object.assign(image.style, {
+        left: `${left}%`,
+        top: `${top}%`,
+        width: `${width}%`,
+        height: `${height}%`,
+        zIndex: String(layer.z ?? 0),
+      });
+      bone.appendChild(image);
+      if (layer.feature) this.features.set(layer.feature, image);
+    }
+  }
+
+  private async transitionRigToPose(pose: CharacterPose, options: PoseTransitionOptions): Promise<boolean> {
+    this.showRig();
+    if (!this.animator) {
+      const fallback = this.resolvePoseAsset(pose) ?? this.entry.asset;
+      return fallback ? this.showPoseSprite(fallback, pose) : false;
+    }
+    this.stopIdle();
+    const template = RIG_POSES[pose] ?? RIG_POSES.idle;
+    const durationMs = options.durationMs ?? 280;
+    if (this.puppet) {
+      this.puppet.style.transitionDuration = `${durationMs}ms`;
+      this.puppet.style.transform = template.presentation;
+    }
+    await this.animator.toPose(template.bones, durationMs, pose);
+    await this.playWholeBodyMotion(options.motion ?? template.motion ?? 'none');
+    if (pose === 'idle') this.startIdle();
+    return true;
+  }
+
+  private showRig(): void {
+    this.puppet?.classList.add('is-rig-active');
+    this.puppet?.classList.remove('is-special-pose');
+  }
+
+  private async showPoseSprite(source: string, pose: CharacterPose): Promise<boolean> {
+    const swapped = await this.swapTo(source, pose);
+    if (!swapped) return false;
+    this.puppet?.classList.remove('is-rig-active');
+    this.puppet?.classList.add('is-special-pose');
+    return true;
+  }
+
+  private resolvePoseAsset(pose: CharacterPose): string | undefined {
+    return this.entry.poseAssets?.[pose]
+      ?? this.entry.emotionAssets?.[this.currentEmotion]
+      ?? this.entry.asset;
   }
 
   private makeSprite(extraClass: string): HTMLImageElement {
@@ -227,17 +349,6 @@ export class PuppetPartsAdapter extends BaseAdapter {
     image.alt = this.entry.displayName;
     image.draggable = false;
     return image;
-  }
-
-  private resolveAsset(pose: CharacterPose): string | undefined {
-    const emotional = this.entry.emotionAssets?.[this.currentEmotion];
-    if ((pose === 'idle' || pose === 'talkNeutral') && this.currentEmotion !== 'neutral' && emotional) {
-      return emotional;
-    }
-    return this.entry.poseAssets?.[pose]
-      ?? emotional
-      ?? (pose === 'idle' ? this.entry.asset : undefined)
-      ?? this.entry.asset;
   }
 
   private async swapTo(source: string, pose: CharacterPose): Promise<boolean> {
@@ -253,10 +364,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
     try {
       await incoming.decode();
     } catch {
-      warnOnce(
-        `puppet-pose-${this.entry.displayName}-${pose}`,
-        `${this.entry.displayName}'s ${pose} sprite could not load; keeping the previous clean pose.`,
-      );
+      warnOnce(`puppet-pose-${this.entry.displayName}-${pose}`, `${this.entry.displayName}'s ${pose} sprite could not load.`);
       return false;
     }
     if (version !== this.swapVersion || !this.activeSprite || !this.standbySprite) return false;
@@ -271,8 +379,70 @@ export class PuppetPartsAdapter extends BaseAdapter {
   }
 
   private applyPoseScale(image: HTMLImageElement, pose: CharacterPose): void {
-    const scale = this.entry.poseScales?.[pose] ?? 1;
-    image.style.height = `${(scale * 100).toFixed(1)}%`;
+    image.style.height = `${((this.entry.poseScales?.[pose] ?? 1) * 100).toFixed(1)}%`;
+  }
+
+  private updateFace(): void {
+    const face = this.rigDefinition?.face;
+    if (!face) return;
+    const brows = this.features.get('brows');
+    const eyes = this.features.get('eyes');
+    if (brows) brows.src = face.brows[this.currentEmotion] ?? face.brows.neutral;
+    if (eyes) eyes.src = face.eyes[this.currentEmotion] ?? face.eyes.neutral;
+    this.updateMouth();
+  }
+
+  private updateMouth(): void {
+    const face = this.rigDefinition?.face;
+    const mouth = this.features.get('mouth');
+    if (!face || !mouth) return;
+    mouth.src = this.talking && this.talkOpen
+      ? face.mouths.talk
+      : face.mouths[this.currentEmotion] ?? face.mouths.neutral;
+  }
+
+  private startBlinking(): void {
+    if (this.blinkTimer || settings.reduceMotion) return;
+    const schedule = () => {
+      this.blinkTimer = setTimeout(() => {
+        const face = this.rigDefinition?.face;
+        const eyes = this.features.get('eyes');
+        if (face && eyes && this.currentEmotion !== 'laughing') {
+          eyes.src = face.eyes.closed;
+          setTimeout(() => {
+            if (this.rigDefinition && this.features.get('eyes') === eyes) {
+              eyes.src = face.eyes[this.currentEmotion] ?? face.eyes.neutral;
+            }
+          }, 125);
+        }
+        this.blinkTimer = null;
+        schedule();
+      }, 2500 + Math.random() * 4000);
+    };
+    schedule();
+  }
+
+  private stopBlinking(): void {
+    if (this.blinkTimer) clearTimeout(this.blinkTimer);
+    this.blinkTimer = null;
+  }
+
+  private async playFallbackMotion(action: CharacterAction): Promise<void> {
+    if (!this.animationLayer || settings.reduceMotion) {
+      await sleep(140);
+      return;
+    }
+    const frames: Partial<Record<CharacterAction, Keyframe[]>> = {
+      nod: [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }, { transform: 'translateY(0)' }],
+      shakeHead: [{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }],
+      wave: [{ transform: 'rotate(0)' }, { transform: 'rotate(-1deg)' }, { transform: 'rotate(0)' }],
+      jump: [{ transform: 'translateY(0)' }, { transform: 'translateY(-24px)' }, { transform: 'translateY(0)' }],
+      tremble: [{ transform: 'translateX(-2px)' }, { transform: 'translateX(2px)' }, { transform: 'translateX(0)' }],
+    };
+    await this.animationLayer.animate(frames[action] ?? [{ opacity: 1 }, { opacity: 0.98 }, { opacity: 1 }], {
+      duration: action === 'tremble' ? 480 : 600,
+      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    }).finished.catch(() => undefined);
   }
 
   private async playWholeBodyMotion(motion: ActingMotion): Promise<void> {
@@ -282,29 +452,14 @@ export class PuppetPartsAdapter extends BaseAdapter {
       return;
     }
     const specs: Partial<Record<ActingMotion, { frames: Keyframe[]; ms: number }>> = {
-      settle: {
-        frames: [{ transform: 'translateY(2px)' }, { transform: 'translateY(-1px)' }, { transform: 'translateY(0)' }],
-        ms: 260,
-      },
-      laugh: {
-        frames: [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }, { transform: 'translateY(-2px)' }, { transform: 'translateY(0)' }],
-        ms: 720,
-      },
-      recoil: {
-        frames: [{ transform: 'translateX(0) scale(1)' }, { transform: 'translateX(-8px) scale(.985)' }, { transform: 'translateX(1px) scale(1)' }],
-        ms: 360,
-      },
-      dance: {
-        frames: [{ transform: 'translate(0,0) rotate(0)' }, { transform: 'translate(-4px,-3px) rotate(-1.5deg)' }, { transform: 'translate(4px,0) rotate(1.5deg)' }, { transform: 'translate(0,0) rotate(0)' }],
-        ms: 980,
-      },
+      settle: { frames: [{ transform: 'translateY(2px)' }, { transform: 'translateY(-1px)' }, { transform: 'translateY(0)' }], ms: 260 },
+      laugh: { frames: [{ transform: 'translateY(0)' }, { transform: 'translateY(4px)' }, { transform: 'translateY(-2px)' }, { transform: 'translateY(0)' }], ms: 720 },
+      recoil: { frames: [{ transform: 'translateX(0) scale(1)' }, { transform: 'translateX(-8px) scale(.985)' }, { transform: 'translateX(1px) scale(1)' }], ms: 360 },
+      dance: { frames: [{ transform: 'translate(0,0) rotate(0)' }, { transform: 'translate(-4px,-3px) rotate(-1.5deg)' }, { transform: 'translate(4px,0) rotate(1.5deg)' }, { transform: 'translate(0,0) rotate(0)' }], ms: 980 },
     };
     const spec = specs[motion];
     if (!spec) return;
-    await this.animationLayer.animate(spec.frames, {
-      duration: spec.ms,
-      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-    }).finished.catch(() => undefined);
+    await this.animationLayer.animate(spec.frames, { duration: spec.ms, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }).finished.catch(() => undefined);
   }
 
   private async turnAround(): Promise<void> {
@@ -325,15 +480,28 @@ export class PuppetPartsAdapter extends BaseAdapter {
     debug.className = 'puppet-debug-overlay';
     debug.setAttribute('aria-hidden', 'true');
     debug.innerHTML = `
-      <span class="puppet-debug-name">${this.entry.displayName} · poseSprites</span>
-      <span class="puppet-debug-animation">idle</span>
-      <i class="puppet-debug-pivot pivot-left-shoulder" data-label="left shoulder"></i>
-      <i class="puppet-debug-pivot pivot-right-shoulder" data-label="right shoulder"></i>
-      <i class="puppet-debug-pivot pivot-left-hip" data-label="left hip"></i>
-      <i class="puppet-debug-pivot pivot-right-hip" data-label="right hip"></i>
-      <span class="puppet-debug-layers">hair-back · back-arm · legs · pelvis · torso · front-arm · head · face · hair-front</span>
+      <span class="puppet-debug-name">${this.entry.displayName} &middot; hybrid rig</span>
+      <span class="puppet-debug-animation">loading</span>
+      <span class="puppet-debug-layers">loading manifest</span>
     `;
     return debug;
+  }
+
+  private populateDebugOverlay(definition: PuppetRigDefinition): void {
+    const overlay = this.puppet?.querySelector<HTMLElement>('.puppet-debug-overlay');
+    if (!overlay) return;
+    overlay.querySelectorAll('.puppet-debug-pivot').forEach((node) => node.remove());
+    for (const [name, bone] of Object.entries(definition.bones)) {
+      if (name === 'root') continue;
+      const pivot = document.createElement('i');
+      pivot.className = 'puppet-debug-pivot';
+      pivot.dataset.label = name;
+      pivot.style.left = `${bone.pivot[0]}%`;
+      pivot.style.top = `${bone.pivot[1]}%`;
+      overlay.appendChild(pivot);
+    }
+    const labels = overlay.querySelector<HTMLElement>('.puppet-debug-layers');
+    if (labels) labels.textContent = definition.layers.map((layer) => layer.name).join(' · ');
   }
 
   private setDebugAnimation(name: string): void {

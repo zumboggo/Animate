@@ -138,13 +138,17 @@ Add a new action by dropping a clip JSON in `rig/clips/`, registering it in
 `ACTION_PHRASES` (validator.ts) and the `CharacterAction` union
 (storyTypes.ts).
 
-## Pose-first puppet parts
+## Hybrid puppet parts
 
-`puppetPartsAdapter.ts` provides nested stage, scale, acting-motion, and art
-layers plus crossfaded full-body poses. It can therefore ship a coherent pose
-sheet before matching separated parts exist. Missing poses retain the previous
-clean art and warn once. Rig debug mode shows actor bounds, starter
-shoulder/hip pivots, layer order, and the current animation. Matching body and
-face layers can be added later without changing the director or `.story`
-syntax. Sarah and Anna use this adapter; see [SARAH_ASSETS.md](SARAH_ASSETS.md)
-and [ANNA_ASSETS.md](ANNA_ASSETS.md).
+`puppetPartsAdapter.ts` loads each character manifest and builds nested HTML
+bones for the torso, head, upper arms, forearms, hands, thighs, shins, and
+feet. `puppetBoneAnimator.ts` reuses the shared JSON clip library with reduced
+rotation ranges suited to overlapped raster art. The face layers blink, swap
+emotions, and alternate mouth shapes while dialogue plays.
+
+Small actions and walking use the layered rig. Difficult poses such as sitting,
+pointing, laughing, scared recoil, and dance crossfade to coherent full-body
+sprites. A missing manifest or layer retains the clean pose fallback. Rig debug
+mode shows real pivots, part bounds, layer order, and the active animation.
+Sarah and Anna use this adapter; see [SARAH_ASSETS.md](SARAH_ASSETS.md) and
+[ANNA_ASSETS.md](ANNA_ASSETS.md).
