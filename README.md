@@ -75,6 +75,25 @@ Supabase migration, upload the normalized WAV files as `anna.wav`, `sarah.wav`,
 `grace.wav`, and `elliott.wav` to the `character-voice-references` bucket, then
 deploy the function with JWT verification enabled.
 
+## AI story generation
+
+Signed-in users can generate stories with AI from the **✨ Write it with AI**
+section of the studio: describe a story, pick which of the five characters
+star in it, choose English / 中文 / Bilingual and a length, and the model
+writes a script in the exact engine format (validated by the real parser,
+with automatic fix round-trips). "Paint a background" also generates a 16:9
+cartoon backdrop for the story's setting.
+
+- Powered by **OpenRouter** with your own API key: add it under your account
+  menu (top right). The key is stored in your private `user_settings` row
+  (RLS-protected, synced across devices, cached locally, cleared from the
+  device on sign-out) and sent only to openrouter.ai.
+- Generated backgrounds upload to the private `story-backgrounds` Storage
+  bucket and become a reusable scene library — any generated scene name can
+  be used in future scripts.
+- Apply `supabase/migrations/20260718090000_ai_story_generation.sql` before
+  first use (`supabase db push` or run it in the dashboard SQL editor).
+
 ## Using the story studio
 
 The browser app now includes an authoring workspace, so you do not need to

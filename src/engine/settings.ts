@@ -6,16 +6,28 @@ interface StoredSettings {
   voices: boolean;
   rigDebug: boolean;
   lastStory?: string;
+  /** Cache of the Supabase-stored key; cleared on sign-out. */
+  openRouterApiKey: string;
+  storyModel: string;
 }
+
+const DEFAULTS: StoredSettings = {
+  autoplay: false,
+  reduceMotion: false,
+  voices: true,
+  rigDebug: false,
+  openRouterApiKey: '',
+  storyModel: '',
+};
 
 function load(): StoredSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { autoplay: false, reduceMotion: false, voices: true, rigDebug: false, ...JSON.parse(raw) };
+    if (raw) return { ...DEFAULTS, ...JSON.parse(raw) };
   } catch {
     // Corrupt storage falls back to defaults.
   }
-  return { autoplay: false, reduceMotion: false, voices: true, rigDebug: false };
+  return { ...DEFAULTS };
 }
 
 const state = load();
@@ -75,6 +87,22 @@ export const settings = {
   },
   set lastStory(value: string | undefined) {
     state.lastStory = value;
+    persist();
+  },
+
+  get openRouterApiKey(): string {
+    return state.openRouterApiKey;
+  },
+  set openRouterApiKey(value: string) {
+    state.openRouterApiKey = value;
+    persist();
+  },
+
+  get storyModel(): string {
+    return state.storyModel;
+  },
+  set storyModel(value: string) {
+    state.storyModel = value;
     persist();
   },
 };

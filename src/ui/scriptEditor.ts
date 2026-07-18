@@ -11,6 +11,9 @@ export interface ScriptEditor {
   setErrors(errors: StoryError[]): void;
   setStatus(kind: 'ready' | 'playing' | 'error', message: string): void;
   getSource(): string;
+  setSource(source: string): void;
+  /** Mount point for the AI generation section. */
+  aiSlot: HTMLElement;
 }
 
 const INSERTIONS = [
@@ -207,7 +210,10 @@ export function buildScriptEditor(
   submit.innerHTML = '<span>▶</span> Create animation';
   actionRow.append(keyboardHint, submit);
 
-  panel.append(panelHead, guidePanel, characterChooser, exampleRow, editorShell, feedback, actionRow);
+  const aiSlot = document.createElement('div');
+  aiSlot.className = 'ai-slot';
+
+  panel.append(panelHead, guidePanel, characterChooser, exampleRow, aiSlot, editorShell, feedback, actionRow);
   parent.appendChild(panel);
 
   let validationTimer = 0;
@@ -246,6 +252,11 @@ export function buildScriptEditor(
     setErrors: (errors) => renderErrors(feedback, textarea, errors, true),
     setStatus: (kind, message) => renderStatus(feedback, kind, message),
     getSource: () => textarea.value,
+    setSource: (source) => {
+      textarea.value = source;
+      textarea.dispatchEvent(new Event('input'));
+    },
+    aiSlot,
   };
 }
 

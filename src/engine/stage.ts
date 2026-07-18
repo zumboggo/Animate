@@ -159,6 +159,27 @@ const SCENES: Record<string, string> = {
 export const SCENE_NAMES = Object.keys(SCENES);
 
 /**
+ * Registers a runtime image backdrop (e.g. an AI-generated background from
+ * the user's scene library). The name becomes usable in `scene:` lines.
+ */
+export function registerImageScene(name: string, url: string): void {
+  const img = document.createElement('img');
+  img.src = url;
+  img.alt = '';
+  img.draggable = false;
+  SCENES[name] = img.outerHTML;
+}
+
+export function isRegisteredScene(name: string): boolean {
+  return name in SCENES;
+}
+
+/** Built-in scenes plus any registered image scenes, in registration order. */
+export function getSceneNames(): string[] {
+  return Object.keys(SCENES);
+}
+
+/**
  * Owns the stage DOM: camera/shake layers, two crossfading scene layers, the
  * actor layer, bubbles, overlays. Transform layout (outer → inner):
  * stage → camera (zoom) → shake layer → scene + actors. Bubbles and overlays

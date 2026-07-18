@@ -162,6 +162,14 @@ Characters are defined in `stories/cast.json`. The starting cast includes
 a character portrait before using the dialogue, entrance, or action shortcut.
 To add someone new, copy a cast entry and adjust its appearance.
 
+## Let the AI write one
+
+Open **✨ Write it with AI** above the editor (sign in first): describe the
+story, pick the characters and language, and a script appears here — fully
+editable, like anything you wrote yourself. It can also paint a brand-new
+background scene for the story; those generated scenes join your scene list
+and can be reused by name in any later script.
+
 ## Playing your story
 
 - **Click the stage or press Space** to advance past dialogue.

@@ -1,9 +1,12 @@
 import './style.css';
+import { loadBackgroundLibrary } from './ai/backgroundLibrary';
 import { Narrator } from './audio/narrator';
+import { initUserSettingsSync, onAiSettingsChange } from './auth/userSettings';
 import { Director } from './engine/director';
-import { SCENE_NAMES, Stage } from './engine/stage';
+import { getSceneNames, Stage } from './engine/stage';
 import type { Cast } from './engine/storyTypes';
 import { compileStory } from './engine/validator';
+import { buildAiPanel } from './ui/aiPanel';
 import { BubbleLayer } from './ui/bubbles';
 import { buildControls } from './ui/controls';
 import { DialogueBox } from './ui/dialogueBox';
@@ -65,6 +68,7 @@ app.innerHTML = `
   <footer>Built for stories worth growing together.</footer>
 `;
 
+initUserSettingsSync();
 buildAuth(document.getElementById('auth-root')!);
 
 const studio = document.getElementById('studio')!;
@@ -103,6 +107,29 @@ editor = buildScriptEditor(studio, [...examples.keys()].sort(), initialSource, c
   },
   onLoadExample: (name) => examples.get(name),
 });
+buildAiPanel(editor.aiSlot, cast, {
+  getScenes: getSceneNames,
+  onScriptGenerated: (script) => {
+    editor.setSource(script);
+    playSource(script, true);
+  },
+});
+
+// Load the user's generated-background scene library once per sign-in, so
+// saved stories that reference generated scenes keep compiling.
+let backgroundsLoaded = false;
+onAiSettingsChange((state) => {
+  if (!state.signedIn) {
+    backgroundsLoaded = false;
+    return;
+  }
+  if (backgroundsLoaded) return;
+  backgroundsLoaded = true;
+  void loadBackgroundLibrary().then((names) => {
+    if (names.length > 0) editor.setStatus('ready', 'Your generated backgrounds are ready to use.');
+  });
+});
+
 studio.appendChild(previewPanel);
 
 const stageFrame = document.createElement('div');
@@ -146,7 +173,13 @@ previewPanel.appendChild(castStrip);
 
 let director: Director | null = null;
 let lastPlayableSource = initialSource;
-const compileOptions = { characters: Object.keys(cast), scenes: SCENE_NAMES };
+// `scenes` is a getter so scripts can use backgrounds registered after startup.
+const compileOptions = {
+  characters: Object.keys(cast),
+  get scenes() {
+    return getSceneNames();
+  },
+};
 
 function playSource(source: string, focusErrors: boolean): void {
   saveDraft(source);
