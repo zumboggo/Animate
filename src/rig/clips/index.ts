@@ -13,6 +13,7 @@ import point from './point.json';
 import dance from './dance.json';
 import fall from './fall.json';
 import bounce from './bounce.json';
+import recoil from './recoil.json';
 import treePose from './treePose.json';
 
 export const CLIPS: Record<string, Clip> = {
@@ -30,5 +31,6 @@ export const CLIPS: Record<string, Clip> = {
   dance,
   fall,
   bounce,
+  recoil,
   treePose,
 };

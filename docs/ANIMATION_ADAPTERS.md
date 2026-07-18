@@ -32,6 +32,7 @@ interface CharacterAnimationAdapter {
   setPosition(position, options?): Promise<void>;   // travel to a named spot
   setEmotion(emotion, options?): Promise<void>;
   playAction(action, options?): Promise<void>;
+  transitionToPose?(pose, options?): Promise<boolean>; // rig template or full-body art
   enterFrom(side, to, gait): Promise<void>;
   exitTo(side, gait): Promise<void>;
   appearAt(position): void;                          // instant, no travel
@@ -44,8 +45,34 @@ interface CharacterAnimationAdapter {
 ```
 
 Every `playAction` must **resolve** (the director awaits it) and must **never
-throw** for an unsupported action — warn once and play a fallback (see
-`warnOnce` and the bounce fallback in `svgRigAdapter.ts`).
+throw** for an unsupported action — warn once and settle into a clean pose.
+
+## Hybrid pose library
+
+`poseLibrary.ts` maps ordinary script actions and dialogue emotions to reusable
+acting poses. The current vocabulary includes `idle`, three talk poses,
+`scared`, `laugh`, `sit`, `point`, `handsOnHips`, `surprised`, `fall`, and
+`dance`. Small actions such as nod, wave, recoil, and bounce remain rig clips.
+
+An adapter can render a pose itself, or a cast entry can provide full-body art:
+
+```json
+{
+  "ANNA": {
+    "displayName": "Anna",
+    "adapter": "svgRig",
+    "poseAssets": {
+      "sit": "assets/characters/anna/sit.webp",
+      "point": "assets/characters/anna/point.webp",
+      "dance": "assets/characters/anna/dance.webp"
+    }
+  }
+}
+```
+
+When pose art is missing or fails to load, the SVG adapter uses the matching
+template from `rig/poseTemplates.ts`. Story writers never need to know which
+representation was selected.
 
 ## BaseAdapter does the boring parts
 
@@ -100,6 +127,8 @@ default, and warns once when nothing matches.
   groups rotating around rest-pose pivots.
 - Clips: `rig/clips/*.json` — normalized keyframes per bone
   (`rotate`/`tx`/`ty`). Author a clip once; every rig character can play it.
+- Pose templates: `rig/poseTemplates.ts` — shared proportions and restrained
+  full-body acting that every rig character can reuse.
 - Player: `rig/svgAnimator.ts` — smoothstep interpolation, pose blending on
   clip start, looping, `holdEnd` for poses like sitting.
 - Faces: `rig/faces.ts` — brow/eye/mouth swaps per emotion, blinking, talk flap.

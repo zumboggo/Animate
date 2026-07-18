@@ -70,7 +70,8 @@ export class SvgAnimator {
         const elapsed = now - start;
         const finished = elapsed >= duration * loops;
         const cycleT = finished ? 1 : (elapsed % duration) / duration;
-        const blend = blendMs > 0 ? Math.min(1, elapsed / blendMs) : 1;
+        const blendProgress = blendMs > 0 ? Math.min(1, elapsed / blendMs) : 1;
+        const blend = smoothstep(blendProgress);
 
         for (const [bone, track] of tracks) {
           const target = evalTrack(track, cycleT);
@@ -100,14 +101,18 @@ export class SvgAnimator {
 
   /** Eases every posed bone back to the rest pose. */
   toRest(ms = 320): Promise<void> {
+    return this.toPose({}, ms, 'rest');
+  }
+
+  /** Smoothly blends from the current skeleton state to a reusable named-pose template. */
+  toPose(target: Record<string, BoneFrame>, ms = 320, name = 'pose'): Promise<void> {
     const bones: Record<string, BoneFrame> = {};
-    for (const [bone, frame] of Object.entries(this.pose)) {
-      if (frame.rotate !== 0 || frame.tx !== 0 || frame.ty !== 0) bones[bone] = {};
-    }
-    if (Object.keys(bones).length === 0) return Promise.resolve();
+    const names = new Set([...Object.keys(this.pose), ...Object.keys(target)]);
+    for (const bone of names) bones[bone] = target[bone] ?? {};
+    if (names.size === 0) return Promise.resolve();
     return this.play(
       {
-        name: 'rest',
+        name,
         durationMs: ms,
         keyframes: [
           { time: 0, bones },
@@ -166,6 +171,10 @@ export class SvgAnimator {
   }
 }
 
+function smoothstep(t: number): number {
+  return t * t * (3 - 2 * t);
+}
+
 function evalTrack(track: Track, t: number): Required<BoneFrame> {
   const { times, frames } = track;
   if (t <= times[0]) return frames[0];
@@ -175,7 +184,7 @@ function evalTrack(track: Track, t: number): Required<BoneFrame> {
   while (t > times[i + 1]) i++;
   const span = times[i + 1] - times[i];
   const u = span === 0 ? 1 : (t - times[i]) / span;
-  const s = u * u * (3 - 2 * u); // smoothstep easing per segment
+  const s = smoothstep(u);
   return {
     rotate: lerp(frames[i].rotate, frames[i + 1].rotate, s),
     tx: lerp(frames[i].tx, frames[i + 1].tx, s),

@@ -1123,7 +1123,7 @@ main {
   height: 56%;
   transform: translateX(-50%);
   transition-property: left;
-  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.45, 0, 0.22, 1);
   will-change: left;
 }
 
@@ -1138,6 +1138,52 @@ main {
   justify-content: center;
   height: 100%;
   transition: transform 0.22s ease;
+}
+
+.actor-presentation,
+.actor-motion-layer {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 92%;
+}
+
+.actor-presentation {
+  transition-property: transform;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.actor-rig-art {
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+.actor-pose-sprite {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  max-width: none;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 160ms ease;
+}
+
+.actor-motion-layer.special-pose-active .actor-rig-art { opacity: 0; }
+.actor-motion-layer.special-pose-active .actor-pose-sprite { opacity: 1; }
+
+.actor-motion-layer.is-talking {
+  animation: actor-talk-settle 1.25s ease-in-out infinite;
+}
+
+@keyframes actor-talk-settle {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-1.5px) rotate(-0.35deg); }
+  70% { transform: translateY(0.5px) rotate(0.25deg); }
 }
 
 .actor-inner svg,

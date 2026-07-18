@@ -2,7 +2,7 @@
 
 A script-driven 2D cartoon player, inspired by Episode Interactive's animation
 studio. You write stories in a simple plain-text script — the characters act
-them out on stage with bone-rigged animation, expressions, and speech bubbles.
+them out on stage with hybrid pose/rig animation, expressions, and speech bubbles.
 
 ```
 title: The Treat Spot Trees

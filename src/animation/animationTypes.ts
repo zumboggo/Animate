@@ -1,6 +1,7 @@
 import type {
   CharacterAction,
   CharacterEmotion,
+  CharacterPose,
   EntrySide,
   Gait,
   StagePositionName,
@@ -10,6 +11,14 @@ export type CharacterPosition = StagePositionName;
 
 export interface AnimationOptions {
   durationMs?: number;
+}
+
+export type ActingMotion = 'none' | 'settle' | 'talk' | 'laugh' | 'recoil' | 'dance';
+
+export interface PoseTransitionOptions extends AnimationOptions {
+  motion?: ActingMotion;
+  /** Prefer a configured full-body sprite; adapters fall back to their clean pose implementation. */
+  preferSprite?: boolean;
 }
 
 /**
@@ -26,6 +35,9 @@ export interface CharacterAnimationAdapter {
   setEmotion(emotion: CharacterEmotion, options?: AnimationOptions): Promise<void>;
 
   playAction(action: CharacterAction, options?: AnimationOptions): Promise<void>;
+
+  /** Transition to a named acting pose. Returns false only when the adapter has no clean representation. */
+  transitionToPose?(pose: CharacterPose, options?: PoseTransitionOptions): Promise<boolean>;
 
   /** Enter from just offstage and travel to a position. */
   enterFrom(side: EntrySide, to: CharacterPosition, gait: Gait): Promise<void>;

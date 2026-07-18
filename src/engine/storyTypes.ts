@@ -51,6 +51,8 @@ export type CharacterAction =
   | 'shakeHead'
   | 'wave'
   | 'jump'
+  | 'bounce'
+  | 'recoil'
   | 'tremble'
   | 'point'
   | 'dance'
@@ -59,7 +61,8 @@ export type CharacterAction =
   | 'laugh'
   | 'cry'
   | 'actScared'
-  | 'treePose';
+  | 'treePose'
+  | 'handsOnHips';
 
 export type CharacterEmotion =
   | 'neutral'
@@ -70,6 +73,21 @@ export type CharacterEmotion =
   | 'surprised'
   | 'laughing'
   | 'confused';
+
+/** Director-level acting poses. Adapters may render these with a rig or a full-body sprite. */
+export type CharacterPose =
+  | 'idle'
+  | 'talkNeutral'
+  | 'talkHappy'
+  | 'talkAngry'
+  | 'scared'
+  | 'laugh'
+  | 'sit'
+  | 'point'
+  | 'handsOnHips'
+  | 'surprised'
+  | 'fall'
+  | 'dance';
 
 /** Validated, normalized commands the director executes. */
 export type StoryCommand =
@@ -119,6 +137,10 @@ export interface CastEntry {
   asset?: string;
   /** Maps engine action names to technology-specific animation names. */
   animationMap?: Partial<Record<CharacterAction, string>>;
+  /** Optional full-body pose art. Missing poses cleanly fall back to the reusable rig template. */
+  poseAssets?: Partial<Record<CharacterPose, string>>;
+  /** Optional per-character override for the director's default action-to-pose choice. */
+  poseMap?: Partial<Record<CharacterAction, CharacterPose>>;
 }
 
 export type Cast = Record<string, CastEntry>;

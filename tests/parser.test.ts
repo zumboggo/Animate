@@ -70,6 +70,13 @@ describe('parser: actions', () => {
     for (const cmd of cmds) expect(cmd).toMatchObject({ action: 'tremble' });
   });
 
+  it('accepts readable pose and small-motion actions', () => {
+    const commands = commandsOf('ANNA recoils\nANNA bounces\nANNA puts hands on hips');
+    expect(commands.map((command) => command.kind === 'action' ? command.action : '')).toEqual([
+      'recoil', 'bounce', 'handsOnHips',
+    ]);
+  });
+
   it('parses expression + action', () => {
     const [cmd] = commandsOf('LIN (angry) shakes head');
     expect(cmd).toMatchObject({ kind: 'action', action: 'shakeHead', emotion: 'angry' });

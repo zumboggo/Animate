@@ -72,9 +72,12 @@ export class Director {
 
       case 'dialogue': {
         const actor = this.getActor(cmd.character);
-        if (cmd.emotion) await actor.setEmotion(cmd.emotion);
+        await actor.beginDialogue(cmd.emotion);
 
         const anchor = actor.onStage ? actor.getElement() : null;
+        const dialogueFocus = anchor
+          ? this.stage.effects.beginDialogueFocus(actor.getStageFraction())
+          : false;
         if (anchor) {
           this.bubbles.show(actor.displayName, cmd.text, anchor);
         } else {
@@ -91,12 +94,13 @@ export class Director {
         actor.stopTalking();
         this.bubbles.hide();
         this.dialogueBox.hide();
+        await actor.endDialogue();
+        if (dialogueFocus) await this.stage.effects.endDialogueFocus();
         return;
       }
 
       case 'expression':
-        await this.getActor(cmd.character).setEmotion(cmd.emotion);
-        await sleep(350);
+        await this.getActor(cmd.character).showExpression(cmd.emotion);
         return;
 
       case 'action':

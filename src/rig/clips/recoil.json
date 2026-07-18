@@ -1,0 +1,10 @@
+{
+  "name": "recoil",
+  "durationMs": 520,
+  "keyframes": [
+    { "time": 0, "bones": { "root": { "tx": 0 }, "torso": { "rotate": 0 }, "head": { "rotate": 0 } } },
+    { "time": 0.32, "bones": { "root": { "tx": -8 }, "torso": { "rotate": -2 }, "head": { "rotate": 3 } } },
+    { "time": 0.7, "bones": { "root": { "tx": 2 }, "torso": { "rotate": 1 }, "head": { "rotate": -1 } } },
+    { "time": 1, "bones": { "root": { "tx": 0 }, "torso": { "rotate": 0 }, "head": { "rotate": 0 } } }
+  ]
+}

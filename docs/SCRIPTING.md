@@ -130,6 +130,8 @@ Pauses the story — good for comedic timing.
 | `shakes head` | Shakes no |
 | `waves` | Waves hello/goodbye |
 | `jumps` | Jumps in the air |
+| `bounces` | Makes a small, readable bounce |
+| `recoils` / `steps back` | Makes a restrained surprise recoil |
 | `trembles` (or `shakes`, `shivers`) | Shakes with fear |
 | `acts scared` | Trembles with a scared face |
 | `laughs` | Bounces with laughter |
@@ -138,6 +140,7 @@ Pauses the story — good for comedic timing.
 | `dances` | Busts a move |
 | `falls` (or `trips`, `falls over`) | Comedy fall! |
 | `turns around` | Turns to face the other way |
+| `puts hands on hips` | Uses a confident hands-on-hips acting pose |
 
 ## All the emotions
 
