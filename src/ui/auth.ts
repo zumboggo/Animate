@@ -260,9 +260,15 @@ function buildAiSettingsSection(rerender: () => void): HTMLElement {
     row.append(saved, remove);
     section.appendChild(row);
   } else {
+    const editor = document.createElement('div');
+    editor.className = 'ai-key-editor';
+    const label = document.createElement('label');
+    label.htmlFor = 'openrouter-api-key';
+    label.textContent = 'OpenRouter API key';
     const row = document.createElement('div');
     row.className = 'ai-key-row';
     const input = document.createElement('input');
+    input.id = 'openrouter-api-key';
     input.type = 'password';
     input.placeholder = 'sk-or-…';
     input.autocomplete = 'off';
@@ -286,7 +292,8 @@ function buildAiSettingsSection(rerender: () => void): HTMLElement {
       }
     });
     row.append(input, save);
-    section.appendChild(row);
+    editor.append(label, row);
+    section.appendChild(editor);
   }
 
   const modelRow = document.createElement('div');

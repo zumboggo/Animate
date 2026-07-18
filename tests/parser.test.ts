@@ -155,6 +155,20 @@ describe('validator: friendly suggestions', () => {
 });
 
 describe('the shipped demo stories compile cleanly', () => {
+  it('does not ship stories featuring retired example characters', async () => {
+    const sources = await Promise.all([
+      import('../stories/family-playtime.story?raw'),
+      import('../stories/chinese-playtime.story?raw'),
+      import('../stories/sisters.story?raw'),
+      import('../stories/peppa-land-adventure.story?raw'),
+      import('../stories/treat-spot-trees.story?raw'),
+      import('../stories/spider.story?raw'),
+    ]);
+    for (const { default: source } of sources) {
+      expect(source).not.toMatch(/^\s*(?:LIN|MAX|MEI)\b/m);
+    }
+  });
+
   it('family-playtime.story has no errors', async () => {
     const { default: source } = await import('../stories/family-playtime.story?raw');
     expect(compile(source).errors).toEqual([]);
@@ -178,5 +192,15 @@ describe('the shipped demo stories compile cleanly', () => {
   it('treat-spot-trees.story has no errors', async () => {
     const { default: source } = await import('../stories/treat-spot-trees.story?raw');
     expect(compile(source).errors).toEqual([]);
+  });
+
+  it('spider.story has no errors and uses Anna and Sarah', async () => {
+    const { default: source } = await import('../stories/spider.story?raw');
+    const result = compile(source);
+    expect(result.errors).toEqual([]);
+    const characters = new Set(
+      result.story.commands.flatMap((command) => ('character' in command ? [command.character] : [])),
+    );
+    expect(characters).toEqual(new Set(['ANNA', 'SARAH']));
   });
 });
