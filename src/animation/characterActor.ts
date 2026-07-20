@@ -43,6 +43,7 @@ export class CharacterActor {
   }
 
   unmount(): void {
+    this.adapter.getElement()?.classList.remove('is-speaking');
     this.adapter.unmount();
     this.onStage = false;
     this.sitting = false;
@@ -85,10 +86,12 @@ export class CharacterActor {
   }
 
   startTalking(): void {
+    this.adapter.getElement()?.classList.add('is-speaking');
     this.adapter.startTalking?.();
   }
 
   stopTalking(): void {
+    this.adapter.getElement()?.classList.remove('is-speaking');
     this.adapter.stopTalking?.();
   }
 
@@ -165,6 +168,7 @@ export class CharacterActor {
 
   /** Reset for a story restart. */
   reset(): void {
+    this.adapter.getElement()?.classList.remove('is-speaking');
     this.onStage = false;
     this.sitting = false;
     this.fallen = false;

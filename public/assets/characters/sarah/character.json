@@ -59,11 +59,11 @@
       { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/sarah/parts/right-thigh.png", "box": [47, 62, 25, 23], "z": 0 },
       { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/sarah/parts/right-shin.png", "box": [48, 72, 25, 27], "z": 1 },
       { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/sarah/parts/pelvis.png", "box": [27, 56, 46, 18], "z": 1 },
-      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/sarah/parts/left-upper-arm.png", "box": [14, 34, 21, 23], "z": 0 },
-      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/sarah/parts/left-forearm.png", "box": [13, 46, 21, 25], "z": 1 },
-      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/sarah/parts/right-upper-arm.png", "box": [65, 34, 21, 23], "z": 0 },
-      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/sarah/parts/right-forearm.png", "box": [66, 46, 21, 25], "z": 1 },
-      { "name": "torso", "bone": "torso", "asset": "assets/characters/sarah/parts/torso-clean-v2.png", "box": [24, 31, 52, 33], "z": 2 },
+      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/sarah/parts/left-upper-arm.png", "box": [18, 34, 17, 23], "z": 0 },
+      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/sarah/parts/left-forearm.png", "box": [18, 47, 17, 24], "z": 1 },
+      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/sarah/parts/right-upper-arm.png", "box": [65, 34, 17, 23], "z": 0 },
+      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/sarah/parts/right-forearm.png", "box": [65, 47, 17, 24], "z": 1 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/sarah/parts/torso-clean-v2.png", "box": [19, 30, 62, 35], "z": 2 },
       { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/sarah/parts/head-closed-v2.png", "box": [0, 1, 100, 34], "z": 4, "feature": "headClosed" },
       { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/sarah/parts/head-open-v2.png", "box": [0, 1, 100, 34], "z": 5, "feature": "headOpen" }
     ]

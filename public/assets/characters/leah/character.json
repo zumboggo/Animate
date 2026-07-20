@@ -15,6 +15,7 @@
   "rig": {
     "aspectRatio": 0.62,
     "rotationScale": 0.5,
+    "talkingHead": true,
     "bones": {
       "root": { "pivot": [50, 95], "z": 0 },
       "pelvis": { "parent": "root", "pivot": [50, 61], "z": 1 },
@@ -35,12 +36,13 @@
       { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/leah/parts/right-thigh.png", "box": [49, 61, 20, 23], "z": 0 },
       { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/leah/parts/right-shin.png", "box": [48, 73, 25, 26], "z": 1 },
       { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/leah/parts/pelvis.png", "box": [31, 55, 38, 25], "z": 1 },
-      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/leah/parts/left-upper-arm.png", "box": [17, 38, 16, 22], "z": 0 },
-      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/leah/parts/left-forearm.png", "box": [16, 51, 18, 23], "z": 1 },
-      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/leah/parts/right-upper-arm.png", "box": [67, 38, 16, 22], "z": 0 },
-      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/leah/parts/right-forearm.png", "box": [66, 51, 18, 23], "z": 1 },
+      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/leah/parts/left-upper-arm.png", "box": [20, 38, 13, 22], "z": 0 },
+      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/leah/parts/left-forearm.png", "box": [19, 51, 14, 23], "z": 1 },
+      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/leah/parts/right-upper-arm.png", "box": [67, 38, 13, 22], "z": 0 },
+      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/leah/parts/right-forearm.png", "box": [67, 51, 14, 23], "z": 1 },
       { "name": "torso", "bone": "torso", "asset": "assets/characters/leah/parts/torso.png", "box": [26, 34, 48, 30], "z": 2 },
-      { "name": "head", "bone": "head", "asset": "assets/characters/leah/parts/head.png", "box": [23.5, 0, 53, 38], "z": 4 }
+      { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/leah/parts/head-closed-v2.png", "box": [22.5, -1, 55, 40], "z": 4, "feature": "headClosed" },
+      { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/leah/parts/head-open-v2.png", "box": [22.5, -1, 55, 40], "z": 5, "feature": "headOpen" }
     ]
   },
   "poses": {
@@ -55,6 +57,6 @@
   "assetStatus": {
     "poseSprites": "ready",
     "bodyParts": "two-piece limbs ready for smooth layered animation",
-    "faceParts": "coherent full-head art with pose-sprite emotion fallback"
+    "faceParts": "aligned full-head closed/open dialogue frames; expressions use pose sprites"
   }
 }

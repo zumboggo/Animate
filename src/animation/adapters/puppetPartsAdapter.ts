@@ -49,6 +49,7 @@ const SPECIAL_POSES = new Set<CharacterPose>([
   'handsOnHips',
   'surprised',
   'dance',
+  'fall',
 ]);
 
 /**
@@ -153,7 +154,10 @@ export class PuppetPartsAdapter extends BaseAdapter {
     if (!this.puppet || !this.animationLayer) return false;
     this.setDebugAnimation(pose);
 
-    const specialSource = SPECIAL_POSES.has(pose) ? this.resolvePoseAsset(pose) : undefined;
+    const preferSprite = options.preferSprite ?? SPECIAL_POSES.has(pose);
+    // Only use an exact pose asset here. Falling back to the neutral sprite
+    // would hide a perfectly good puppet interpretation of the requested cue.
+    const specialSource = preferSprite ? this.entry.poseAssets?.[pose] : undefined;
     if (specialSource) {
       this.stopIdle();
       const shown = await this.showPoseSprite(specialSource, pose);
@@ -360,6 +364,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
   private showRig(): void {
     this.puppet?.classList.add('is-rig-active');
     this.puppet?.classList.remove('is-special-pose');
+    this.setDebugMode('puppet');
   }
 
   private async showPoseSprite(source: string, pose: CharacterPose): Promise<boolean> {
@@ -367,6 +372,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
     if (!swapped) return false;
     this.puppet?.classList.remove('is-rig-active');
     this.puppet?.classList.add('is-special-pose');
+    this.setDebugMode('pose sprite');
     return true;
   }
 
@@ -545,7 +551,9 @@ export class PuppetPartsAdapter extends BaseAdapter {
     debug.innerHTML = `
       <span class="puppet-debug-name">${this.entry.displayName} &middot; hybrid rig</span>
       <span class="puppet-debug-animation">loading</span>
+      <span class="puppet-debug-mode">loading</span>
       <span class="puppet-debug-layers">loading manifest</span>
+      <i class="puppet-debug-baseline" data-label="stage baseline"></i>
     `;
     return debug;
   }
@@ -558,11 +566,26 @@ export class PuppetPartsAdapter extends BaseAdapter {
       if (name === 'root') continue;
       const pivot = document.createElement('i');
       pivot.className = 'puppet-debug-pivot';
+      if (name === 'head') pivot.classList.add('is-head-anchor');
+      if (name === 'leftUpperArm' || name === 'rightUpperArm') pivot.classList.add('is-shoulder-anchor');
       pivot.dataset.label = name;
       pivot.style.left = `${bone.pivot[0]}%`;
       pivot.style.top = `${bone.pivot[1]}%`;
       overlay.appendChild(pivot);
     }
+    const headLayer = definition.layers.find((layer) => layer.feature === 'headClosed')
+      ?? definition.layers.find((layer) => layer.name === 'head');
+    if (headLayer) {
+      const [left, top, width, height] = headLayer.box;
+      const mouth = document.createElement('i');
+      mouth.className = 'puppet-debug-pivot is-mouth-anchor';
+      mouth.dataset.label = 'mouth';
+      mouth.style.left = `${left + width * 0.5}%`;
+      mouth.style.top = `${top + height * 0.76}%`;
+      overlay.appendChild(mouth);
+    }
+    const baseline = overlay.querySelector<HTMLElement>('.puppet-debug-baseline');
+    if (baseline) baseline.style.top = `${definition.bones.root?.pivot[1] ?? 95}%`;
     const labels = overlay.querySelector<HTMLElement>('.puppet-debug-layers');
     if (labels) labels.textContent = definition.layers.map((layer) => layer.name).join(' · ');
   }
@@ -571,5 +594,10 @@ export class PuppetPartsAdapter extends BaseAdapter {
     if (this.puppet) this.puppet.dataset.animation = name;
     const label = this.puppet?.querySelector<HTMLElement>('.puppet-debug-animation');
     if (label) label.textContent = name;
+  }
+
+  private setDebugMode(mode: string): void {
+    const label = this.puppet?.querySelector<HTMLElement>('.puppet-debug-mode');
+    if (label) label.textContent = mode;
   }
 }

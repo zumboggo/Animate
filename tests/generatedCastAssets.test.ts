@@ -16,7 +16,10 @@ describe('generated-art supporting cast', () => {
       expect(cast[name].adapter).toBe('puppetParts');
       expect(manifest.renderMode).toBe('hybrid');
       expect(Object.keys(manifest.rig.bones)).toHaveLength(12);
-      expect(manifest.rig.layers).toHaveLength(name === 'ELLIOTT' ? 12 : 11);
+      expect(manifest.rig.layers).toHaveLength(name === 'ELLIOTT' ? 13 : 12);
+      expect(manifest.rig.talkingHead).toBe(true);
+      expect(manifest.rig.layers.filter((layer) => layer.feature === 'headClosed')).toHaveLength(1);
+      expect(manifest.rig.layers.filter((layer) => layer.feature === 'headOpen')).toHaveLength(1);
       expect(manifest.rig.bones).not.toHaveProperty('leftHand');
       expect(manifest.rig.bones).not.toHaveProperty('rightFoot');
     }
@@ -26,6 +29,13 @@ describe('generated-art supporting cast', () => {
     expect(grace.rig.layers.find((layer) => layer.name === 'torso')?.asset).toContain('torso-clean-v2');
     expect(elliott.rig.layers.some((layer) => layer.name === 'neck')).toBe(true);
     expect(elliott.rig.layers.find((layer) => layer.name === 'torso')?.box[1]).toBeLessThan(30);
+  });
+
+  it('keeps the youngest arms restrained and Grace\u2019s illustrated head overlapped with her shirt', () => {
+    const sarahUpperArm = cast.SARAH.assetManifest;
+    expect(sarahUpperArm).toContain('?v=3');
+    expect(leah.rig.layers.find((layer) => layer.name === 'left-upper-arm')?.box[2]).toBeLessThanOrEqual(13);
+    expect(grace.rig.layers.find((layer) => layer.feature === 'headClosed')?.box[1]).toBeLessThan(0);
   });
 
   it('ships seven coherent pose sprites for each character', () => {

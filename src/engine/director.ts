@@ -78,9 +78,12 @@ export class Director {
         const dialogueFocus = anchor
           ? this.stage.effects.beginDialogueFocus(actor.getStageFraction())
           : false;
-        if (anchor) {
+        const onStageCount = [...this.actors.values()].filter((candidate) => candidate.onStage).length;
+        if (anchor && onStageCount <= 3) {
           this.bubbles.show(actor.displayName, cmd.text, anchor);
         } else {
+          // A bottom card stays readable when a busy stage would make a bubble
+          // cover another character's premium illustrated head.
           this.dialogueBox.show(actor.displayName, cmd.text);
         }
         actor.startTalking();

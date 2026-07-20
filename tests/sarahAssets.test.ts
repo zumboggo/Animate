@@ -21,6 +21,8 @@ describe('Sarah generated-art character', () => {
     expect(sarah.rig.layers.filter((layer) => layer.feature === 'headClosed')).toHaveLength(1);
     expect(sarah.rig.layers.filter((layer) => layer.feature === 'headOpen')).toHaveLength(1);
     expect(sarah.rig.layers.find((layer) => layer.name === 'torso')?.asset).toContain('torso-clean-v2');
+    expect(sarah.rig.layers.find((layer) => layer.name === 'torso')?.box[2]).toBeGreaterThanOrEqual(60);
+    expect(sarah.rig.layers.find((layer) => layer.name === 'left-upper-arm')?.box[2]).toBeLessThanOrEqual(17);
     expect(sarah.assetStatus).toEqual({
       poseSprites: 'ready',
       bodyParts: 'two-piece limbs ready for smooth layered animation',
