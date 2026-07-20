@@ -9,16 +9,18 @@ describe('Sarah generated-art character', () => {
     expect(cast.SARAH.scale).toBeLessThanOrEqual(0.88);
     expect(cast.SARAH.scale).toBeLessThan(cast.ANNA.appearance.height);
     expect(cast.SARAH.asset).toBe('assets/characters/sarah/poses/neutral.png');
+    expect(cast.SARAH.faceAnimation).toBe('mouthOnly');
   });
 
-  it('ships a matching layered body and animated face rig', () => {
+  it('keeps Sarah’s illustrated face calm and animates only her mouth', () => {
     expect(sarah.renderMode).toBe('hybrid');
     expect(Object.keys(sarah.rig.bones)).toHaveLength(12);
     expect(sarah.rig.layers).toHaveLength(16);
+    expect(sarah.rig.face.mode).toBe('mouthOnly');
     expect(sarah.assetStatus).toEqual({
       poseSprites: 'ready',
       bodyParts: 'two-piece limbs ready for smooth layered animation',
-      faceParts: 'ready for blink and talk-shape assembly',
+      faceParts: 'illustrated eyes and brows stay still; only the mouth animates',
     });
   });
 

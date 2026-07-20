@@ -167,7 +167,7 @@ for (const [name, entry] of stageCast) {
 }
 const sceneNames = document.createElement('span');
 sceneNames.className = 'cast-scenes';
-sceneNames.textContent = 'park · camp · bedroom · street · peppa-land';
+sceneNames.textContent = 'park · camp · cabin dining · bedroom · street · peppa-land';
 castStrip.appendChild(sceneNames);
 previewPanel.appendChild(castStrip);
 

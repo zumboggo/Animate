@@ -132,6 +132,8 @@ export interface CastAppearance {
 export interface CastEntry {
   displayName: string;
   adapter: string;
+  /** Optional facial-animation restraint for characters with detailed illustrated faces. */
+  faceAnimation?: 'full' | 'mouthOnly';
   /** Character-relative stage height; 1 is the standard cast height. */
   scale?: number;
   appearance?: CastAppearance;

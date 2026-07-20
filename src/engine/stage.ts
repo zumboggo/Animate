@@ -48,6 +48,48 @@ const SCENES: Record<string, string> = {
       </g>
       <g fill="#f3e8c5" opacity="0.85"><circle cx="610" cy="705" r="7"/><circle cx="670" cy="742" r="6"/><circle cx="748" cy="700" r="8"/></g>
     </svg>`,
+  'cabin-dining': `
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-label="A warm, spacious dining hall inside a big log cabin">
+      <defs>
+        <linearGradient id="cabin-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#dba568"/><stop offset="1" stop-color="#a9683f"/>
+        </linearGradient>
+        <linearGradient id="cabin-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8f5635"/><stop offset="1" stop-color="#603a29"/>
+        </linearGradient>
+        <linearGradient id="cabin-window" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#9edcf7"/><stop offset="1" stop-color="#e8f6ff"/>
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="900" fill="url(#cabin-wall)"/>
+      <g opacity="0.32" stroke="#74452f" stroke-width="7">
+        <path d="M0 92H1600M0 178H1600M0 264H1600M0 350H1600M0 436H1600M0 522H1600M0 608H1600"/>
+      </g>
+      <path d="M0 0H1600V86L800 28 0 86Z" fill="#5b3928"/>
+      <path d="M90 0L530 390M1510 0L1070 390M800 0V330" stroke="#543322" stroke-width="38" opacity="0.92"/>
+      <rect y="650" width="1600" height="250" fill="url(#cabin-floor)"/>
+      <g stroke="#4f3022" stroke-width="14">
+        <rect x="105" y="175" width="330" height="300" rx="10" fill="url(#cabin-window)"/>
+        <path d="M270 180V470M110 320H430"/>
+        <rect x="1165" y="175" width="330" height="300" rx="10" fill="url(#cabin-window)"/>
+        <path d="M1330 180V470M1170 320H1490"/>
+      </g>
+      <g fill="#f8fbff" opacity="0.9"><ellipse cx="190" cy="250" rx="58" ry="22"/><ellipse cx="351" cy="376" rx="48" ry="18"/><ellipse cx="1260" cy="245" rx="65" ry="23"/><ellipse cx="1410" cy="375" rx="52" ry="19"/></g>
+      <g>
+        <path d="M630 640V330Q800 250 970 330V640Z" fill="#6a3e2a" stroke="#4a2b20" stroke-width="18"/>
+        <path d="M684 622V398Q800 342 916 398V622Z" fill="#31251f"/>
+        <path d="M708 606V446Q800 410 892 446V606Z" fill="#f4a340"/>
+        <path d="M730 586V480Q800 454 870 480V586Z" fill="#ffd16e" opacity="0.86"/>
+        <rect x="595" y="306" width="410" height="60" rx="24" fill="#805037" stroke="#4a2b20" stroke-width="14"/>
+      </g>
+      <g fill="#f7e5b6">
+        <circle cx="555" cy="155" r="13"/><circle cx="800" cy="128" r="13"/><circle cx="1045" cy="155" r="13"/>
+      </g>
+      <g stroke="#70432c" stroke-width="14" fill="#bd7a48">
+        <path d="M470 690V520Q520 470 570 520V690"/><path d="M1030 690V520Q1080 470 1130 520V690"/>
+      </g>
+      <g fill="#f4d495" opacity="0.75"><rect x="70" y="548" width="245" height="20" rx="10"/><rect x="1285" y="548" width="245" height="20" rx="10"/></g>
+    </svg>`,
   park: `
     <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -156,6 +198,57 @@ const SCENES: Record<string, string> = {
     </svg>`,
 };
 
+/** Scene props that must sit in front of the actors, such as a dining table. */
+const SCENE_FOREGROUNDS: Record<string, string> = {
+  'cabin-dining': `
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-label="A long cabin table set with many places and pancakes">
+      <defs>
+        <linearGradient id="table-top" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#b97743"/><stop offset="1" stop-color="#75442c"/>
+        </linearGradient>
+        <filter id="table-shadow" x="-20%" y="-30%" width="140%" height="180%">
+          <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#332117" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+      <g filter="url(#table-shadow)">
+        <path d="M-80 650L1680 650 1510 910H90Z" fill="url(#table-top)" stroke="#573320" stroke-width="18"/>
+        <path d="M25 700H1575" stroke="#d49a61" stroke-width="6" opacity="0.48"/>
+        <path d="M90 815H1510" stroke="#4e2e20" stroke-width="8" opacity="0.45"/>
+      </g>
+      <g fill="#fff9e9" stroke="#d8c8a9" stroke-width="6">
+        <ellipse cx="170" cy="724" rx="86" ry="29"/><ellipse cx="360" cy="748" rx="88" ry="31"/>
+        <ellipse cx="560" cy="770" rx="96" ry="34"/><ellipse cx="780" cy="785" rx="98" ry="35"/>
+        <ellipse cx="1010" cy="778" rx="96" ry="34"/><ellipse cx="1220" cy="755" rx="90" ry="31"/>
+        <ellipse cx="1410" cy="728" rx="85" ry="29"/>
+      </g>
+      <g fill="none" stroke="#d8c8a9" stroke-width="7" stroke-linecap="round">
+        <path d="M86 690L58 776M255 706L270 790M447 719L454 818M666 733L670 836M897 732L892 832M1116 716L1108 806M1320 694L1300 779M1495 682L1525 765"/>
+      </g>
+      <!-- Grace's remaining half stack. -->
+      <g transform="translate(497 720)">
+        <path d="M0 40Q63 62 126 40V68Q64 91 0 68Z" fill="#d99442"/>
+        <ellipse cx="63" cy="40" rx="64" ry="22" fill="#efb75d" stroke="#bd7532" stroke-width="5"/>
+        <path d="M63 18A64 22 0 0 1 127 40A64 22 0 0 1 63 62Z" fill="#f8ca76"/>
+        <path d="M63 18V62" stroke="#fff2bd" stroke-width="5"/>
+        <rect x="83" y="25" width="24" height="14" rx="4" fill="#f9e292" transform="rotate(10 95 32)"/>
+      </g>
+      <!-- Elliott's lonely quarter pancake. -->
+      <g transform="translate(990 727)">
+        <path d="M0 0A69 25 0 0 1 69 25L7 45A69 25 0 0 1 0 0Z" fill="#efb75d" stroke="#bd7532" stroke-width="5"/>
+        <path d="M8 8L66 26L10 39Z" fill="#f8ca76"/>
+        <rect x="23" y="11" width="20" height="12" rx="4" fill="#f9e292" transform="rotate(12 33 17)"/>
+      </g>
+      <g transform="translate(744 660)">
+        <path d="M0 22Q30 0 60 22L52 100Q30 112 8 100Z" fill="#f4c25e" stroke="#8b562d" stroke-width="6"/>
+        <path d="M18 8Q30 -12 42 8" fill="none" stroke="#8b562d" stroke-width="7"/>
+        <text x="30" y="69" text-anchor="middle" font-family="system-ui,sans-serif" font-size="25" font-weight="900" fill="#8b562d">SYRUP</text>
+      </g>
+      <g fill="#f2f7fa" stroke="#aab9c2" stroke-width="5">
+        <path d="M225 645H277L265 711Q251 723 237 711Z"/><path d="M1290 650H1342L1330 716Q1316 728 1302 716Z"/>
+      </g>
+    </svg>`,
+};
+
 export const SCENE_NAMES = Object.keys(SCENES);
 
 /**
@@ -192,6 +285,7 @@ export class Stage {
   readonly effects: StageEffects;
 
   private sceneLayers: [HTMLDivElement, HTMLDivElement];
+  private foregroundLayers: [HTMLDivElement, HTMLDivElement];
   private activeScene = 0;
   private hintEl: HTMLDivElement;
 
@@ -215,7 +309,14 @@ export class Stage {
     this.actorLayer = document.createElement('div');
     this.actorLayer.className = 'actor-layer';
 
-    shake.append(sceneA, sceneB, this.actorLayer);
+    const foregroundA = document.createElement('div');
+    foregroundA.className = 'scene-foreground-layer';
+    const foregroundB = document.createElement('div');
+    foregroundB.className = 'scene-foreground-layer';
+    foregroundB.style.opacity = '0';
+    this.foregroundLayers = [foregroundA, foregroundB];
+
+    shake.append(sceneA, sceneB, this.actorLayer, foregroundA, foregroundB);
 
     const fadeOverlay = document.createElement('div');
     fadeOverlay.className = 'fade-overlay';
@@ -237,16 +338,25 @@ export class Stage {
     const markup = SCENES[name] ?? '';
     const incoming = this.sceneLayers[1 - this.activeScene];
     const outgoing = this.sceneLayers[this.activeScene];
+    const incomingForeground = this.foregroundLayers[1 - this.activeScene];
+    const outgoingForeground = this.foregroundLayers[this.activeScene];
     incoming.innerHTML = markup;
+    incomingForeground.innerHTML = SCENE_FOREGROUNDS[name] ?? '';
     if (instant) {
       incoming.style.transitionDuration = '0s';
       outgoing.style.transitionDuration = '0s';
+      incomingForeground.style.transitionDuration = '0s';
+      outgoingForeground.style.transitionDuration = '0s';
     } else {
       incoming.style.transitionDuration = '';
       outgoing.style.transitionDuration = '';
+      incomingForeground.style.transitionDuration = '';
+      outgoingForeground.style.transitionDuration = '';
     }
     incoming.style.opacity = '1';
     outgoing.style.opacity = '0';
+    incomingForeground.style.opacity = '1';
+    outgoingForeground.style.opacity = '0';
     this.activeScene = 1 - this.activeScene;
   }
 
@@ -264,5 +374,9 @@ export class Stage {
     this.sceneLayers[1].innerHTML = '';
     this.sceneLayers[0].style.opacity = '0';
     this.sceneLayers[1].style.opacity = '0';
+    this.foregroundLayers[0].innerHTML = '';
+    this.foregroundLayers[1].innerHTML = '';
+    this.foregroundLayers[0].style.opacity = '0';
+    this.foregroundLayers[1].style.opacity = '0';
   }
 }

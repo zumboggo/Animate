@@ -71,6 +71,7 @@
       { "name": "hair-front", "bone": "head", "asset": "assets/characters/sarah/parts/hair-front.png", "box": [0, 0, 100, 33], "z": 5 }
     ],
     "face": {
+      "mode": "mouthOnly",
       "brows": {
         "neutral": "assets/characters/sarah/face/brows-neutral.png",
         "happy": "assets/characters/sarah/face/brows-neutral.png",
@@ -117,6 +118,6 @@
   "assetStatus": {
     "poseSprites": "ready",
     "bodyParts": "two-piece limbs ready for smooth layered animation",
-    "faceParts": "ready for blink and talk-shape assembly"
+    "faceParts": "illustrated eyes and brows stay still; only the mouth animates"
   }
 }

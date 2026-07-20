@@ -5,7 +5,7 @@ import type { StoryCommand } from '../src/engine/storyTypes';
 
 const OPTS = {
   characters: ['LIN', 'MAX', 'MEI', 'ANNA', 'SARAH', 'GRACE', 'ELLIOTT', 'LEAH'],
-  scenes: ['park', 'camp', 'bedroom', 'street', 'peppa-land'],
+  scenes: ['park', 'camp', 'cabin-dining', 'bedroom', 'street', 'peppa-land'],
 };
 
 function compile(source: string) {
@@ -170,6 +170,7 @@ describe('the shipped demo stories compile cleanly', () => {
       import('../stories/peppa-land-adventure.story?raw'),
       import('../stories/treat-spot-trees.story?raw'),
       import('../stories/spider.story?raw'),
+      import('../stories/pancake-payback.story?raw'),
     ]);
     for (const { default: source } of sources) {
       expect(source).not.toMatch(/^\s*(?:LIN|MAX|MEI)\b/m);
@@ -199,6 +200,16 @@ describe('the shipped demo stories compile cleanly', () => {
   it('treat-spot-trees.story has no errors', async () => {
     const { default: source } = await import('../stories/treat-spot-trees.story?raw');
     expect(compile(source).errors).toEqual([]);
+  });
+
+  it('pancake-payback.story has no errors and stars Grace and Elliott', async () => {
+    const { default: source } = await import('../stories/pancake-payback.story?raw');
+    const result = compile(source);
+    expect(result.errors).toEqual([]);
+    const characters = new Set(
+      result.story.commands.flatMap((command) => ('character' in command ? [command.character] : [])),
+    );
+    expect(characters).toEqual(new Set(['GRACE', 'ELLIOTT']));
   });
 
   it('spider.story has no errors and uses Anna and Sarah', async () => {

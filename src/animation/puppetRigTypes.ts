@@ -18,6 +18,8 @@ export interface PuppetLayerDefinition {
 }
 
 export interface PuppetFaceDefinition {
+  /** Mouth-only preserves the illustrated eyes and brows while dialogue animates. */
+  mode?: 'full' | 'mouthOnly';
   brows: Partial<Record<CharacterEmotion, string>> & { neutral: string };
   eyes: Partial<Record<CharacterEmotion, string>> & {
     neutral: string;

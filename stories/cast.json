@@ -59,6 +59,7 @@
   "SARAH": {
     "displayName": "Sarah",
     "adapter": "puppetParts",
+    "faceAnimation": "mouthOnly",
     "scale": 0.85,
     "asset": "assets/characters/sarah/poses/neutral.png",
     "assetManifest": "assets/characters/sarah/character.json",

@@ -248,7 +248,9 @@ export class PuppetPartsAdapter extends BaseAdapter {
   private async loadLayeredRig(): Promise<void> {
     if (!this.entry.assetManifest || !this.rigArt || !this.puppet) return;
     try {
-      const response = await fetch(this.entry.assetManifest);
+      // Character manifests are authoring assets and can change independently
+      // of the JS bundle; avoid a stale browser copy after an art update.
+      const response = await fetch(this.entry.assetManifest, { cache: 'no-store' });
       if (!response.ok) throw new Error(`manifest returned ${response.status}`);
       const manifest = await response.json() as PuppetCharacterManifest;
       if (manifest.renderMode !== 'hybrid' || !manifest.rig) throw new Error('manifest has no hybrid rig');
@@ -261,7 +263,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
       this.animator = new PuppetBoneAnimator(this.bones, manifest.rig.rotationScale ?? 0.7);
       this.populateDebugOverlay(manifest.rig);
       this.updateFace();
-      if (manifest.rig.face) this.startBlinking();
+      if (manifest.rig.face && !this.isMouthOnlyFace()) this.startBlinking();
       if (!manifest.rig.face && this.currentEmotion !== 'neutral') {
         const source = this.entry.emotionAssets?.[this.currentEmotion];
         const shown = source
@@ -414,11 +416,17 @@ export class PuppetPartsAdapter extends BaseAdapter {
   private updateFace(): void {
     const face = this.rigDefinition?.face;
     if (!face) return;
-    const brows = this.features.get('brows');
-    const eyes = this.features.get('eyes');
-    if (brows) brows.src = face.brows[this.currentEmotion] ?? face.brows.neutral;
-    if (eyes) eyes.src = face.eyes[this.currentEmotion] ?? face.eyes.neutral;
+    if (!this.isMouthOnlyFace()) {
+      const brows = this.features.get('brows');
+      const eyes = this.features.get('eyes');
+      if (brows) brows.src = face.brows[this.currentEmotion] ?? face.brows.neutral;
+      if (eyes) eyes.src = face.eyes[this.currentEmotion] ?? face.eyes.neutral;
+    }
     this.updateMouth();
+  }
+
+  private isMouthOnlyFace(): boolean {
+    return this.entry.faceAnimation === 'mouthOnly' || this.rigDefinition?.face?.mode === 'mouthOnly';
   }
 
   private updateMouth(): void {
