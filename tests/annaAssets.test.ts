@@ -21,8 +21,8 @@ describe('Anna generated-art character', () => {
 
   it('publishes a matching parts-and-face manifest for rig assembly', () => {
     expect(anna.renderMode).toBe('hybrid');
-    expect(Object.keys(anna.rig.bones)).toHaveLength(16);
-    expect(anna.rig.layers).toHaveLength(20);
+    expect(Object.keys(anna.rig.bones)).toHaveLength(12);
+    expect(anna.rig.layers).toHaveLength(16);
     expect(anna.paths).toMatchObject({
       parts: 'assets/characters/anna/parts',
       face: 'assets/characters/anna/face',
@@ -30,7 +30,7 @@ describe('Anna generated-art character', () => {
     });
     expect(anna.assetStatus).toEqual({
       poseSprites: 'ready',
-      bodyParts: 'ready for layered-rig assembly and pivot tuning',
+      bodyParts: 'two-piece limbs ready for smooth layered animation',
       faceParts: 'ready for blink and talk-shape assembly',
     });
     expect(Object.keys(anna.poses)).toHaveLength(7);

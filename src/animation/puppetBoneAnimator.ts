@@ -123,7 +123,9 @@ export class PuppetBoneAnimator {
 }
 
 function smoothstep(value: number): number {
-  return value * value * (3 - 2 * value);
+  // Quintic smoothstep has zero velocity and acceleration at both ends.  The
+  // gentler settle is especially visible on the simplified elbow/knee rig.
+  return value * value * value * (value * (value * 6 - 15) + 10);
 }
 
 function evalTrack(track: Track, value: number): Required<BoneFrame> {

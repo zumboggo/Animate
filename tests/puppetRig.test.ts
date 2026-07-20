@@ -33,12 +33,19 @@ describe('smooth puppet rig guardrails', () => {
     expect(maxAbs(rotations('sit', 'rightThigh'))).toBeLessThanOrEqual(8);
   });
 
-  it('nests generated-art limbs into real parent-child bone chains', () => {
+  it('uses exactly two rendered segments per arm and leg', () => {
     for (const manifest of [anna, sarah]) {
       expect(manifest.rig.bones.leftForearm.parent).toBe('leftUpperArm');
-      expect(manifest.rig.bones.leftHand.parent).toBe('leftForearm');
       expect(manifest.rig.bones.rightShin.parent).toBe('rightThigh');
-      expect(manifest.rig.bones.rightFoot.parent).toBe('rightShin');
+      expect(manifest.rig.bones).not.toHaveProperty('leftHand');
+      expect(manifest.rig.bones).not.toHaveProperty('rightHand');
+      expect(manifest.rig.bones).not.toHaveProperty('leftFoot');
+      expect(manifest.rig.bones).not.toHaveProperty('rightFoot');
+      const limbLayers = manifest.rig.layers.filter((layer) =>
+        /(?:upper-arm|forearm|thigh|shin)$/.test(layer.name),
+      );
+      expect(limbLayers).toHaveLength(8);
+      expect(manifest.rig.layers.some((layer) => /(?:hand|foot)$/.test(layer.name))).toBe(false);
       expect(manifest.rig.bones.head.parent).toBe('torso');
     }
   });

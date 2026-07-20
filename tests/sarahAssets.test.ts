@@ -13,11 +13,11 @@ describe('Sarah generated-art character', () => {
 
   it('ships a matching layered body and animated face rig', () => {
     expect(sarah.renderMode).toBe('hybrid');
-    expect(Object.keys(sarah.rig.bones)).toHaveLength(16);
-    expect(sarah.rig.layers).toHaveLength(20);
+    expect(Object.keys(sarah.rig.bones)).toHaveLength(12);
+    expect(sarah.rig.layers).toHaveLength(16);
     expect(sarah.assetStatus).toEqual({
       poseSprites: 'ready',
-      bodyParts: 'ready for layered-rig assembly and pivot tuning',
+      bodyParts: 'two-piece limbs ready for smooth layered animation',
       faceParts: 'ready for blink and talk-shape assembly',
     });
   });
