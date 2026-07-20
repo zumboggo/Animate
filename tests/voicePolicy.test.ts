@@ -32,4 +32,16 @@ describe('bundled demo voices', () => {
     expect(demoVoiceClipUrl('GRACE\0happy\0你好！我是 Grace。')).toContain('/audio/demos/grace-');
     expect(demoVoiceClipUrl('ANNA\0neutral\0A brand new line')).toBeNull();
   });
+
+  it('bundles every Grace and Elliott line from The Pancake Payback', () => {
+    const pancakeLines = [
+      'GRACE\0angry\0Elliott! You stole half of my pancakes!',
+      'ELLIOTT\0confused\0I only wanted a little taste.',
+      'GRACE\0angry\0Then I am taking three quarters of your pancakes!',
+      'GRACE\0happy\0One bite, two bites, three bites. Delicious!',
+      'ELLIOTT\0sad\0Now I only have one quarter left!',
+      'GRACE\0laughing\0I am done eating. You have one quarter, and I still have half!',
+    ];
+    for (const key of pancakeLines) expect(demoVoiceClipUrl(key)).toMatch(/\/audio\/demos\/(grace|elliott)-.+\.wav$/);
+  });
 });
