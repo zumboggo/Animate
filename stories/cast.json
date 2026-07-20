@@ -2,9 +2,10 @@
   "ANNA": {
     "displayName": "Anna",
     "adapter": "puppetParts",
+    "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/anna/poses/neutral.png",
-    "assetManifest": "assets/characters/anna/character.json",
+    "assetManifest": "assets/characters/anna/character.json?v=2",
     "poseAssets": {
       "idle": "assets/characters/anna/poses/neutral.png",
       "talkNeutral": "assets/characters/anna/poses/happy.png",
@@ -62,7 +63,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 0.85,
     "asset": "assets/characters/sarah/poses/neutral.png",
-    "assetManifest": "assets/characters/sarah/character.json",
+    "assetManifest": "assets/characters/sarah/character.json?v=2",
     "poseAssets": {
       "idle": "assets/characters/sarah/poses/neutral.png",
       "talkNeutral": "assets/characters/sarah/poses/happy.png",
@@ -119,7 +120,7 @@
     "adapter": "puppetParts",
     "scale": 1.05,
     "asset": "assets/characters/grace/poses/neutral.png",
-    "assetManifest": "assets/characters/grace/character.json",
+    "assetManifest": "assets/characters/grace/character.json?v=2",
     "poseAssets": {
       "idle": "assets/characters/grace/poses/neutral.png",
       "talkNeutral": "assets/characters/grace/poses/happy.png",
@@ -176,7 +177,7 @@
     "adapter": "puppetParts",
     "scale": 1.0,
     "asset": "assets/characters/elliott/poses/neutral.png",
-    "assetManifest": "assets/characters/elliott/character.json",
+    "assetManifest": "assets/characters/elliott/character.json?v=2",
     "poseAssets": {
       "idle": "assets/characters/elliott/poses/neutral.png",
       "talkNeutral": "assets/characters/elliott/poses/happy.png",

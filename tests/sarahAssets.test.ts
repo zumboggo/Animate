@@ -12,15 +12,19 @@ describe('Sarah generated-art character', () => {
     expect(cast.SARAH.faceAnimation).toBe('mouthOnly');
   });
 
-  it('keeps Sarah’s illustrated face calm and animates only her mouth', () => {
+  it('keeps Sarah\u2019s face calm and swaps only aligned whole-head talk frames', () => {
     expect(sarah.renderMode).toBe('hybrid');
     expect(Object.keys(sarah.rig.bones)).toHaveLength(12);
-    expect(sarah.rig.layers).toHaveLength(16);
-    expect(sarah.rig.face.mode).toBe('mouthOnly');
+    expect(sarah.rig.layers).toHaveLength(12);
+    expect(sarah.rig.talkingHead).toBe(true);
+    expect(sarah.rig).not.toHaveProperty('face');
+    expect(sarah.rig.layers.filter((layer) => layer.feature === 'headClosed')).toHaveLength(1);
+    expect(sarah.rig.layers.filter((layer) => layer.feature === 'headOpen')).toHaveLength(1);
+    expect(sarah.rig.layers.find((layer) => layer.name === 'torso')?.asset).toContain('torso-clean-v2');
     expect(sarah.assetStatus).toEqual({
       poseSprites: 'ready',
       bodyParts: 'two-piece limbs ready for smooth layered animation',
-      faceParts: 'illustrated eyes and brows stay still; only the mouth animates',
+      faceParts: 'aligned full-head closed/open dialogue frames; expressions use pose sprites',
     });
   });
 

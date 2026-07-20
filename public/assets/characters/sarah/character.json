@@ -38,6 +38,7 @@
   "rig": {
     "aspectRatio": 0.54,
     "rotationScale": 0.54,
+    "talkingHead": true,
     "bones": {
       "root": { "pivot": [50, 94], "z": 0 },
       "pelvis": { "parent": "root", "pivot": [50, 61], "z": 1 },
@@ -62,49 +63,10 @@
       { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/sarah/parts/left-forearm.png", "box": [13, 46, 21, 25], "z": 1 },
       { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/sarah/parts/right-upper-arm.png", "box": [65, 34, 21, 23], "z": 0 },
       { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/sarah/parts/right-forearm.png", "box": [66, 46, 21, 25], "z": 1 },
-      { "name": "torso", "bone": "torso", "asset": "assets/characters/sarah/parts/torso.png", "box": [20, 31, 60, 33], "z": 2 },
-      { "name": "hair-back", "bone": "head", "asset": "assets/characters/sarah/parts/hair-back.png", "box": [0, 0, 100, 35], "z": 0 },
-      { "name": "face-base", "bone": "head", "asset": "assets/characters/sarah/parts/face-base.png", "box": [20, 4, 60, 31], "z": 1 },
-      { "name": "brows", "bone": "head", "asset": "assets/characters/sarah/face/brows-neutral.png", "box": [34, 13, 32, 4], "z": 2, "feature": "brows" },
-      { "name": "eyes", "bone": "head", "asset": "assets/characters/sarah/face/eyes-open.png", "box": [31, 16, 38, 7], "z": 3, "feature": "eyes" },
-      { "name": "mouth", "bone": "head", "asset": "assets/characters/sarah/face/mouth-neutral.png", "box": [40, 23, 20, 6], "z": 4, "feature": "mouth" },
-      { "name": "hair-front", "bone": "head", "asset": "assets/characters/sarah/parts/hair-front.png", "box": [0, 0, 100, 33], "z": 5 }
-    ],
-    "face": {
-      "mode": "mouthOnly",
-      "brows": {
-        "neutral": "assets/characters/sarah/face/brows-neutral.png",
-        "happy": "assets/characters/sarah/face/brows-neutral.png",
-        "sad": "assets/characters/sarah/face/brows-sad.png",
-        "angry": "assets/characters/sarah/face/brows-angry.png",
-        "scared": "assets/characters/sarah/face/brows-sad.png",
-        "surprised": "assets/characters/sarah/face/brows-surprised.png",
-        "laughing": "assets/characters/sarah/face/brows-neutral.png",
-        "confused": "assets/characters/sarah/face/brows-angry.png"
-      },
-      "eyes": {
-        "neutral": "assets/characters/sarah/face/eyes-open.png",
-        "closed": "assets/characters/sarah/face/eyes-closed.png",
-        "happy": "assets/characters/sarah/face/eyes-happy.png",
-        "sad": "assets/characters/sarah/face/eyes-worried.png",
-        "angry": "assets/characters/sarah/face/eyes-open.png",
-        "scared": "assets/characters/sarah/face/eyes-worried.png",
-        "surprised": "assets/characters/sarah/face/eyes-surprised.png",
-        "laughing": "assets/characters/sarah/face/eyes-happy.png",
-        "confused": "assets/characters/sarah/face/eyes-worried.png"
-      },
-      "mouths": {
-        "neutral": "assets/characters/sarah/face/mouth-neutral.png",
-        "talk": "assets/characters/sarah/face/mouth-open-talk.png",
-        "happy": "assets/characters/sarah/face/mouth-smile.png",
-        "sad": "assets/characters/sarah/face/mouth-sad.png",
-        "angry": "assets/characters/sarah/face/mouth-angry.png",
-        "scared": "assets/characters/sarah/face/mouth-surprised.png",
-        "surprised": "assets/characters/sarah/face/mouth-surprised.png",
-        "laughing": "assets/characters/sarah/face/mouth-laugh.png",
-        "confused": "assets/characters/sarah/face/mouth-neutral.png"
-      }
-    }
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/sarah/parts/torso-clean-v2.png", "box": [24, 31, 52, 33], "z": 2 },
+      { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/sarah/parts/head-closed-v2.png", "box": [0, 1, 100, 34], "z": 4, "feature": "headClosed" },
+      { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/sarah/parts/head-open-v2.png", "box": [0, 1, 100, 34], "z": 5, "feature": "headOpen" }
+    ]
   },
   "poses": {
     "neutral": "poses/neutral.png",
@@ -118,6 +80,6 @@
   "assetStatus": {
     "poseSprites": "ready",
     "bodyParts": "two-piece limbs ready for smooth layered animation",
-    "faceParts": "illustrated eyes and brows stay still; only the mouth animates"
+    "faceParts": "aligned full-head closed/open dialogue frames; expressions use pose sprites"
   }
 }

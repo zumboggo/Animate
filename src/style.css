@@ -1252,6 +1252,11 @@ main {
   user-select: none;
 }
 
+.puppet-rig-layer[data-layer="talking-head-closed"],
+.puppet-rig-layer[data-layer="talking-head-open"] {
+  will-change: visibility;
+}
+
 .puppet.is-rig-active .puppet-rig-art { opacity: 1; }
 .puppet.is-rig-active .puppet-pose-sprite { opacity: 0; }
 .puppet.is-special-pose .puppet-rig-art { opacity: 0; }
@@ -1262,7 +1267,7 @@ main {
 }
 
 .puppet-animation-layer.is-talking {
-  animation: puppet-talk 1.05s ease-in-out infinite;
+  animation: puppet-talk 1.35s ease-in-out infinite;
 }
 
 .puppet-animation-layer.is-walking {
@@ -1308,13 +1313,13 @@ main {
 
 @keyframes puppet-talk {
   0%, 100% { transform: translateY(0) rotate(0); }
-  38% { transform: translateY(-2px) rotate(-0.35deg); }
-  72% { transform: translateY(0.5px) rotate(0.22deg); }
+  42% { transform: translateY(-1px) rotate(-0.18deg); }
+  76% { transform: translateY(0.3px) rotate(0.12deg); }
 }
 
 @keyframes puppet-walk {
-  0%, 100% { transform: translateY(0) rotate(-0.3deg); }
-  50% { transform: translateY(-5px) rotate(0.3deg); }
+  0%, 100% { transform: translateY(0) rotate(-0.18deg); }
+  50% { transform: translateY(-3px) rotate(0.18deg); }
 }
 
 .puppet-debug-overlay {

@@ -16,10 +16,16 @@ describe('generated-art supporting cast', () => {
       expect(cast[name].adapter).toBe('puppetParts');
       expect(manifest.renderMode).toBe('hybrid');
       expect(Object.keys(manifest.rig.bones)).toHaveLength(12);
-      expect(manifest.rig.layers).toHaveLength(11);
+      expect(manifest.rig.layers).toHaveLength(name === 'ELLIOTT' ? 12 : 11);
       expect(manifest.rig.bones).not.toHaveProperty('leftHand');
       expect(manifest.rig.bones).not.toHaveProperty('rightFoot');
     }
+  });
+
+  it('hides duplicate torso arms and closes Elliott\u2019s head-to-shirt gap', () => {
+    expect(grace.rig.layers.find((layer) => layer.name === 'torso')?.asset).toContain('torso-clean-v2');
+    expect(elliott.rig.layers.some((layer) => layer.name === 'neck')).toBe(true);
+    expect(elliott.rig.layers.find((layer) => layer.name === 'torso')?.box[1]).toBeLessThan(30);
   });
 
   it('ships seven coherent pose sprites for each character', () => {

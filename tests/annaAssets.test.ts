@@ -8,6 +8,7 @@ describe('Anna generated-art character', () => {
     expect(cast.ANNA.scale).toBe(1);
     expect(cast.ANNA.scale).toBeGreaterThan(cast.SARAH.scale);
     expect(cast.ANNA.asset).toBe('assets/characters/anna/poses/neutral.png');
+    expect(cast.ANNA.faceAnimation).toBe('mouthOnly');
   });
 
   it('maps difficult actions to coherent Anna pose art', () => {
@@ -19,10 +20,14 @@ describe('Anna generated-art character', () => {
     });
   });
 
-  it('publishes a matching parts-and-face manifest for rig assembly', () => {
+  it('uses aligned whole-head dialogue frames without independent facial motion', () => {
     expect(anna.renderMode).toBe('hybrid');
     expect(Object.keys(anna.rig.bones)).toHaveLength(12);
-    expect(anna.rig.layers).toHaveLength(16);
+    expect(anna.rig.layers).toHaveLength(12);
+    expect(anna.rig.talkingHead).toBe(true);
+    expect(anna.rig).not.toHaveProperty('face');
+    expect(anna.rig.layers.filter((layer) => layer.feature === 'headClosed')).toHaveLength(1);
+    expect(anna.rig.layers.filter((layer) => layer.feature === 'headOpen')).toHaveLength(1);
     expect(anna.paths).toMatchObject({
       parts: 'assets/characters/anna/parts',
       face: 'assets/characters/anna/face',
@@ -31,7 +36,7 @@ describe('Anna generated-art character', () => {
     expect(anna.assetStatus).toEqual({
       poseSprites: 'ready',
       bodyParts: 'two-piece limbs ready for smooth layered animation',
-      faceParts: 'ready for blink and talk-shape assembly',
+      faceParts: 'aligned full-head closed/open dialogue frames; expressions use pose sprites',
     });
     expect(Object.keys(anna.poses)).toHaveLength(7);
   });

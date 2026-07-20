@@ -23,9 +23,9 @@
       "rightThigh": { "parent": "pelvis", "pivot": [58, 62], "z": -3 },
       "rightShin": { "parent": "rightThigh", "pivot": [59, 78], "z": 1 },
       "torso": { "parent": "root", "pivot": [50, 54], "z": 3 },
-      "leftUpperArm": { "parent": "torso", "pivot": [30, 35], "z": -2 },
+      "leftUpperArm": { "parent": "torso", "pivot": [30, 33], "z": -2 },
       "leftForearm": { "parent": "leftUpperArm", "pivot": [24, 51], "z": 1 },
-      "rightUpperArm": { "parent": "torso", "pivot": [70, 35], "z": -3 },
+      "rightUpperArm": { "parent": "torso", "pivot": [70, 33], "z": -3 },
       "rightForearm": { "parent": "rightUpperArm", "pivot": [76, 51], "z": 1 },
       "head": { "parent": "torso", "pivot": [50, 29], "z": 4 }
     },
@@ -35,11 +35,12 @@
       { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/elliott/parts/right-thigh.png", "box": [48, 60, 21, 23], "z": 0 },
       { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/elliott/parts/right-shin.png", "box": [47, 74, 27, 25], "z": 1 },
       { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/elliott/parts/pelvis.png", "box": [29, 54, 42, 24], "z": 1 },
-      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/elliott/parts/left-upper-arm.png", "box": [16, 34, 17, 22], "z": 0 },
+      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/elliott/parts/left-upper-arm.png", "box": [16, 32, 17, 22], "z": 0 },
       { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/elliott/parts/left-forearm.png", "box": [16, 48, 16, 25], "z": 1 },
-      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/elliott/parts/right-upper-arm.png", "box": [67, 34, 17, 22], "z": 0 },
+      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/elliott/parts/right-upper-arm.png", "box": [67, 32, 17, 22], "z": 0 },
       { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/elliott/parts/right-forearm.png", "box": [68, 48, 16, 25], "z": 1 },
-      { "name": "torso", "bone": "torso", "asset": "assets/characters/elliott/parts/torso.png", "box": [20, 30, 60, 26], "z": 2 },
+      { "name": "neck", "bone": "torso", "asset": "assets/characters/elliott/parts/neck.svg", "box": [43, 25, 14, 16], "z": 1 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/elliott/parts/torso.png", "box": [20, 27, 60, 29], "z": 2 },
       { "name": "head", "bone": "head", "asset": "assets/characters/elliott/parts/head.png", "box": [22, 1, 56, 31], "z": 4 }
     ]
   },

@@ -39,7 +39,7 @@
       { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/grace/parts/left-forearm.png", "box": [16, 50, 16, 26], "z": 1 },
       { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/grace/parts/right-upper-arm.png", "box": [69, 34, 15, 24], "z": 0 },
       { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/grace/parts/right-forearm.png", "box": [68, 50, 16, 26], "z": 1 },
-      { "name": "torso", "bone": "torso", "asset": "assets/characters/grace/parts/torso.png", "box": [25, 31, 50, 30], "z": 2 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/grace/parts/torso-clean-v2.png", "box": [31, 30, 38, 32], "z": 2 },
       { "name": "head", "bone": "head", "asset": "assets/characters/grace/parts/head.png", "box": [18, 0, 64, 36], "z": 4 }
     ]
   },

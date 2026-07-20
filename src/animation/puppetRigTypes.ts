@@ -14,7 +14,7 @@ export interface PuppetLayerDefinition {
   /** left, top, width, height as percentages of the rig canvas. */
   box: [number, number, number, number];
   z?: number;
-  feature?: 'brows' | 'eyes' | 'mouth';
+  feature?: 'brows' | 'eyes' | 'mouth' | 'headClosed' | 'headOpen';
 }
 
 export interface PuppetFaceDefinition {
@@ -34,6 +34,8 @@ export interface PuppetFaceDefinition {
 export interface PuppetRigDefinition {
   aspectRatio: number;
   rotationScale?: number;
+  /** Two complete, aligned head layers crossfade during neutral dialogue. */
+  talkingHead?: boolean;
   bones: Record<string, PuppetBoneDefinition>;
   layers: PuppetLayerDefinition[];
   face?: PuppetFaceDefinition;

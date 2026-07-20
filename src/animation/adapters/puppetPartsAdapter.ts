@@ -40,6 +40,8 @@ const ACTION_CLIPS: Partial<Record<CharacterAction, ClipSpec>> = {
 };
 
 const SPECIAL_POSES = new Set<CharacterPose>([
+  'talkHappy',
+  'talkAngry',
   'scared',
   'laugh',
   'sit',
@@ -65,7 +67,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
   private standbySprite: HTMLImageElement | null = null;
   private animator: PuppetBoneAnimator | null = null;
   private bones = new Map<string, HTMLDivElement>();
-  private features = new Map<'brows' | 'eyes' | 'mouth', HTMLImageElement>();
+  private features = new Map<'brows' | 'eyes' | 'mouth' | 'headClosed' | 'headOpen', HTMLImageElement>();
   private rigDefinition: PuppetRigDefinition | null = null;
   private currentEmotion: CharacterEmotion = 'neutral';
   private currentAsset = '';
@@ -74,7 +76,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
   private talking = false;
   private talkOpen = false;
   private blinkTimer: ReturnType<typeof setTimeout> | null = null;
-  private talkTimer: ReturnType<typeof setInterval> | null = null;
+  private talkTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(private entry: CastEntry) {
     super();
@@ -211,18 +213,23 @@ export class PuppetPartsAdapter extends BaseAdapter {
   startTalking(): void {
     this.talking = true;
     this.animationLayer?.classList.add('is-talking');
-    if (!this.features.get('mouth') || this.talkTimer) return;
-    this.talkTimer = setInterval(() => {
+    if ((!this.features.get('mouth') && !this.features.get('headOpen')) || this.talkTimer) return;
+    const advanceMouth = () => {
+      if (!this.talking) return;
       this.talkOpen = !this.talkOpen;
       this.updateMouth();
-    }, 145);
+      // A lightly varied cadence reads more like syllables than a mechanical flap.
+      const delay = this.talkOpen ? 105 : 150 + Math.round(Math.random() * 70);
+      this.talkTimer = setTimeout(advanceMouth, delay);
+    };
+    this.talkTimer = setTimeout(advanceMouth, 90);
   }
 
   stopTalking(): void {
     this.talking = false;
     this.talkOpen = false;
     this.animationLayer?.classList.remove('is-talking');
-    if (this.talkTimer) clearInterval(this.talkTimer);
+    if (this.talkTimer) clearTimeout(this.talkTimer);
     this.talkTimer = null;
     this.updateMouth();
   }
@@ -263,7 +270,7 @@ export class PuppetPartsAdapter extends BaseAdapter {
       this.animator = new PuppetBoneAnimator(this.bones, manifest.rig.rotationScale ?? 0.7);
       this.populateDebugOverlay(manifest.rig);
       this.updateFace();
-      if (manifest.rig.face && !this.isMouthOnlyFace()) this.startBlinking();
+      if (manifest.rig.face && !manifest.rig.talkingHead && !this.isMouthOnlyFace()) this.startBlinking();
       if (!manifest.rig.face && this.currentEmotion !== 'neutral') {
         const source = this.entry.emotionAssets?.[this.currentEmotion];
         const shown = source
@@ -322,6 +329,10 @@ export class PuppetPartsAdapter extends BaseAdapter {
         height: `${height}%`,
         zIndex: String(layer.z ?? 0),
       });
+      if (layer.feature === 'headOpen') {
+        image.style.opacity = '0';
+        image.style.visibility = 'hidden';
+      }
       bone.appendChild(image);
       if (layer.feature) this.features.set(layer.feature, image);
     }
@@ -414,6 +425,10 @@ export class PuppetPartsAdapter extends BaseAdapter {
   }
 
   private updateFace(): void {
+    if (this.rigDefinition?.talkingHead) {
+      this.updateMouth();
+      return;
+    }
     const face = this.rigDefinition?.face;
     if (!face) return;
     if (!this.isMouthOnlyFace()) {
@@ -430,6 +445,17 @@ export class PuppetPartsAdapter extends BaseAdapter {
   }
 
   private updateMouth(): void {
+    if (this.rigDefinition?.talkingHead) {
+      const closed = this.features.get('headClosed');
+      const open = this.features.get('headOpen');
+      if (!closed || !open) return;
+      const showOpen = this.talking && this.talkOpen;
+      closed.style.opacity = showOpen ? '0' : '1';
+      closed.style.visibility = showOpen ? 'hidden' : 'visible';
+      open.style.opacity = showOpen ? '1' : '0';
+      open.style.visibility = showOpen ? 'visible' : 'hidden';
+      return;
+    }
     const face = this.rigDefinition?.face;
     const mouth = this.features.get('mouth');
     if (!face || !mouth) return;
