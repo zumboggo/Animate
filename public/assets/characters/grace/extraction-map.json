@@ -1,0 +1,21 @@
+{
+  "sources": {
+    "poses": "reference/pose-sheet.png",
+    "parts": "reference/parts-sheet.png"
+  },
+  "poseCrops": {
+    "neutral": [105, 8, 285, 565],
+    "happy": [430, 8, 315, 565],
+    "angry": [780, 8, 290, 565],
+    "scared": [1090, 8, 315, 565],
+    "seated": [195, 555, 370, 465],
+    "pointing": [575, 525, 375, 495],
+    "laughing": [920, 530, 350, 490]
+  },
+  "verticalKeep": {
+    "left-thigh": [0.0, 0.82],
+    "right-thigh": [0.0, 0.82],
+    "left-shin": [0.08, 1.0],
+    "right-shin": [0.08, 1.0]
+  }
+}

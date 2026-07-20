@@ -1,0 +1,60 @@
+{
+  "id": "LEAH",
+  "displayName": "Leah",
+  "adapter": "puppetParts",
+  "renderMode": "hybrid",
+  "scale": 0.7,
+  "defaultEmotion": "neutral",
+  "defaultPose": "neutral",
+  "baseAsset": "assets/characters/leah/poses/neutral.png",
+  "paths": {
+    "reference": "assets/characters/leah/reference",
+    "parts": "assets/characters/leah/parts",
+    "poses": "assets/characters/leah/poses"
+  },
+  "rig": {
+    "aspectRatio": 0.62,
+    "rotationScale": 0.5,
+    "bones": {
+      "root": { "pivot": [50, 95], "z": 0 },
+      "pelvis": { "parent": "root", "pivot": [50, 61], "z": 1 },
+      "leftThigh": { "parent": "pelvis", "pivot": [41, 63], "z": -2 },
+      "leftShin": { "parent": "leftThigh", "pivot": [40, 77], "z": 1 },
+      "rightThigh": { "parent": "pelvis", "pivot": [59, 63], "z": -3 },
+      "rightShin": { "parent": "rightThigh", "pivot": [60, 77], "z": 1 },
+      "torso": { "parent": "root", "pivot": [50, 56], "z": 3 },
+      "leftUpperArm": { "parent": "torso", "pivot": [30, 40], "z": -2 },
+      "leftForearm": { "parent": "leftUpperArm", "pivot": [25, 54], "z": 1 },
+      "rightUpperArm": { "parent": "torso", "pivot": [70, 40], "z": -3 },
+      "rightForearm": { "parent": "rightUpperArm", "pivot": [75, 54], "z": 1 },
+      "head": { "parent": "torso", "pivot": [50, 35], "z": 4 }
+    },
+    "layers": [
+      { "name": "left-thigh", "bone": "leftThigh", "asset": "assets/characters/leah/parts/left-thigh.png", "box": [31, 61, 20, 23], "z": 0 },
+      { "name": "left-shin", "bone": "leftShin", "asset": "assets/characters/leah/parts/left-shin.png", "box": [27, 73, 25, 26], "z": 1 },
+      { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/leah/parts/right-thigh.png", "box": [49, 61, 20, 23], "z": 0 },
+      { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/leah/parts/right-shin.png", "box": [48, 73, 25, 26], "z": 1 },
+      { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/leah/parts/pelvis.png", "box": [31, 55, 38, 25], "z": 1 },
+      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/leah/parts/left-upper-arm.png", "box": [17, 38, 16, 22], "z": 0 },
+      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/leah/parts/left-forearm.png", "box": [16, 51, 18, 23], "z": 1 },
+      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/leah/parts/right-upper-arm.png", "box": [67, 38, 16, 22], "z": 0 },
+      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/leah/parts/right-forearm.png", "box": [66, 51, 18, 23], "z": 1 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/leah/parts/torso.png", "box": [26, 34, 48, 30], "z": 2 },
+      { "name": "head", "bone": "head", "asset": "assets/characters/leah/parts/head.png", "box": [23.5, 0, 53, 38], "z": 4 }
+    ]
+  },
+  "poses": {
+    "neutral": "poses/neutral.png",
+    "happy": "poses/happy.png",
+    "angry": "poses/angry.png",
+    "scared": "poses/scared.png",
+    "seated": "poses/seated.png",
+    "pointing": "poses/pointing.png",
+    "laughing": "poses/laughing.png"
+  },
+  "assetStatus": {
+    "poseSprites": "ready",
+    "bodyParts": "two-piece limbs ready for smooth layered animation",
+    "faceParts": "coherent full-head art with pose-sprite emotion fallback"
+  }
+}

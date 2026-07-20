@@ -1,0 +1,60 @@
+{
+  "id": "GRACE",
+  "displayName": "Grace",
+  "adapter": "puppetParts",
+  "renderMode": "hybrid",
+  "scale": 1.05,
+  "defaultEmotion": "neutral",
+  "defaultPose": "neutral",
+  "baseAsset": "assets/characters/grace/poses/neutral.png",
+  "paths": {
+    "reference": "assets/characters/grace/reference",
+    "parts": "assets/characters/grace/parts",
+    "poses": "assets/characters/grace/poses"
+  },
+  "rig": {
+    "aspectRatio": 0.5,
+    "rotationScale": 0.54,
+    "bones": {
+      "root": { "pivot": [50, 95], "z": 0 },
+      "pelvis": { "parent": "root", "pivot": [50, 60], "z": 1 },
+      "leftThigh": { "parent": "pelvis", "pivot": [42, 63], "z": -2 },
+      "leftShin": { "parent": "leftThigh", "pivot": [42, 77], "z": 1 },
+      "rightThigh": { "parent": "pelvis", "pivot": [58, 63], "z": -3 },
+      "rightShin": { "parent": "rightThigh", "pivot": [58, 77], "z": 1 },
+      "torso": { "parent": "root", "pivot": [50, 54], "z": 3 },
+      "leftUpperArm": { "parent": "torso", "pivot": [30, 36], "z": -2 },
+      "leftForearm": { "parent": "leftUpperArm", "pivot": [24, 53], "z": 1 },
+      "rightUpperArm": { "parent": "torso", "pivot": [70, 36], "z": -3 },
+      "rightForearm": { "parent": "rightUpperArm", "pivot": [76, 53], "z": 1 },
+      "head": { "parent": "torso", "pivot": [50, 30], "z": 4 }
+    },
+    "layers": [
+      { "name": "left-thigh", "bone": "leftThigh", "asset": "assets/characters/grace/parts/left-thigh.png", "box": [33, 61, 18, 22], "z": 0 },
+      { "name": "left-shin", "bone": "leftShin", "asset": "assets/characters/grace/parts/left-shin.png", "box": [30, 73, 22, 27], "z": 1 },
+      { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/grace/parts/right-thigh.png", "box": [49, 61, 18, 22], "z": 0 },
+      { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/grace/parts/right-shin.png", "box": [48, 73, 22, 27], "z": 1 },
+      { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/grace/parts/pelvis.png", "box": [28, 55, 44, 18], "z": 1 },
+      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/grace/parts/left-upper-arm.png", "box": [16, 34, 15, 24], "z": 0 },
+      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/grace/parts/left-forearm.png", "box": [16, 50, 16, 26], "z": 1 },
+      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/grace/parts/right-upper-arm.png", "box": [69, 34, 15, 24], "z": 0 },
+      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/grace/parts/right-forearm.png", "box": [68, 50, 16, 26], "z": 1 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/grace/parts/torso.png", "box": [25, 31, 50, 30], "z": 2 },
+      { "name": "head", "bone": "head", "asset": "assets/characters/grace/parts/head.png", "box": [18, 0, 64, 36], "z": 4 }
+    ]
+  },
+  "poses": {
+    "neutral": "poses/neutral.png",
+    "happy": "poses/happy.png",
+    "angry": "poses/angry.png",
+    "scared": "poses/scared.png",
+    "seated": "poses/seated.png",
+    "pointing": "poses/pointing.png",
+    "laughing": "poses/laughing.png"
+  },
+  "assetStatus": {
+    "poseSprites": "ready",
+    "bodyParts": "two-piece limbs ready for smooth layered animation",
+    "faceParts": "coherent full-head art with pose-sprite emotion fallback"
+  }
+}

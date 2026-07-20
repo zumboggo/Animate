@@ -132,6 +132,18 @@ export class PuppetPartsAdapter extends BaseAdapter {
 
   async setEmotion(emotion: CharacterEmotion): Promise<void> {
     this.currentEmotion = emotion;
+    if (this.rigDefinition && !this.rigDefinition.face) {
+      if (emotion === 'neutral') {
+        this.showRig();
+        return;
+      }
+      const source = this.entry.emotionAssets?.[emotion];
+      if (source) {
+        this.stopIdle();
+        await this.showPoseSprite(source, this.poseForEmotion(emotion));
+        return;
+      }
+    }
     this.updateFace();
   }
 
@@ -249,8 +261,16 @@ export class PuppetPartsAdapter extends BaseAdapter {
       this.animator = new PuppetBoneAnimator(this.bones, manifest.rig.rotationScale ?? 0.7);
       this.populateDebugOverlay(manifest.rig);
       this.updateFace();
-      this.startBlinking();
-      this.showRig();
+      if (manifest.rig.face) this.startBlinking();
+      if (!manifest.rig.face && this.currentEmotion !== 'neutral') {
+        const source = this.entry.emotionAssets?.[this.currentEmotion];
+        const shown = source
+          ? await this.showPoseSprite(source, this.poseForEmotion(this.currentEmotion))
+          : false;
+        if (!shown) this.showRig();
+      } else {
+        this.showRig();
+      }
       this.setDebugAnimation('idle');
       this.startIdle();
     } catch (error) {
@@ -341,6 +361,15 @@ export class PuppetPartsAdapter extends BaseAdapter {
     return this.entry.poseAssets?.[pose]
       ?? this.entry.emotionAssets?.[this.currentEmotion]
       ?? this.entry.asset;
+  }
+
+  private poseForEmotion(emotion: CharacterEmotion): CharacterPose {
+    if (emotion === 'happy') return 'talkHappy';
+    if (emotion === 'angry') return 'talkAngry';
+    if (emotion === 'laughing') return 'laugh';
+    if (emotion === 'scared' || emotion === 'sad') return 'scared';
+    if (emotion === 'surprised') return 'surprised';
+    return 'talkNeutral';
   }
 
   private makeSprite(extraClass: string): HTMLImageElement {

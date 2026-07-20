@@ -34,7 +34,7 @@ export interface PuppetRigDefinition {
   rotationScale?: number;
   bones: Record<string, PuppetBoneDefinition>;
   layers: PuppetLayerDefinition[];
-  face: PuppetFaceDefinition;
+  face?: PuppetFaceDefinition;
 }
 
 export interface PuppetCharacterManifest {
