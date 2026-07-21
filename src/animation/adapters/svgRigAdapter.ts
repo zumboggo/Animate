@@ -179,7 +179,7 @@ export class SvgRigAdapter extends BaseAdapter {
     this.stopIdle();
     this.hidePoseSprite();
     if (this.presentation) this.presentation.style.transform = RIG_POSES.idle.presentation;
-    void this.animator.play(CLIPS.walk, { rate: gait === 'run' ? 1.9 : 1 });
+    void this.animator.play(gait === 'swim' ? CLIPS.swim : CLIPS.walk, { rate: gait === 'run' ? 1.9 : 1 });
   }
 
   protected onMoveEnd(): void {

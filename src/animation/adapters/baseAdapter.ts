@@ -6,7 +6,7 @@ import type {
   EntrySide,
   Gait,
 } from '../../engine/storyTypes';
-import { RUN_MS_FULL_STAGE, WALK_MS_FULL_STAGE, sleep, waitTransition } from '../../engine/timing';
+import { RUN_MS_FULL_STAGE, SWIM_MS_FULL_STAGE, WALK_MS_FULL_STAGE, sleep, waitTransition } from '../../engine/timing';
 import type {
   AnimationOptions,
   CharacterAnimationAdapter,
@@ -124,7 +124,11 @@ export abstract class BaseAdapter implements CharacterAnimationAdapter {
       return;
     }
 
-    const perStage = gait === 'run' ? RUN_MS_FULL_STAGE : WALK_MS_FULL_STAGE;
+    const perStage = gait === 'run'
+      ? RUN_MS_FULL_STAGE
+      : gait === 'swim'
+        ? SWIM_MS_FULL_STAGE
+        : WALK_MS_FULL_STAGE;
     const ms = Math.max(350, distance * perStage);
     this.onMoveStart(gait);
     this.wrapper.style.transitionDuration = `${ms}ms`;

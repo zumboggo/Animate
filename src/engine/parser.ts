@@ -14,6 +14,7 @@ const POSITION_WORDS: Record<string, StagePositionName> = {
   centre: 'center',
   middle: 'center',
   right: 'right',
+  shore: 'farRight',
   'far right': 'farRight',
   farright: 'farRight',
 };
@@ -194,7 +195,7 @@ function extractDirections(phrase: string): {
     rest = (rest.slice(0, fromMatch.index) + rest.slice(fromMatch.index! + fromMatch[0].length)).trim();
   }
 
-  const toMatch = rest.match(/\bto (?:the )?(far left|farleft|far right|farright|left|center|centre|middle|right)\b/);
+  const toMatch = rest.match(/\bto (?:the )?(far left|farleft|far right|farright|left|center|centre|middle|right|shore)\b/);
   if (toMatch) {
     to = POSITION_WORDS[toMatch[1]];
     rest = (rest.slice(0, toMatch.index) + rest.slice(toMatch.index! + toMatch[0].length)).trim();

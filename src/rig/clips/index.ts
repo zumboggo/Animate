@@ -15,6 +15,7 @@ import fall from './fall.json';
 import bounce from './bounce.json';
 import recoil from './recoil.json';
 import treePose from './treePose.json';
+import swim from './swim.json';
 
 export const CLIPS: Record<string, Clip> = {
   idle,
@@ -33,4 +34,5 @@ export const CLIPS: Record<string, Clip> = {
   bounce,
   recoil,
   treePose,
+  swim,
 };

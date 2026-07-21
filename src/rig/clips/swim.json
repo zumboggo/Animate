@@ -1,0 +1,43 @@
+{
+  "name": "swim",
+  "durationMs": 1080,
+  "loop": true,
+  "keyframes": [
+    {
+      "time": 0,
+      "bones": {
+        "root": { "ty": 1 },
+        "torso": { "rotate": -2 },
+        "head": { "rotate": 2 },
+        "leftUpperArm": { "rotate": 22 },
+        "leftForearm": { "rotate": 12 },
+        "rightUpperArm": { "rotate": -22 },
+        "rightForearm": { "rotate": -12 }
+      }
+    },
+    {
+      "time": 0.5,
+      "bones": {
+        "root": { "ty": -2 },
+        "torso": { "rotate": 2 },
+        "head": { "rotate": -2 },
+        "leftUpperArm": { "rotate": -20 },
+        "leftForearm": { "rotate": -10 },
+        "rightUpperArm": { "rotate": 20 },
+        "rightForearm": { "rotate": 10 }
+      }
+    },
+    {
+      "time": 1,
+      "bones": {
+        "root": { "ty": 1 },
+        "torso": { "rotate": -2 },
+        "head": { "rotate": 2 },
+        "leftUpperArm": { "rotate": 22 },
+        "leftForearm": { "rotate": 12 },
+        "rightUpperArm": { "rotate": -22 },
+        "rightForearm": { "rotate": -12 }
+      }
+    }
+  ]
+}

@@ -5,11 +5,12 @@ import type {
   Story,
   StoryCommand,
   StoryError,
+  Gait,
 } from './storyTypes';
 
 interface ActionSpec {
   action: CharacterAction;
-  gait?: 'walk' | 'run';
+  gait?: Gait;
   /** Some actions imply a facial expression (e.g. laughing). */
   impliedEmotion?: CharacterEmotion;
 }
@@ -22,6 +23,8 @@ export const ACTION_PHRASES: Record<string, ActionSpec> = {
   'comes in': { action: 'walkIn' },
   'runs in': { action: 'runIn', gait: 'run' },
   'run in': { action: 'runIn', gait: 'run' },
+  'swims in': { action: 'walkIn', gait: 'swim' },
+  'swim in': { action: 'walkIn', gait: 'swim' },
   'walks out': { action: 'walkOut' },
   'walk out': { action: 'walkOut' },
   leaves: { action: 'walkOut' },
@@ -240,6 +243,11 @@ function resolveAction(verb: string, hasFrom: boolean, hasTo: boolean): ActionSp
     if (hasTo) return { action: 'walkTo', gait: 'run' };
     if (hasFrom) return { action: 'runIn', gait: 'run' };
     return `"runs" needs a direction — try "runs to center" or "runs in from left".`;
+  }
+  if (verb === 'swims' || verb === 'swim') {
+    if (hasTo) return { action: 'walkTo', gait: 'swim' };
+    if (hasFrom) return { action: 'walkIn', gait: 'swim' };
+    return `"swims" needs a direction â€” try "swims to shore" or "swims in from left".`;
   }
 
   return withSuggestion(

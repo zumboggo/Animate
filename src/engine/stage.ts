@@ -9,6 +9,39 @@ import peppaLandUrl from '../../assets/backgrounds/peppa-land.png?url';
 const SCENES: Record<string, string> = {
   'peppa-land': `
     <img src="${peppaLandUrl}" alt="" draggable="false" />`,
+  lake: `
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-label="A sparkling camp lake seen from above, with the sandy shore on the right">
+      <defs>
+        <radialGradient id="lake-water" cx="42%" cy="42%" r="78%">
+          <stop offset="0" stop-color="#62c9d5"/><stop offset="0.58" stop-color="#3da8bd"/><stop offset="1" stop-color="#237e9d"/>
+        </radialGradient>
+        <linearGradient id="lake-shore" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#e8ce8c"/><stop offset="1" stop-color="#c89d58"/>
+        </linearGradient>
+        <pattern id="lake-glints" width="150" height="110" patternUnits="userSpaceOnUse">
+          <path d="M12 42Q48 22 84 42M70 88Q108 68 142 88" fill="none" stroke="#d9fbff" stroke-width="7" stroke-linecap="round" opacity="0.34"/>
+        </pattern>
+      </defs>
+      <rect width="1600" height="900" fill="url(#lake-water)"/>
+      <rect width="1600" height="900" fill="url(#lake-glints)"/>
+      <path d="M1270 0Q1180 150 1250 300Q1335 465 1215 620Q1140 725 1200 900H1600V0Z" fill="#bfe3cd" opacity="0.55"/>
+      <path d="M1360 0Q1265 155 1338 312Q1420 480 1298 635Q1222 744 1285 900H1600V0Z" fill="url(#lake-shore)"/>
+      <path d="M1395 0Q1325 170 1390 320Q1460 485 1360 650Q1310 750 1360 900" fill="none" stroke="#f6e7b6" stroke-width="34" opacity="0.9"/>
+      <g fill="none" stroke="#d8fbff" stroke-width="9" opacity="0.5">
+        <ellipse cx="270" cy="260" rx="110" ry="40"/><ellipse cx="630" cy="605" rx="135" ry="48"/>
+        <ellipse cx="980" cy="260" rx="125" ry="44"/><ellipse cx="1110" cy="690" rx="92" ry="34"/>
+      </g>
+      <g transform="translate(55 28) rotate(8 220 150)">
+        <rect x="0" y="0" width="430" height="190" rx="18" fill="#a86c3d" stroke="#704223" stroke-width="13"/>
+        <path d="M25 45H405M25 95H405M25 145H405" stroke="#d79b62" stroke-width="9" opacity="0.7"/>
+        <rect x="42" y="178" width="42" height="180" rx="12" fill="#6f4428"/>
+        <rect x="338" y="178" width="42" height="180" rx="12" fill="#6f4428"/>
+      </g>
+      <g fill="#568b55">
+        <circle cx="1490" cy="120" r="54"/><circle cx="1535" cy="230" r="42"/><circle cx="1455" cy="770" r="62"/><circle cx="1530" cy="850" r="50"/>
+      </g>
+      <g fill="#f7ffff" opacity="0.72"><circle cx="490" cy="370" r="9"/><circle cx="830" cy="155" r="7"/><circle cx="760" cy="725" r="8"/><circle cx="1080" cy="460" r="6"/></g>
+    </svg>`,
   camp: `
     <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -335,6 +368,7 @@ export class Stage {
   }
 
   setScene(name: string, instant = false): void {
+    this.el.dataset.scene = name;
     const markup = SCENES[name] ?? '';
     const incoming = this.sceneLayers[1 - this.activeScene];
     const outgoing = this.sceneLayers[this.activeScene];
@@ -369,6 +403,7 @@ export class Stage {
     this.actorLayer.innerHTML = '';
     this.bubbleLayer.innerHTML = '';
     this.effects.clear();
+    delete this.el.dataset.scene;
     this.showAdvanceHint(false);
     this.sceneLayers[0].innerHTML = '';
     this.sceneLayers[1].innerHTML = '';

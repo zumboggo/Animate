@@ -33,6 +33,14 @@ describe('smooth puppet rig guardrails', () => {
     expect(maxAbs(rotations('sit', 'rightThigh'))).toBeLessThanOrEqual(8);
   });
 
+  it('uses a gentle arm-led swim cycle without kicking the legs apart', () => {
+    expect(CLIPS.swim.loop).toBe(true);
+    expect(maxAbs(rotations('swim', 'leftUpperArm'))).toBeLessThanOrEqual(22);
+    expect(maxAbs(rotations('swim', 'rightUpperArm'))).toBeLessThanOrEqual(22);
+    expect(maxAbs(rotations('swim', 'leftThigh'))).toBe(0);
+    expect(maxAbs(rotations('swim', 'rightThigh'))).toBe(0);
+  });
+
   it('uses exactly two rendered segments per arm and leg', () => {
     for (const manifest of [anna, sarah]) {
       expect(manifest.rig.bones.leftForearm.parent).toBe('leftUpperArm');

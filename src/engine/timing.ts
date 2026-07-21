@@ -7,6 +7,7 @@ export function dialogueMs(text: string): number {
 /** Time to cross the full stage width. */
 export const WALK_MS_FULL_STAGE = 2600;
 export const RUN_MS_FULL_STAGE = 1400;
+export const SWIM_MS_FULL_STAGE = 3200;
 
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));

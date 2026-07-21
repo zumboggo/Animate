@@ -5,7 +5,7 @@ import type { StoryCommand } from '../src/engine/storyTypes';
 
 const OPTS = {
   characters: ['LIN', 'MAX', 'MEI', 'ANNA', 'SARAH', 'GRACE', 'ELLIOTT', 'LEAH'],
-  scenes: ['park', 'camp', 'cabin-dining', 'bedroom', 'street', 'peppa-land'],
+  scenes: ['park', 'camp', 'cabin-dining', 'bedroom', 'street', 'peppa-land', 'lake'],
 };
 
 function compile(source: string) {
@@ -200,6 +200,12 @@ describe('the shipped demo stories compile cleanly', () => {
   it('treat-spot-trees.story has no errors', async () => {
     const { default: source } = await import('../stories/treat-spot-trees.story?raw');
     expect(compile(source).errors).toEqual([]);
+  });
+
+  it('parses swimming entrances and maps the shore to the lake edge', () => {
+    const commands = commandsOf('SARAH swims in from left to center\nSARAH swims to shore');
+    expect(commands[0]).toMatchObject({ action: 'walkIn', from: 'left', to: 'center', gait: 'swim' });
+    expect(commands[1]).toMatchObject({ action: 'walkTo', to: 'farRight', gait: 'swim' });
   });
 
   it('pancake-payback.story has no errors and stars Grace and Elliott', async () => {

@@ -241,13 +241,17 @@ export class PuppetPartsAdapter extends BaseAdapter {
   protected onMoveStart(gait: Gait): void {
     this.stopIdle();
     this.showRig();
-    this.setDebugAnimation(gait === 'run' ? 'run' : 'walk');
-    this.animationLayer?.classList.add(gait === 'run' ? 'is-running' : 'is-walking');
-    if (this.animator) void this.animator.play(CLIPS.walk, { rate: gait === 'run' ? 1.75 : 1 });
+    this.setDebugAnimation(gait);
+    const className = gait === 'run' ? 'is-running' : gait === 'swim' ? 'is-swimming' : 'is-walking';
+    this.animationLayer?.classList.add(className);
+    if (this.animator) {
+      const clip = gait === 'swim' ? CLIPS.swim : CLIPS.walk;
+      void this.animator.play(clip, { rate: gait === 'run' ? 1.75 : 1 });
+    }
   }
 
   protected onMoveEnd(): void {
-    this.animationLayer?.classList.remove('is-walking', 'is-running');
+    this.animationLayer?.classList.remove('is-walking', 'is-running', 'is-swimming');
     if (!this.animator) {
       this.startIdle();
       return;

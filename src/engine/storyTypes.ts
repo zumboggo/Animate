@@ -1,6 +1,6 @@
 export type StagePositionName = 'farLeft' | 'left' | 'center' | 'right' | 'farRight';
 export type EntrySide = 'left' | 'right';
-export type Gait = 'walk' | 'run';
+export type Gait = 'walk' | 'run' | 'swim';
 
 export type StageEffectName =
   | 'screenShake'
