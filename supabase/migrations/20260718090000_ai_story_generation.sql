@@ -10,26 +10,36 @@ create table if not exists public.user_settings (
 
 alter table public.user_settings enable row level security;
 
+-- Data API access is explicit. Anonymous visitors cannot read or write API
+-- keys; authenticated users are still restricted to their own row by RLS.
+revoke all on table public.user_settings from anon;
+grant select, insert, update, delete on table public.user_settings to authenticated;
+grant select, insert, update, delete on table public.user_settings to service_role;
+
+drop policy if exists "user_settings_select_own" on public.user_settings;
 create policy "user_settings_select_own"
   on public.user_settings for select
   to authenticated
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "user_settings_insert_own" on public.user_settings;
 create policy "user_settings_insert_own"
   on public.user_settings for insert
   to authenticated
-  with check (auth.uid() = user_id);
+  with check ((select auth.uid()) = user_id);
 
+drop policy if exists "user_settings_update_own" on public.user_settings;
 create policy "user_settings_update_own"
   on public.user_settings for update
   to authenticated
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);
 
+drop policy if exists "user_settings_delete_own" on public.user_settings;
 create policy "user_settings_delete_own"
   on public.user_settings for delete
   to authenticated
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
 -- Generated story backgrounds. Private: each user can only touch files inside
 -- a folder named after their own user id ({uid}/scene-name.png).
@@ -42,22 +52,30 @@ on conflict (id) do update set
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
+drop policy if exists "story_backgrounds_read_own" on storage.objects;
 create policy "story_backgrounds_read_own"
   on storage.objects for select
   to authenticated
   using (bucket_id = 'story-backgrounds' and (storage.foldername(name))[1] = auth.uid()::text);
 
+drop policy if exists "story_backgrounds_insert_own" on storage.objects;
 create policy "story_backgrounds_insert_own"
   on storage.objects for insert
   to authenticated
   with check (bucket_id = 'story-backgrounds' and (storage.foldername(name))[1] = auth.uid()::text);
 
+drop policy if exists "story_backgrounds_update_own" on storage.objects;
 create policy "story_backgrounds_update_own"
   on storage.objects for update
   to authenticated
-  using (bucket_id = 'story-backgrounds' and (storage.foldername(name))[1] = auth.uid()::text);
+  using (bucket_id = 'story-backgrounds' and (storage.foldername(name))[1] = (select auth.uid())::text)
+  with check (bucket_id = 'story-backgrounds' and (storage.foldername(name))[1] = (select auth.uid())::text);
 
+drop policy if exists "story_backgrounds_delete_own" on storage.objects;
 create policy "story_backgrounds_delete_own"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'story-backgrounds' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- Make the newly created table visible immediately to PostgREST.
+notify pgrst, 'reload schema';
