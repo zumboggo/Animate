@@ -45,7 +45,7 @@ foreach ($character in $characters) {
   foreach ($slotName in $slots.Keys) {
     $slot = $slots[$slotName]
     $sourceName = $slot.Source
-    if ($character -in @('sarah', 'grace') -and $slotName -eq 'torso') {
+    if ($character -in @('sarah', 'grace', 'elliott') -and $slotName -eq 'torso') {
       $sourceName = 'torso-clean-v2.png'
     }
     $sourcePath = Join-Path $parts $sourceName

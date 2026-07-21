@@ -135,6 +135,12 @@ studio.appendChild(previewPanel);
 const stageFrame = document.createElement('div');
 stageFrame.className = 'stage-frame';
 previewPanel.appendChild(stageFrame);
+const fullscreenClose = document.createElement('button');
+fullscreenClose.className = 'fullscreen-close';
+fullscreenClose.type = 'button';
+fullscreenClose.setAttribute('aria-label', 'Exit full screen');
+fullscreenClose.textContent = '×';
+previewPanel.appendChild(fullscreenClose);
 const stage = new Stage(stageFrame);
 const bubbles = new BubbleLayer(stage.bubbleLayer, stage.el);
 const dialogueBox = new DialogueBox(stage.el);
@@ -219,27 +225,80 @@ function saveDraft(source: string): void {
   }
 }
 
+type LockableOrientation = ScreenOrientation & {
+  lock?: (orientation: string) => Promise<void>;
+  unlock?: () => void;
+};
+
+function fullscreenActive(): boolean {
+  return document.fullscreenElement === previewPanel
+    || previewPanel.classList.contains('fullscreen-fallback');
+}
+
+function announceFullscreenChange(): void {
+  document.dispatchEvent(new Event('storysproutfullscreenchange'));
+}
+
+async function requestLandscape(): Promise<void> {
+  try {
+    await (screen.orientation as LockableOrientation | undefined)?.lock?.('landscape');
+  } catch {
+    // iOS and some embedded browsers do not expose orientation locking. They
+    // keep the correctly oriented 16:9 stage centered on black instead.
+  }
+}
+
+function releaseLandscape(): void {
+  try {
+    (screen.orientation as LockableOrientation | undefined)?.unlock?.();
+  } catch {
+    // Orientation unlock is best-effort for browsers with partial support.
+  }
+}
+
+function setFallbackFullscreen(active: boolean): void {
+  previewPanel.classList.toggle('fullscreen-fallback', active);
+  document.documentElement.classList.toggle('stage-fullscreen-active', active);
+  announceFullscreenChange();
+}
+
+async function exitFullscreen(): Promise<void> {
+  if (document.fullscreenElement) await document.exitFullscreen();
+  setFallbackFullscreen(false);
+  releaseLandscape();
+}
+
+async function toggleFullscreen(): Promise<void> {
+  if (fullscreenActive()) {
+    await exitFullscreen();
+    return;
+  }
+  try {
+    await previewPanel.requestFullscreen();
+    document.documentElement.classList.add('stage-fullscreen-active');
+  } catch {
+    // Some embedded and mobile browsers do not grant the Fullscreen API.
+    setFallbackFullscreen(true);
+  }
+  await requestLandscape();
+  announceFullscreenChange();
+}
+
+fullscreenClose.addEventListener('click', (event) => {
+  event.stopPropagation();
+  void exitFullscreen();
+});
+document.addEventListener('fullscreenchange', () => {
+  const nativeActive = document.fullscreenElement === previewPanel;
+  document.documentElement.classList.toggle('stage-fullscreen-active', nativeActive || previewPanel.classList.contains('fullscreen-fallback'));
+  if (!nativeActive && !previewPanel.classList.contains('fullscreen-fallback')) releaseLandscape();
+  announceFullscreenChange();
+});
+
 buildControls(previewPanel, {
   onRestart: () => playSource(lastPlayableSource, false),
-  onToggleFullscreen: async () => {
-    if (previewPanel.classList.contains('fullscreen-fallback')) {
-      previewPanel.classList.remove('fullscreen-fallback');
-      return;
-    }
-    if (document.fullscreenElement) {
-      await document.exitFullscreen();
-      return;
-    }
-    try {
-      await previewPanel.requestFullscreen();
-    } catch {
-      // Some embedded browsers do not grant the Fullscreen API. The fixed
-      // theater layout provides the same focused viewing mode.
-      previewPanel.classList.add('fullscreen-fallback');
-    }
-  },
-  isFullscreen: () => document.fullscreenElement === previewPanel
-    || previewPanel.classList.contains('fullscreen-fallback'),
+  onToggleFullscreen: toggleFullscreen,
+  isFullscreen: fullscreenActive,
 });
 
 stage.el.addEventListener('click', () => director?.advance());

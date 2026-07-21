@@ -1028,38 +1028,89 @@ main {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 13px 30px rgba(42, 50, 46, 0.12);
 }
 
+.fullscreen-close {
+  display: none;
+}
+
+html.stage-fullscreen-active,
+html.stage-fullscreen-active body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #000;
+}
+
 .preview-panel:fullscreen,
 .preview-panel.fullscreen-fallback {
+  position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   max-width: none;
-  padding: clamp(14px, 2vw, 28px);
+  padding: 0;
   overflow: hidden;
+  border: 0;
   border-radius: 0;
-  background: #f8f7f1;
+  background: #000;
 }
 
 .preview-panel.fullscreen-fallback {
   position: fixed;
-  z-index: 1000;
+  z-index: 10000;
   inset: 0;
+}
+
+.preview-panel:fullscreen .panel-heading,
+.preview-panel:fullscreen .cast-strip,
+.preview-panel:fullscreen .controls,
+.preview-panel.fullscreen-fallback .panel-heading,
+.preview-panel.fullscreen-fallback .cast-strip,
+.preview-panel.fullscreen-fallback .controls {
+  display: none;
 }
 
 .preview-panel:fullscreen .stage-frame,
 .preview-panel.fullscreen-fallback .stage-frame {
   display: grid;
-  flex: 1;
-  min-height: 0;
   place-items: center;
-  background: #1c2824;
+  width: 100vw;
+  height: 100dvh;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+  box-shadow: none;
 }
 
 .preview-panel:fullscreen .stage,
 .preview-panel.fullscreen-fallback .stage {
-  width: min(100%, calc((100vh - 190px) * 16 / 9));
-  max-height: calc(100vh - 190px);
+  width: min(100vw, calc(100dvh * 16 / 9));
+  max-width: 100vw;
+  max-height: 100dvh;
+  border-radius: 0;
+}
+
+.preview-panel:fullscreen .fullscreen-close,
+.preview-panel.fullscreen-fallback .fullscreen-close {
+  position: fixed;
+  z-index: 10002;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  display: grid;
+  width: 42px;
+  height: 42px;
+  padding: 0 0 3px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.62);
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font: 32px/1 system-ui, sans-serif;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .stage {

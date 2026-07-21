@@ -44,8 +44,8 @@
       { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/grace/parts/right-upper-arm.png", "box": [69, 34, 15, 24], "z": 0 },
       { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/grace/parts/right-forearm.png", "box": [68, 50, 16, 26], "z": 1 },
       { "name": "torso", "bone": "torso", "asset": "assets/characters/grace/parts/torso-clean-v2.png", "box": [31, 30, 38, 32], "z": 2 },
-      { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/grace/parts/head-closed-v2.png", "box": [17, -1, 66, 38], "z": 4, "feature": "headClosed" },
-      { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/grace/parts/head-open-v2.png", "box": [17, -1, 66, 38], "z": 5, "feature": "headOpen" }
+      { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/grace/parts/head-closed-v2.png", "box": [15, -1, 66, 38], "z": 4, "feature": "headClosed" },
+      { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/grace/parts/head-open-v2.png", "box": [15, -1, 66, 38], "z": 5, "feature": "headOpen" }
     ]
   },
   "poses": {

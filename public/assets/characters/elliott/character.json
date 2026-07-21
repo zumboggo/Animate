@@ -44,7 +44,7 @@
       { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/elliott/parts/right-upper-arm.png", "box": [67, 32, 17, 22], "z": 0 },
       { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/elliott/parts/right-forearm.png", "box": [68, 48, 16, 25], "z": 1 },
       { "name": "neck", "bone": "torso", "asset": "assets/characters/elliott/parts/neck.svg", "box": [43, 25, 14, 16], "z": 1 },
-      { "name": "torso", "bone": "torso", "asset": "assets/characters/elliott/parts/torso.png", "box": [20, 27, 60, 29], "z": 2 },
+      { "name": "torso", "bone": "torso", "asset": "assets/characters/elliott/parts/torso-clean-v2.png", "box": [20, 27, 60, 29], "z": 2 },
       { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/elliott/parts/head-closed-v2.png", "box": [22, 0, 56, 34], "z": 4, "feature": "headClosed" },
       { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/elliott/parts/head-open-v2.png", "box": [22, 0, 56, 34], "z": 5, "feature": "headOpen" }
     ]
@@ -60,7 +60,7 @@
   },
   "assetStatus": {
     "poseSprites": "ready",
-    "bodyParts": "shared child geometry with two-piece arms and two-piece shoed legs",
+    "bodyParts": "shared child geometry with sleeve-capped upper arms, a sleeveless torso, and two-piece shoed legs",
     "faceParts": "aligned full-head closed/open dialogue frames; expressions use pose sprites"
   }
 }

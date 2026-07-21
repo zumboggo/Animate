@@ -67,6 +67,7 @@ export function buildControls(
   renderFullscreen();
   fullscreen.addEventListener('click', () => void cb.onToggleFullscreen().finally(renderFullscreen));
   document.addEventListener('fullscreenchange', renderFullscreen);
+  document.addEventListener('storysproutfullscreenchange', renderFullscreen);
   bar.appendChild(fullscreen);
 
   const rigDebug = document.createElement('button');

@@ -30,6 +30,7 @@ describe('generated-art supporting cast', () => {
   it('hides duplicate torso arms and closes Elliott\u2019s head-to-shirt gap', () => {
     expect(grace.rig.layers.find((layer) => layer.name === 'torso')?.asset).toContain('torso-clean-v2');
     expect(elliott.rig.layers.some((layer) => layer.name === 'neck')).toBe(true);
+    expect(elliott.rig.layers.find((layer) => layer.name === 'torso')?.asset).toContain('torso-clean-v2');
     expect(elliott.rig.layers.find((layer) => layer.name === 'torso')?.box[1]).toBeLessThan(30);
   });
 
@@ -38,6 +39,7 @@ describe('generated-art supporting cast', () => {
     expect(sarahUpperArm).toContain('?v=5');
     expect(leah.rig.layers.find((layer) => layer.name === 'left-upper-arm')?.box[2]).toBeLessThanOrEqual(13);
     expect(grace.rig.layers.find((layer) => layer.feature === 'headClosed')?.box[1]).toBeLessThan(0);
+    expect(grace.rig.layers.find((layer) => layer.feature === 'headClosed')?.box[0]).toBe(15);
   });
 
   it('uses one shared main-cast skeleton and the same two-piece arm contract', () => {
