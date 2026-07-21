@@ -35,12 +35,9 @@ export interface PuppetRigDefinition {
   aspectRatio: number;
   /** Reuses a cast-wide skeleton while each character keeps character-specific art boxes. */
   preset?: 'episodeKid';
-  /** Single-piece arms rotate from the shoulder; bent gestures use coherent pose art. */
-  armStyle?: 'segmented' | 'singlePiece';
-  armVariants?: {
-    leftBent?: string;
-    rightBent?: string;
-  };
+  /** Folder containing the canonical child slot filenames for this character skin. */
+  skinRoot?: string;
+  armStyle?: 'segmented';
   rotationScale?: number;
   /** Two complete, aligned head layers crossfade during neutral dialogue. */
   talkingHead?: boolean;

@@ -24,7 +24,7 @@ describe('Sarah generated-art character', () => {
     expect(sarah.rig.layers.find((layer) => layer.name === 'left-upper-arm')?.box[2]).toBeLessThanOrEqual(17);
     expect(sarah.assetStatus).toEqual({
       poseSprites: 'ready',
-      bodyParts: 'two-piece limbs ready for smooth layered animation',
+      bodyParts: 'shared child geometry with two-piece arms and two-piece shoed legs',
       faceParts: 'aligned full-head closed/open dialogue frames; expressions use pose sprites',
     });
   });

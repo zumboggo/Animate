@@ -5,7 +5,11 @@ import anna from '../public/assets/characters/anna/character.json';
 import sarah from '../public/assets/characters/sarah/character.json';
 import grace from '../public/assets/characters/grace/character.json';
 import elliott from '../public/assets/characters/elliott/character.json';
-import { applySharedRigPreset, EPISODE_KID_BONES } from '../src/rig/sharedPuppetRig';
+import {
+  applySharedRigPreset,
+  CHILD_RIG_LAYER_SPECS,
+  EPISODE_KID_BONES,
+} from '../src/rig/sharedPuppetRig';
 import type { PuppetRigDefinition } from '../src/animation/puppetRigTypes';
 
 function rotations(clipName: string, boneName: string): number[] {
@@ -75,6 +79,14 @@ describe('smooth puppet rig guardrails', () => {
       for (const [name, sharedBone] of Object.entries(EPISODE_KID_BONES)) {
         expect(normalized.bones[name]?.pivot).toEqual(sharedBone.pivot);
         expect(normalized.bones[name]?.parent).toBe(sharedBone.parent);
+      }
+      expect(normalized.aspectRatio).toBe(0.5);
+      expect(normalized.rotationScale).toBe(0.54);
+      expect(normalized.armStyle).toBe('segmented');
+      for (const [name, spec] of Object.entries(CHILD_RIG_LAYER_SPECS)) {
+        const layer = normalized.layers.find((candidate) => candidate.name === name);
+        expect(layer?.box).toEqual(spec.box);
+        expect(layer?.asset).toContain('/parts/standard/');
       }
     }
   });

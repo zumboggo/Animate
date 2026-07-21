@@ -18,7 +18,7 @@ describe('generated-art supporting cast', () => {
       expect(cast[name].adapter).toBe('puppetParts');
       expect(manifest.renderMode).toBe('hybrid');
       expect(Object.keys(manifest.rig.bones)).toHaveLength(12);
-      expect(manifest.rig.layers).toHaveLength(name === 'ELLIOTT' ? 13 : name === 'GRACE' ? 10 : 12);
+      expect(manifest.rig.layers).toHaveLength(name === 'ELLIOTT' ? 13 : 12);
       expect(manifest.rig.talkingHead).toBe(true);
       expect(manifest.rig.layers.filter((layer) => layer.feature === 'headClosed')).toHaveLength(1);
       expect(manifest.rig.layers.filter((layer) => layer.feature === 'headOpen')).toHaveLength(1);
@@ -35,20 +35,19 @@ describe('generated-art supporting cast', () => {
 
   it('keeps the youngest arms restrained and Grace\u2019s illustrated head overlapped with her shirt', () => {
     const sarahUpperArm = cast.SARAH.assetManifest;
-    expect(sarahUpperArm).toContain('?v=4');
+    expect(sarahUpperArm).toContain('?v=5');
     expect(leah.rig.layers.find((layer) => layer.name === 'left-upper-arm')?.box[2]).toBeLessThanOrEqual(13);
     expect(grace.rig.layers.find((layer) => layer.feature === 'headClosed')?.box[1]).toBeLessThan(0);
   });
 
-  it('uses one shared main-cast skeleton and coherent everyday arms for Grace', () => {
+  it('uses one shared main-cast skeleton and the same two-piece arm contract', () => {
     for (const manifest of [anna, sarah, grace, elliott]) {
       expect(manifest.rig.preset).toBe('episodeKid');
+      expect(manifest.rig.armStyle).toBe('segmented');
+      expect(manifest.rig.skinRoot).toContain('/parts/standard');
+      expect(manifest.rig.layers.filter((layer) => /upper-arm/.test(layer.name))).toHaveLength(2);
+      expect(manifest.rig.layers.filter((layer) => /forearm/.test(layer.name))).toHaveLength(2);
     }
-    expect(grace.rig.armStyle).toBe('singlePiece');
-    expect(grace.rig.layers.filter((layer) => layer.name.includes('arm-straight'))).toHaveLength(2);
-    expect(grace.rig.layers.some((layer) => /upper-arm|forearm/.test(layer.name))).toBe(false);
-    expect(grace.rig.armVariants.leftBent).toContain('left-arm-bent-v1.png');
-    expect(grace.rig.armVariants.rightBent).toContain('right-arm-bent-v1.png');
   });
 
   it('ships seven coherent pose sprites for each character', () => {

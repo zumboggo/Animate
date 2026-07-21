@@ -35,7 +35,7 @@ describe('Anna generated-art character', () => {
     });
     expect(anna.assetStatus).toEqual({
       poseSprites: 'ready',
-      bodyParts: 'two-piece limbs ready for smooth layered animation',
+      bodyParts: 'shared child geometry with two-piece arms and two-piece shoed legs',
       faceParts: 'aligned full-head closed/open dialogue frames; expressions use pose sprites',
     });
     expect(Object.keys(anna.poses)).toHaveLength(7);

@@ -5,7 +5,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/anna/poses/neutral.png",
-    "assetManifest": "assets/characters/anna/character.json?v=4",
+    "assetManifest": "assets/characters/anna/character.json?v=5",
     "poseAssets": {
       "idle": "assets/characters/anna/poses/neutral.png",
       "talkNeutral": "assets/characters/anna/poses/happy.png",
@@ -63,7 +63,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/sarah/poses/neutral.png",
-    "assetManifest": "assets/characters/sarah/character.json?v=4",
+    "assetManifest": "assets/characters/sarah/character.json?v=5",
     "poseAssets": {
       "idle": "assets/characters/sarah/poses/neutral.png",
       "talkNeutral": "assets/characters/sarah/poses/happy.png",
@@ -121,7 +121,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/grace/poses/neutral.png",
-    "assetManifest": "assets/characters/grace/character.json?v=4",
+    "assetManifest": "assets/characters/grace/character.json?v=5",
     "poseAssets": {
       "idle": "assets/characters/grace/poses/neutral.png",
       "talkNeutral": "assets/characters/grace/poses/happy.png",
@@ -179,7 +179,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/elliott/poses/neutral.png",
-    "assetManifest": "assets/characters/elliott/character.json?v=4",
+    "assetManifest": "assets/characters/elliott/character.json?v=5",
     "poseAssets": {
       "idle": "assets/characters/elliott/poses/neutral.png",
       "talkNeutral": "assets/characters/elliott/poses/happy.png",
