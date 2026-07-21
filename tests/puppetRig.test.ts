@@ -3,6 +3,10 @@ import { CLIPS } from '../src/rig/clips';
 import { BONE_DEFS } from '../src/rig/svgSkeleton';
 import anna from '../public/assets/characters/anna/character.json';
 import sarah from '../public/assets/characters/sarah/character.json';
+import grace from '../public/assets/characters/grace/character.json';
+import elliott from '../public/assets/characters/elliott/character.json';
+import { applySharedRigPreset, EPISODE_KID_BONES } from '../src/rig/sharedPuppetRig';
+import type { PuppetRigDefinition } from '../src/animation/puppetRigTypes';
 
 function rotations(clipName: string, boneName: string): number[] {
   return CLIPS[clipName].keyframes.map((frame) => frame.bones[boneName]?.rotate ?? 0);
@@ -62,6 +66,16 @@ describe('smooth puppet rig guardrails', () => {
     for (const manifest of [anna, sarah]) {
       expect(manifest.rig.bones.rightUpperArm.pivot[0]).toBeGreaterThan(50);
       expect(manifest.rig.bones.leftUpperArm.pivot[0]).toBeLessThan(50);
+    }
+  });
+
+  it('resolves the main cast onto one reusable pivot map', () => {
+    for (const manifest of [anna, sarah, grace, elliott]) {
+      const normalized = applySharedRigPreset(manifest.rig as unknown as PuppetRigDefinition);
+      for (const [name, sharedBone] of Object.entries(EPISODE_KID_BONES)) {
+        expect(normalized.bones[name]?.pivot).toEqual(sharedBone.pivot);
+        expect(normalized.bones[name]?.parent).toBe(sharedBone.parent);
+      }
     }
   });
 });

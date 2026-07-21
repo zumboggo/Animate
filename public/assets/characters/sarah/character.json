@@ -3,7 +3,7 @@
   "displayName": "Sarah",
   "adapter": "puppetParts",
   "renderMode": "hybrid",
-  "scale": 0.85,
+  "scale": 1.0,
   "defaultEmotion": "neutral",
   "defaultPose": "neutral",
   "baseAsset": "assets/characters/sarah/poses/neutral.png",
@@ -37,6 +37,8 @@
   },
   "rig": {
     "aspectRatio": 0.54,
+    "preset": "episodeKid",
+    "armStyle": "segmented",
     "rotationScale": 0.54,
     "talkingHead": true,
     "bones": {

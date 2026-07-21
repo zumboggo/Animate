@@ -5,7 +5,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/anna/poses/neutral.png",
-    "assetManifest": "assets/characters/anna/character.json?v=3",
+    "assetManifest": "assets/characters/anna/character.json?v=4",
     "poseAssets": {
       "idle": "assets/characters/anna/poses/neutral.png",
       "talkNeutral": "assets/characters/anna/poses/happy.png",
@@ -61,9 +61,9 @@
     "displayName": "Sarah",
     "adapter": "puppetParts",
     "faceAnimation": "mouthOnly",
-    "scale": 0.85,
+    "scale": 1.0,
     "asset": "assets/characters/sarah/poses/neutral.png",
-    "assetManifest": "assets/characters/sarah/character.json?v=3",
+    "assetManifest": "assets/characters/sarah/character.json?v=4",
     "poseAssets": {
       "idle": "assets/characters/sarah/poses/neutral.png",
       "talkNeutral": "assets/characters/sarah/poses/happy.png",
@@ -111,7 +111,7 @@
       "dressColor": "#f05b91",
       "pattern": "plain",
       "eyeColor": "#5a4030",
-      "height": 0.85,
+      "height": 1.0,
       "build": "small"
     }
   },
@@ -119,9 +119,9 @@
     "displayName": "Grace",
     "adapter": "puppetParts",
     "faceAnimation": "mouthOnly",
-    "scale": 1.05,
+    "scale": 1.0,
     "asset": "assets/characters/grace/poses/neutral.png",
-    "assetManifest": "assets/characters/grace/character.json?v=3",
+    "assetManifest": "assets/characters/grace/character.json?v=4",
     "poseAssets": {
       "idle": "assets/characters/grace/poses/neutral.png",
       "talkNeutral": "assets/characters/grace/poses/happy.png",
@@ -169,7 +169,7 @@
       "dressColor": "#d88a9d",
       "pattern": "cat",
       "eyeColor": "#463829",
-      "height": 1.05,
+      "height": 1.0,
       "build": "average"
     }
   },
@@ -179,7 +179,7 @@
     "faceAnimation": "mouthOnly",
     "scale": 1.0,
     "asset": "assets/characters/elliott/poses/neutral.png",
-    "assetManifest": "assets/characters/elliott/character.json?v=3",
+    "assetManifest": "assets/characters/elliott/character.json?v=4",
     "poseAssets": {
       "idle": "assets/characters/elliott/poses/neutral.png",
       "talkNeutral": "assets/characters/elliott/poses/happy.png",

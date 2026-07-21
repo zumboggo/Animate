@@ -1,0 +1,17 @@
+{
+  "name": "Story Sprout Animate",
+  "short_name": "Animate",
+  "description": "Turn a simple script into a tiny animated story.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f4ea",
+  "theme_color": "#df4775",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

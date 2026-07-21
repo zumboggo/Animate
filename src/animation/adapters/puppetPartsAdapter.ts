@@ -9,6 +9,7 @@ import type {
 import { sleep } from '../../engine/timing';
 import { CLIPS } from '../../rig/clips';
 import { RIG_POSES } from '../../rig/poseTemplates';
+import { applySharedRigPreset } from '../../rig/sharedPuppetRig';
 import type { ActingMotion, AnimationOptions, PoseTransitionOptions } from '../animationTypes';
 import { PuppetBoneAnimator } from '../puppetBoneAnimator';
 import type { PuppetCharacterManifest, PuppetRigDefinition } from '../puppetRigTypes';
@@ -51,6 +52,16 @@ const SPECIAL_POSES = new Set<CharacterPose>([
   'dance',
   'fall',
 ]);
+
+const ACTION_POSES: Partial<Record<CharacterAction, CharacterPose>> = {
+  actScared: 'scared',
+  tremble: 'scared',
+  cry: 'scared',
+  sit: 'sit',
+  laugh: 'laugh',
+  point: 'point',
+  dance: 'dance',
+};
 
 /**
  * Hybrid generated-art adapter.
@@ -179,6 +190,17 @@ export class PuppetPartsAdapter extends BaseAdapter {
       return;
     }
 
+    // Large elbow/hip changes look more convincing as authored full-body
+    // poses. Everyday motion remains on the reusable rig.
+    const authoredPose = ACTION_POSES[action];
+    if (authoredPose && this.entry.poseAssets?.[authoredPose]) {
+      await this.transitionToPose(authoredPose, {
+        preferSprite: true,
+        motion: action === 'laugh' ? 'laugh' : action === 'dance' ? 'dance' : action === 'actScared' ? 'recoil' : 'settle',
+      });
+      return;
+    }
+
     const spec = ACTION_CLIPS[action];
     if (this.animator && spec) {
       this.showRig();
@@ -270,13 +292,14 @@ export class PuppetPartsAdapter extends BaseAdapter {
       const manifest = await response.json() as PuppetCharacterManifest;
       if (manifest.renderMode !== 'hybrid' || !manifest.rig) throw new Error('manifest has no hybrid rig');
       if (!this.rigArt || !this.puppet) return;
-      this.rigDefinition = manifest.rig;
-      this.buildRig(manifest.rig);
+      const definition = applySharedRigPreset(manifest.rig);
+      this.rigDefinition = definition;
+      this.buildRig(definition);
       const images = [...this.rigArt.querySelectorAll('img')];
       await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
       if (!this.rigArt || !this.puppet) return;
-      this.animator = new PuppetBoneAnimator(this.bones, manifest.rig.rotationScale ?? 0.7);
-      this.populateDebugOverlay(manifest.rig);
+      this.animator = new PuppetBoneAnimator(this.bones, definition.rotationScale ?? 0.7);
+      this.populateDebugOverlay(definition);
       this.updateFace();
       if (manifest.rig.face && !manifest.rig.talkingHead && !this.isMouthOnlyFace()) this.startBlinking();
       if (!manifest.rig.face && this.currentEmotion !== 'neutral') {
@@ -304,6 +327,8 @@ export class PuppetPartsAdapter extends BaseAdapter {
     if (!this.rigArt) return;
     this.rigArt.replaceChildren();
     this.rigArt.style.aspectRatio = String(definition.aspectRatio);
+    this.puppet?.setAttribute('data-rig-preset', definition.preset ?? 'custom');
+    this.puppet?.setAttribute('data-arm-style', definition.armStyle ?? 'segmented');
     this.bones.clear();
     this.features.clear();
 

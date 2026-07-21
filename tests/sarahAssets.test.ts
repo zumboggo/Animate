@@ -3,11 +3,10 @@ import sarah from '../public/assets/characters/sarah/character.json';
 import cast from '../stories/cast.json';
 
 describe('Sarah generated-art character', () => {
-  it('uses the hybrid bone-and-pose adapter at toddler scale', () => {
+  it('uses the hybrid bone-and-pose adapter on the shared actor scale', () => {
     expect(cast.SARAH.adapter).toBe('puppetParts');
-    expect(cast.SARAH.scale).toBeGreaterThanOrEqual(0.82);
-    expect(cast.SARAH.scale).toBeLessThanOrEqual(0.88);
-    expect(cast.SARAH.scale).toBeLessThan(cast.ANNA.appearance.height);
+    expect(cast.SARAH.scale).toBe(1);
+    expect(cast.SARAH.scale).toBe(cast.ANNA.appearance.height);
     expect(cast.SARAH.asset).toBe('assets/characters/sarah/poses/neutral.png');
     expect(cast.SARAH.faceAnimation).toBe('mouthOnly');
   });

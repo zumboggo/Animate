@@ -41,6 +41,8 @@
   },
   "rig": {
     "aspectRatio": 0.48,
+    "preset": "episodeKid",
+    "armStyle": "segmented",
     "rotationScale": 0.58,
     "talkingHead": true,
     "bones": {

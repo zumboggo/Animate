@@ -3,10 +3,10 @@ import anna from '../public/assets/characters/anna/character.json';
 import cast from '../stories/cast.json';
 
 describe('Anna generated-art character', () => {
-  it('uses the hybrid bone-and-pose adapter above Sarah toddler scale', () => {
+  it('uses the hybrid bone-and-pose adapter on the shared actor scale', () => {
     expect(cast.ANNA.adapter).toBe('puppetParts');
     expect(cast.ANNA.scale).toBe(1);
-    expect(cast.ANNA.scale).toBeGreaterThan(cast.SARAH.scale);
+    expect(cast.ANNA.scale).toBe(cast.SARAH.scale);
     expect(cast.ANNA.asset).toBe('assets/characters/anna/poses/neutral.png');
     expect(cast.ANNA.faceAnimation).toBe('mouthOnly');
   });

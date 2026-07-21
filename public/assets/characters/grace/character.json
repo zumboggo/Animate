@@ -3,7 +3,7 @@
   "displayName": "Grace",
   "adapter": "puppetParts",
   "renderMode": "hybrid",
-  "scale": 1.05,
+  "scale": 1.0,
   "defaultEmotion": "neutral",
   "defaultPose": "neutral",
   "baseAsset": "assets/characters/grace/poses/neutral.png",
@@ -14,6 +14,12 @@
   },
   "rig": {
     "aspectRatio": 0.5,
+    "preset": "episodeKid",
+    "armStyle": "singlePiece",
+    "armVariants": {
+      "leftBent": "assets/characters/grace/parts/left-arm-bent-v1.png",
+      "rightBent": "assets/characters/grace/parts/right-arm-bent-v1.png"
+    },
     "rotationScale": 0.54,
     "talkingHead": true,
     "bones": {
@@ -36,10 +42,8 @@
       { "name": "right-thigh", "bone": "rightThigh", "asset": "assets/characters/grace/parts/right-thigh.png", "box": [49, 61, 18, 22], "z": 0 },
       { "name": "right-shin", "bone": "rightShin", "asset": "assets/characters/grace/parts/right-shin.png", "box": [48, 73, 22, 27], "z": 1 },
       { "name": "pelvis", "bone": "pelvis", "asset": "assets/characters/grace/parts/pelvis.png", "box": [28, 55, 44, 18], "z": 1 },
-      { "name": "left-upper-arm", "bone": "leftUpperArm", "asset": "assets/characters/grace/parts/left-upper-arm.png", "box": [16, 34, 15, 24], "z": 0 },
-      { "name": "left-forearm", "bone": "leftForearm", "asset": "assets/characters/grace/parts/left-forearm.png", "box": [16, 50, 16, 26], "z": 1 },
-      { "name": "right-upper-arm", "bone": "rightUpperArm", "asset": "assets/characters/grace/parts/right-upper-arm.png", "box": [69, 34, 15, 24], "z": 0 },
-      { "name": "right-forearm", "bone": "rightForearm", "asset": "assets/characters/grace/parts/right-forearm.png", "box": [68, 50, 16, 26], "z": 1 },
+      { "name": "left-arm-straight", "bone": "leftUpperArm", "asset": "assets/characters/grace/parts/left-arm-straight-v1.png", "box": [16, 29, 25, 48], "z": 0 },
+      { "name": "right-arm-straight", "bone": "rightUpperArm", "asset": "assets/characters/grace/parts/right-arm-straight-v1.png", "box": [59, 29, 25, 48], "z": 0 },
       { "name": "torso", "bone": "torso", "asset": "assets/characters/grace/parts/torso-clean-v2.png", "box": [31, 30, 38, 32], "z": 2 },
       { "name": "talking-head-closed", "bone": "head", "asset": "assets/characters/grace/parts/head-closed-v2.png", "box": [17, -1, 66, 38], "z": 4, "feature": "headClosed" },
       { "name": "talking-head-open", "bone": "head", "asset": "assets/characters/grace/parts/head-open-v2.png", "box": [17, -1, 66, 38], "z": 5, "feature": "headOpen" }
@@ -56,7 +60,7 @@
   },
   "assetStatus": {
     "poseSprites": "ready",
-    "bodyParts": "two-piece limbs ready for smooth layered animation",
+    "bodyParts": "single-piece everyday arms plus authored bent-arm and full-body gesture poses",
     "faceParts": "aligned full-head closed/open dialogue frames; expressions use pose sprites"
   }
 }
